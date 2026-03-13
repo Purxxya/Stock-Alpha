@@ -1,0 +1,1578 @@
+2026-03-11 16:30:26 [INFO] Trinity.Historical | ============================================================
+2026-03-11 16:30:26 [INFO] Trinity.Historical | 🚀 Trinity EOD Archive | 2026-03-11 16:30:26
+2026-03-11 16:30:26 [INFO] Trinity.Historical | 🔖 Batch Process Started | symbols=100
+2026-03-11 16:30:26 [INFO] Trinity.Historical | ============================================================
+2026-03-11 16:30:26 [INFO] Trinity.Historical | 🔍 ตรวจสอบวันที่ล่าสุดใน DB สำหรับแต่ละหุ้น...
+2026-03-11 16:30:27 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?select=symbol%2C%20date&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&order=date.desc "HTTP/2 200 OK"
+2026-03-11 16:30:27 [INFO] Trinity.Historical | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-11 16:30:28 [INFO] Trinity.Historical | ⏭️  AAV | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:28 [INFO] Trinity.Historical | ⏭️  ADVANC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:28 [INFO] Trinity.Historical | ⏭️  AEONTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:28 [INFO] Trinity.Historical | ⏭️  AMATA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:28 [INFO] Trinity.Historical | ⏭️  AOT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:28 [INFO] Trinity.Historical | ⏭️  AP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:28 [INFO] Trinity.Historical | ⏭️  AURA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:28 [INFO] Trinity.Historical | ⏭️  AWC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:28 [INFO] Trinity.Historical | ⏭️  BA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:28 [INFO] Trinity.Historical | ⏭️  BAM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:29 [INFO] Trinity.Historical | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-11 16:30:29 [INFO] Trinity.Historical | ⏭️  BANPU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:29 [INFO] Trinity.Historical | ⏭️  BBL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:29 [INFO] Trinity.Historical | ⏭️  BCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:29 [INFO] Trinity.Historical | ⏭️  BCP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:29 [INFO] Trinity.Historical | ⏭️  BCPG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:29 [INFO] Trinity.Historical | ⏭️  BDMS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:29 [INFO] Trinity.Historical | ⏭️  BEM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:29 [INFO] Trinity.Historical | ⏭️  BGRIM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:29 [INFO] Trinity.Historical | ⏭️  BH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:29 [INFO] Trinity.Historical | ⏭️  BJC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:30 [INFO] Trinity.Historical | 📦 Batch 3/10: BLA, BTG, BTS, CBG, CCET, CENTEL, CHG, CK, COM7, CPALL
+2026-03-11 16:30:30 [INFO] Trinity.Historical | ⏭️  BLA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:30 [INFO] Trinity.Historical | ⏭️  BTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:30 [INFO] Trinity.Historical | ⏭️  BTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:30 [INFO] Trinity.Historical | ⏭️  CBG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:30 [INFO] Trinity.Historical | ⏭️  CCET | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:30 [INFO] Trinity.Historical | ⏭️  CENTEL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:30 [INFO] Trinity.Historical | ⏭️  CHG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:30 [INFO] Trinity.Historical | ⏭️  CK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:30 [INFO] Trinity.Historical | ⏭️  COM7 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:30 [INFO] Trinity.Historical | ⏭️  CPALL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:31 [INFO] Trinity.Historical | 📦 Batch 4/10: CPF, CPN, CRC, DELTA, DOHOME, EA, EGCO, ERW, GFPT, GLOBAL
+2026-03-11 16:30:31 [INFO] Trinity.Historical | ⏭️  CPF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:31 [INFO] Trinity.Historical | ⏭️  CPN | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:31 [INFO] Trinity.Historical | ⏭️  CRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:31 [INFO] Trinity.Historical | ⏭️  DELTA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:31 [INFO] Trinity.Historical | ⏭️  DOHOME | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:31 [INFO] Trinity.Historical | ⏭️  EA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:31 [INFO] Trinity.Historical | ⏭️  EGCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:31 [INFO] Trinity.Historical | ⏭️  ERW | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:31 [INFO] Trinity.Historical | ⏭️  GFPT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:31 [INFO] Trinity.Historical | ⏭️  GLOBAL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:32 [INFO] Trinity.Historical | 📦 Batch 5/10: GPSC, GULF, GUNKUL, HANA, HMPRO, ICHI, IRPC, IVL, JAS, JMART
+2026-03-11 16:30:33 [INFO] Trinity.Historical | ⏭️  GPSC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:33 [INFO] Trinity.Historical | ⏭️  GULF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:33 [INFO] Trinity.Historical | ⏭️  GUNKUL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:33 [INFO] Trinity.Historical | ⏭️  HANA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:33 [INFO] Trinity.Historical | ⏭️  HMPRO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:33 [INFO] Trinity.Historical | ⏭️  ICHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:33 [INFO] Trinity.Historical | ⏭️  IRPC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:33 [INFO] Trinity.Historical | ⏭️  IVL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:33 [INFO] Trinity.Historical | ⏭️  JAS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:33 [INFO] Trinity.Historical | ⏭️  JMART | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:34 [INFO] Trinity.Historical | 📦 Batch 6/10: JMT, JTS, KBANK, KCE, KKP, KTB, KTC, LH, M, MEGA
+2026-03-11 16:30:34 [INFO] Trinity.Historical | ⏭️  JMT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:34 [INFO] Trinity.Historical | ⏭️  JTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:34 [INFO] Trinity.Historical | ⏭️  KBANK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:34 [INFO] Trinity.Historical | ⏭️  KCE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:34 [INFO] Trinity.Historical | ⏭️  KKP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:34 [INFO] Trinity.Historical | ⏭️  KTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:34 [INFO] Trinity.Historical | ⏭️  KTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:34 [INFO] Trinity.Historical | ⏭️  LH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:34 [INFO] Trinity.Historical | ⏭️  M | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:34 [INFO] Trinity.Historical | ⏭️  MEGA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:35 [INFO] Trinity.Historical | 📦 Batch 7/10: MINT, MOSHI, MTC, OR, OSP, PLANB, PR9, PRM, PTG, PTT
+2026-03-11 16:30:35 [INFO] Trinity.Historical | ⏭️  MINT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:35 [INFO] Trinity.Historical | ⏭️  MOSHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:35 [INFO] Trinity.Historical | ⏭️  MTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:35 [INFO] Trinity.Historical | ⏭️  OR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:35 [INFO] Trinity.Historical | ⏭️  OSP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:35 [INFO] Trinity.Historical | ⏭️  PLANB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:35 [INFO] Trinity.Historical | ⏭️  PR9 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:35 [INFO] Trinity.Historical | ⏭️  PRM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:35 [INFO] Trinity.Historical | ⏭️  PTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:35 [INFO] Trinity.Historical | ⏭️  PTT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:36 [INFO] Trinity.Historical | 📦 Batch 8/10: PTTEP, PTTGC, QH, RATCH, RCL, SAWAD, SCB, SCC, SCGP, SIRI
+2026-03-11 16:30:36 [INFO] Trinity.Historical | ⏭️  PTTEP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:36 [INFO] Trinity.Historical | ⏭️  PTTGC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:36 [INFO] Trinity.Historical | ⏭️  QH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:36 [INFO] Trinity.Historical | ⏭️  RATCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:36 [INFO] Trinity.Historical | ⏭️  RCL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:36 [INFO] Trinity.Historical | ⏭️  SAWAD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:36 [INFO] Trinity.Historical | ⏭️  SCB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:36 [INFO] Trinity.Historical | ⏭️  SCC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:36 [INFO] Trinity.Historical | ⏭️  SCGP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:36 [INFO] Trinity.Historical | ⏭️  SIRI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:37 [INFO] Trinity.Historical | 📦 Batch 9/10: SISB, SJWD, SPALI, SPRC, STA, STECON, STGT, TASCO, TCAP, TFG
+2026-03-11 16:30:38 [INFO] Trinity.Historical | ⏭️  SISB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:38 [INFO] Trinity.Historical | ⏭️  SJWD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:38 [INFO] Trinity.Historical | ⏭️  SPALI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:38 [INFO] Trinity.Historical | ⏭️  SPRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:38 [INFO] Trinity.Historical | ⏭️  STA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:38 [INFO] Trinity.Historical | ⏭️  STECON | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:38 [INFO] Trinity.Historical | ⏭️  STGT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:38 [INFO] Trinity.Historical | ⏭️  TASCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:38 [INFO] Trinity.Historical | ⏭️  TCAP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:38 [INFO] Trinity.Historical | ⏭️  TFG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:39 [INFO] Trinity.Historical | 📦 Batch 10/10: TIDLOR, TISCO, TLI, TOA, TOP, TRUE, TTB, TU, VGI, WHA
+2026-03-11 16:30:39 [INFO] Trinity.Historical | ⏭️  TIDLOR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:39 [INFO] Trinity.Historical | ⏭️  TISCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:39 [INFO] Trinity.Historical | ⏭️  TLI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:39 [INFO] Trinity.Historical | ⏭️  TOA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:39 [INFO] Trinity.Historical | ⏭️  TOP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:39 [INFO] Trinity.Historical | ⏭️  TRUE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:39 [INFO] Trinity.Historical | ⏭️  TTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:39 [INFO] Trinity.Historical | ⏭️  TU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:39 [INFO] Trinity.Historical | ⏭️  VGI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:39 [INFO] Trinity.Historical | ⏭️  WHA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:30:39 [INFO] Trinity.Historical | 🔄 อัปเดต Prediction Accuracy สำหรับ 0 หุ้น...
+2026-03-11 16:30:39 [INFO] Trinity.Historical | ============================================================
+2026-03-11 16:30:39 [INFO] Trinity.Historical | 🏁 Batch Process Completed in 12.7s
+2026-03-11 16:30:39 [INFO] Trinity.Historical |    📊 New rows archived : 0
+2026-03-11 16:30:39 [INFO] Trinity.Historical |    ❌ Failed symbols    : 0
+2026-03-11 16:30:39 [INFO] Trinity.Historical | ============================================================
+2026-03-11 16:59:22 [INFO] Trinity.Historical | ============================================================
+2026-03-11 16:59:22 [INFO] Trinity.Historical | 🚀 Trinity EOD Archive | 2026-03-11 16:59:22
+2026-03-11 16:59:22 [INFO] Trinity.Historical | 🔖 Batch Process Started | symbols=100
+2026-03-11 16:59:22 [INFO] Trinity.Historical | ============================================================
+2026-03-11 16:59:22 [INFO] Trinity.Historical | 🔍 ตรวจสอบวันที่ล่าสุดใน DB สำหรับแต่ละหุ้น...
+2026-03-11 16:59:23 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?select=symbol%2C%20date&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&order=date.desc "HTTP/2 200 OK"
+2026-03-11 16:59:23 [INFO] Trinity.Historical | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-11 16:59:24 [INFO] Trinity.Historical | ⏭️  AAV | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:24 [INFO] Trinity.Historical | ⏭️  ADVANC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:24 [INFO] Trinity.Historical | ⏭️  AEONTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:24 [INFO] Trinity.Historical | ⏭️  AMATA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:24 [INFO] Trinity.Historical | ⏭️  AOT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:24 [INFO] Trinity.Historical | ⏭️  AP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:24 [INFO] Trinity.Historical | ⏭️  AURA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:24 [INFO] Trinity.Historical | ⏭️  AWC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:24 [INFO] Trinity.Historical | ⏭️  BA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:24 [INFO] Trinity.Historical | ⏭️  BAM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:25 [INFO] Trinity.Historical | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-11 16:59:25 [INFO] Trinity.Historical | ⏭️  BANPU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:25 [INFO] Trinity.Historical | ⏭️  BBL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:25 [INFO] Trinity.Historical | ⏭️  BCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:25 [INFO] Trinity.Historical | ⏭️  BCP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:25 [INFO] Trinity.Historical | ⏭️  BCPG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:25 [INFO] Trinity.Historical | ⏭️  BDMS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:25 [INFO] Trinity.Historical | ⏭️  BEM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:25 [INFO] Trinity.Historical | ⏭️  BGRIM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:25 [INFO] Trinity.Historical | ⏭️  BH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:25 [INFO] Trinity.Historical | ⏭️  BJC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:26 [INFO] Trinity.Historical | 📦 Batch 3/10: BLA, BTG, BTS, CBG, CCET, CENTEL, CHG, CK, COM7, CPALL
+2026-03-11 16:59:26 [INFO] Trinity.Historical | ⏭️  BLA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:26 [INFO] Trinity.Historical | ⏭️  BTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:26 [INFO] Trinity.Historical | ⏭️  BTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:26 [INFO] Trinity.Historical | ⏭️  CBG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:26 [INFO] Trinity.Historical | ⏭️  CCET | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:26 [INFO] Trinity.Historical | ⏭️  CENTEL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:26 [INFO] Trinity.Historical | ⏭️  CHG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:26 [INFO] Trinity.Historical | ⏭️  CK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:26 [INFO] Trinity.Historical | ⏭️  COM7 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:26 [INFO] Trinity.Historical | ⏭️  CPALL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:27 [INFO] Trinity.Historical | 📦 Batch 4/10: CPF, CPN, CRC, DELTA, DOHOME, EA, EGCO, ERW, GFPT, GLOBAL
+2026-03-11 16:59:27 [INFO] Trinity.Historical | ⏭️  CPF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:27 [INFO] Trinity.Historical | ⏭️  CPN | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:27 [INFO] Trinity.Historical | ⏭️  CRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:27 [INFO] Trinity.Historical | ⏭️  DELTA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:27 [INFO] Trinity.Historical | ⏭️  DOHOME | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:27 [INFO] Trinity.Historical | ⏭️  EA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:27 [INFO] Trinity.Historical | ⏭️  EGCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:27 [INFO] Trinity.Historical | ⏭️  ERW | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:27 [INFO] Trinity.Historical | ⏭️  GFPT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:27 [INFO] Trinity.Historical | ⏭️  GLOBAL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:28 [INFO] Trinity.Historical | 📦 Batch 5/10: GPSC, GULF, GUNKUL, HANA, HMPRO, ICHI, IRPC, IVL, JAS, JMART
+2026-03-11 16:59:29 [INFO] Trinity.Historical | ⏭️  GPSC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:29 [INFO] Trinity.Historical | ⏭️  GULF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:29 [INFO] Trinity.Historical | ⏭️  GUNKUL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:29 [INFO] Trinity.Historical | ⏭️  HANA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:29 [INFO] Trinity.Historical | ⏭️  HMPRO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:29 [INFO] Trinity.Historical | ⏭️  ICHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:29 [INFO] Trinity.Historical | ⏭️  IRPC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:29 [INFO] Trinity.Historical | ⏭️  IVL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:29 [INFO] Trinity.Historical | ⏭️  JAS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:29 [INFO] Trinity.Historical | ⏭️  JMART | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:30 [INFO] Trinity.Historical | 📦 Batch 6/10: JMT, JTS, KBANK, KCE, KKP, KTB, KTC, LH, M, MEGA
+2026-03-11 16:59:30 [INFO] Trinity.Historical | ⏭️  JMT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:30 [INFO] Trinity.Historical | ⏭️  JTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:30 [INFO] Trinity.Historical | ⏭️  KBANK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:30 [INFO] Trinity.Historical | ⏭️  KCE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:30 [INFO] Trinity.Historical | ⏭️  KKP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:30 [INFO] Trinity.Historical | ⏭️  KTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:30 [INFO] Trinity.Historical | ⏭️  KTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:30 [INFO] Trinity.Historical | ⏭️  LH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:30 [INFO] Trinity.Historical | ⏭️  M | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:30 [INFO] Trinity.Historical | ⏭️  MEGA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:31 [INFO] Trinity.Historical | 📦 Batch 7/10: MINT, MOSHI, MTC, OR, OSP, PLANB, PR9, PRM, PTG, PTT
+2026-03-11 16:59:31 [INFO] Trinity.Historical | ⏭️  MINT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:31 [INFO] Trinity.Historical | ⏭️  MOSHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:31 [INFO] Trinity.Historical | ⏭️  MTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:31 [INFO] Trinity.Historical | ⏭️  OR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:31 [INFO] Trinity.Historical | ⏭️  OSP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:31 [INFO] Trinity.Historical | ⏭️  PLANB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:31 [INFO] Trinity.Historical | ⏭️  PR9 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:31 [INFO] Trinity.Historical | ⏭️  PRM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:31 [INFO] Trinity.Historical | ⏭️  PTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:31 [INFO] Trinity.Historical | ⏭️  PTT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:32 [INFO] Trinity.Historical | 📦 Batch 8/10: PTTEP, PTTGC, QH, RATCH, RCL, SAWAD, SCB, SCC, SCGP, SIRI
+2026-03-11 16:59:32 [INFO] Trinity.Historical | ⏭️  PTTEP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:32 [INFO] Trinity.Historical | ⏭️  PTTGC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:32 [INFO] Trinity.Historical | ⏭️  QH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:32 [INFO] Trinity.Historical | ⏭️  RATCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:32 [INFO] Trinity.Historical | ⏭️  RCL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:32 [INFO] Trinity.Historical | ⏭️  SAWAD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:32 [INFO] Trinity.Historical | ⏭️  SCB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:32 [INFO] Trinity.Historical | ⏭️  SCC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:32 [INFO] Trinity.Historical | ⏭️  SCGP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:32 [INFO] Trinity.Historical | ⏭️  SIRI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:33 [INFO] Trinity.Historical | 📦 Batch 9/10: SISB, SJWD, SPALI, SPRC, STA, STECON, STGT, TASCO, TCAP, TFG
+2026-03-11 16:59:34 [INFO] Trinity.Historical | ⏭️  SISB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:34 [INFO] Trinity.Historical | ⏭️  SJWD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:34 [INFO] Trinity.Historical | ⏭️  SPALI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:34 [INFO] Trinity.Historical | ⏭️  SPRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:34 [INFO] Trinity.Historical | ⏭️  STA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:34 [INFO] Trinity.Historical | ⏭️  STECON | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:34 [INFO] Trinity.Historical | ⏭️  STGT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:34 [INFO] Trinity.Historical | ⏭️  TASCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:34 [INFO] Trinity.Historical | ⏭️  TCAP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:34 [INFO] Trinity.Historical | ⏭️  TFG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:35 [INFO] Trinity.Historical | 📦 Batch 10/10: TIDLOR, TISCO, TLI, TOA, TOP, TRUE, TTB, TU, VGI, WHA
+2026-03-11 16:59:35 [INFO] Trinity.Historical | ⏭️  TIDLOR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:35 [INFO] Trinity.Historical | ⏭️  TISCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:35 [INFO] Trinity.Historical | ⏭️  TLI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:35 [INFO] Trinity.Historical | ⏭️  TOA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:35 [INFO] Trinity.Historical | ⏭️  TOP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:35 [INFO] Trinity.Historical | ⏭️  TRUE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:35 [INFO] Trinity.Historical | ⏭️  TTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:35 [INFO] Trinity.Historical | ⏭️  TU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:35 [INFO] Trinity.Historical | ⏭️  VGI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:35 [INFO] Trinity.Historical | ⏭️  WHA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 16:59:35 [INFO] Trinity.Historical | 🔄 อัปเดต Prediction Accuracy สำหรับ 0 หุ้น...
+2026-03-11 16:59:35 [INFO] Trinity.Historical | ============================================================
+2026-03-11 16:59:35 [INFO] Trinity.Historical | 🏁 Batch Process Completed in 13.1s
+2026-03-11 16:59:35 [INFO] Trinity.Historical |    📊 New rows archived : 0
+2026-03-11 16:59:35 [INFO] Trinity.Historical |    ❌ Failed symbols    : 0
+2026-03-11 16:59:35 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:11:20 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:11:20 [INFO] Trinity.Historical | 🚀 Trinity EOD Archive | 2026-03-11 17:11:20
+2026-03-11 17:11:20 [INFO] Trinity.Historical | 🔖 Batch Process Started | symbols=100
+2026-03-11 17:11:20 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:11:20 [INFO] Trinity.Historical | 🔍 ตรวจสอบวันที่ล่าสุดใน DB สำหรับแต่ละหุ้น...
+2026-03-11 17:11:21 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?select=symbol%2C%20date&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&order=date.desc "HTTP/2 200 OK"
+2026-03-11 17:11:21 [INFO] Trinity.Historical | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-11 17:11:22 [INFO] Trinity.Historical | ⏭️  AAV | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:22 [INFO] Trinity.Historical | ⏭️  ADVANC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:22 [INFO] Trinity.Historical | ⏭️  AEONTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:22 [INFO] Trinity.Historical | ⏭️  AMATA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:22 [INFO] Trinity.Historical | ⏭️  AOT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:22 [INFO] Trinity.Historical | ⏭️  AP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:22 [INFO] Trinity.Historical | ⏭️  AURA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:22 [INFO] Trinity.Historical | ⏭️  AWC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:22 [INFO] Trinity.Historical | ⏭️  BA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:22 [INFO] Trinity.Historical | ⏭️  BAM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:23 [INFO] Trinity.Historical | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-11 17:11:23 [INFO] Trinity.Historical | ⏭️  BANPU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:23 [INFO] Trinity.Historical | ⏭️  BBL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:23 [INFO] Trinity.Historical | ⏭️  BCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:23 [INFO] Trinity.Historical | ⏭️  BCP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:23 [INFO] Trinity.Historical | ⏭️  BCPG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:23 [INFO] Trinity.Historical | ⏭️  BDMS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:23 [INFO] Trinity.Historical | ⏭️  BEM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:23 [INFO] Trinity.Historical | ⏭️  BGRIM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:23 [INFO] Trinity.Historical | ⏭️  BH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:23 [INFO] Trinity.Historical | ⏭️  BJC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:24 [INFO] Trinity.Historical | 📦 Batch 3/10: BLA, BTG, BTS, CBG, CCET, CENTEL, CHG, CK, COM7, CPALL
+2026-03-11 17:11:24 [INFO] Trinity.Historical | ⏭️  BLA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:24 [INFO] Trinity.Historical | ⏭️  BTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:24 [INFO] Trinity.Historical | ⏭️  BTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:24 [INFO] Trinity.Historical | ⏭️  CBG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:24 [INFO] Trinity.Historical | ⏭️  CCET | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:24 [INFO] Trinity.Historical | ⏭️  CENTEL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:24 [INFO] Trinity.Historical | ⏭️  CHG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:24 [INFO] Trinity.Historical | ⏭️  CK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:24 [INFO] Trinity.Historical | ⏭️  COM7 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:24 [INFO] Trinity.Historical | ⏭️  CPALL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:25 [INFO] Trinity.Historical | 📦 Batch 4/10: CPF, CPN, CRC, DELTA, DOHOME, EA, EGCO, ERW, GFPT, GLOBAL
+2026-03-11 17:11:25 [INFO] Trinity.Historical | ⏭️  CPF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:25 [INFO] Trinity.Historical | ⏭️  CPN | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:25 [INFO] Trinity.Historical | ⏭️  CRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:25 [INFO] Trinity.Historical | ⏭️  DELTA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:25 [INFO] Trinity.Historical | ⏭️  DOHOME | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:25 [INFO] Trinity.Historical | ⏭️  EA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:25 [INFO] Trinity.Historical | ⏭️  EGCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:25 [INFO] Trinity.Historical | ⏭️  ERW | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:25 [INFO] Trinity.Historical | ⏭️  GFPT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:25 [INFO] Trinity.Historical | ⏭️  GLOBAL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:26 [INFO] Trinity.Historical | 📦 Batch 5/10: GPSC, GULF, GUNKUL, HANA, HMPRO, ICHI, IRPC, IVL, JAS, JMART
+2026-03-11 17:11:26 [INFO] Trinity.Historical | ⏭️  GPSC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:26 [INFO] Trinity.Historical | ⏭️  GULF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:26 [INFO] Trinity.Historical | ⏭️  GUNKUL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:26 [INFO] Trinity.Historical | ⏭️  HANA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:26 [INFO] Trinity.Historical | ⏭️  HMPRO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:26 [INFO] Trinity.Historical | ⏭️  ICHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:26 [INFO] Trinity.Historical | ⏭️  IRPC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:26 [INFO] Trinity.Historical | ⏭️  IVL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:26 [INFO] Trinity.Historical | ⏭️  JAS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:26 [INFO] Trinity.Historical | ⏭️  JMART | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:27 [INFO] Trinity.Historical | 📦 Batch 6/10: JMT, JTS, KBANK, KCE, KKP, KTB, KTC, LH, M, MEGA
+2026-03-11 17:11:28 [INFO] Trinity.Historical | ⏭️  JMT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:28 [INFO] Trinity.Historical | ⏭️  JTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:28 [INFO] Trinity.Historical | ⏭️  KBANK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:28 [INFO] Trinity.Historical | ⏭️  KCE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:28 [INFO] Trinity.Historical | ⏭️  KKP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:28 [INFO] Trinity.Historical | ⏭️  KTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:28 [INFO] Trinity.Historical | ⏭️  KTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:28 [INFO] Trinity.Historical | ⏭️  LH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:28 [INFO] Trinity.Historical | ⏭️  M | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:28 [INFO] Trinity.Historical | ⏭️  MEGA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:29 [INFO] Trinity.Historical | 📦 Batch 7/10: MINT, MOSHI, MTC, OR, OSP, PLANB, PR9, PRM, PTG, PTT
+2026-03-11 17:11:29 [INFO] Trinity.Historical | ⏭️  MINT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:29 [INFO] Trinity.Historical | ⏭️  MOSHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:29 [INFO] Trinity.Historical | ⏭️  MTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:29 [INFO] Trinity.Historical | ⏭️  OR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:29 [INFO] Trinity.Historical | ⏭️  OSP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:29 [INFO] Trinity.Historical | ⏭️  PLANB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:29 [INFO] Trinity.Historical | ⏭️  PR9 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:29 [INFO] Trinity.Historical | ⏭️  PRM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:29 [INFO] Trinity.Historical | ⏭️  PTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:29 [INFO] Trinity.Historical | ⏭️  PTT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:30 [INFO] Trinity.Historical | 📦 Batch 8/10: PTTEP, PTTGC, QH, RATCH, RCL, SAWAD, SCB, SCC, SCGP, SIRI
+2026-03-11 17:11:30 [INFO] Trinity.Historical | ⏭️  PTTEP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:30 [INFO] Trinity.Historical | ⏭️  PTTGC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:30 [INFO] Trinity.Historical | ⏭️  QH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:30 [INFO] Trinity.Historical | ⏭️  RATCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:30 [INFO] Trinity.Historical | ⏭️  RCL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:30 [INFO] Trinity.Historical | ⏭️  SAWAD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:30 [INFO] Trinity.Historical | ⏭️  SCB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:30 [INFO] Trinity.Historical | ⏭️  SCC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:30 [INFO] Trinity.Historical | ⏭️  SCGP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:30 [INFO] Trinity.Historical | ⏭️  SIRI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:31 [INFO] Trinity.Historical | 📦 Batch 9/10: SISB, SJWD, SPALI, SPRC, STA, STECON, STGT, TASCO, TCAP, TFG
+2026-03-11 17:11:31 [INFO] Trinity.Historical | ⏭️  SISB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:31 [INFO] Trinity.Historical | ⏭️  SJWD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:31 [INFO] Trinity.Historical | ⏭️  SPALI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:31 [INFO] Trinity.Historical | ⏭️  SPRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:31 [INFO] Trinity.Historical | ⏭️  STA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:31 [INFO] Trinity.Historical | ⏭️  STECON | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:31 [INFO] Trinity.Historical | ⏭️  STGT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:31 [INFO] Trinity.Historical | ⏭️  TASCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:31 [INFO] Trinity.Historical | ⏭️  TCAP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:31 [INFO] Trinity.Historical | ⏭️  TFG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:32 [INFO] Trinity.Historical | 📦 Batch 10/10: TIDLOR, TISCO, TLI, TOA, TOP, TRUE, TTB, TU, VGI, WHA
+2026-03-11 17:11:33 [INFO] Trinity.Historical | ⏭️  TIDLOR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:33 [INFO] Trinity.Historical | ⏭️  TISCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:33 [INFO] Trinity.Historical | ⏭️  TLI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:33 [INFO] Trinity.Historical | ⏭️  TOA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:33 [INFO] Trinity.Historical | ⏭️  TOP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:33 [INFO] Trinity.Historical | ⏭️  TRUE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:33 [INFO] Trinity.Historical | ⏭️  TTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:33 [INFO] Trinity.Historical | ⏭️  TU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:33 [INFO] Trinity.Historical | ⏭️  VGI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:33 [INFO] Trinity.Historical | ⏭️  WHA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:11:33 [INFO] Trinity.Historical | 🔄 อัปเดต Prediction Accuracy สำหรับ 0 หุ้น...
+2026-03-11 17:11:33 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:11:33 [INFO] Trinity.Historical | 🏁 Batch Process Completed in 12.8s
+2026-03-11 17:11:33 [INFO] Trinity.Historical |    📊 New rows archived : 0
+2026-03-11 17:11:33 [INFO] Trinity.Historical |    ❌ Failed symbols    : 0
+2026-03-11 17:11:33 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:18:41 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:18:41 [INFO] Trinity.Historical | 🚀 Trinity EOD Archive | 2026-03-11 17:18:41
+2026-03-11 17:18:41 [INFO] Trinity.Historical | 🔖 Batch Process Started | symbols=100
+2026-03-11 17:18:41 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:18:41 [INFO] Trinity.Historical | 🔍 ตรวจสอบวันที่ล่าสุดใน DB สำหรับแต่ละหุ้น...
+2026-03-11 17:18:42 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?select=symbol%2C%20date&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&order=date.desc "HTTP/2 200 OK"
+2026-03-11 17:18:42 [INFO] Trinity.Historical | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-11 17:18:43 [INFO] Trinity.Historical | ⏭️  AAV | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:43 [INFO] Trinity.Historical | ⏭️  ADVANC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:43 [INFO] Trinity.Historical | ⏭️  AEONTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:43 [INFO] Trinity.Historical | ⏭️  AMATA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:43 [INFO] Trinity.Historical | ⏭️  AOT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:43 [INFO] Trinity.Historical | ⏭️  AP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:43 [INFO] Trinity.Historical | ⏭️  AURA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:43 [INFO] Trinity.Historical | ⏭️  AWC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:43 [INFO] Trinity.Historical | ⏭️  BA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:43 [INFO] Trinity.Historical | ⏭️  BAM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:44 [INFO] Trinity.Historical | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-11 17:18:44 [INFO] Trinity.Historical | ⏭️  BANPU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:44 [INFO] Trinity.Historical | ⏭️  BBL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:44 [INFO] Trinity.Historical | ⏭️  BCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:44 [INFO] Trinity.Historical | ⏭️  BCP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:44 [INFO] Trinity.Historical | ⏭️  BCPG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:44 [INFO] Trinity.Historical | ⏭️  BDMS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:44 [INFO] Trinity.Historical | ⏭️  BEM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:44 [INFO] Trinity.Historical | ⏭️  BGRIM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:44 [INFO] Trinity.Historical | ⏭️  BH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:44 [INFO] Trinity.Historical | ⏭️  BJC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:45 [INFO] Trinity.Historical | 📦 Batch 3/10: BLA, BTG, BTS, CBG, CCET, CENTEL, CHG, CK, COM7, CPALL
+2026-03-11 17:18:46 [INFO] Trinity.Historical | ⏭️  BLA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:46 [INFO] Trinity.Historical | ⏭️  BTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:46 [INFO] Trinity.Historical | ⏭️  BTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:46 [INFO] Trinity.Historical | ⏭️  CBG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:46 [INFO] Trinity.Historical | ⏭️  CCET | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:46 [INFO] Trinity.Historical | ⏭️  CENTEL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:46 [INFO] Trinity.Historical | ⏭️  CHG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:46 [INFO] Trinity.Historical | ⏭️  CK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:46 [INFO] Trinity.Historical | ⏭️  COM7 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:46 [INFO] Trinity.Historical | ⏭️  CPALL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:47 [INFO] Trinity.Historical | 📦 Batch 4/10: CPF, CPN, CRC, DELTA, DOHOME, EA, EGCO, ERW, GFPT, GLOBAL
+2026-03-11 17:18:47 [INFO] Trinity.Historical | ⏭️  CPF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:47 [INFO] Trinity.Historical | ⏭️  CPN | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:47 [INFO] Trinity.Historical | ⏭️  CRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:47 [INFO] Trinity.Historical | ⏭️  DELTA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:47 [INFO] Trinity.Historical | ⏭️  DOHOME | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:47 [INFO] Trinity.Historical | ⏭️  EA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:47 [INFO] Trinity.Historical | ⏭️  EGCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:47 [INFO] Trinity.Historical | ⏭️  ERW | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:47 [INFO] Trinity.Historical | ⏭️  GFPT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:47 [INFO] Trinity.Historical | ⏭️  GLOBAL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:48 [INFO] Trinity.Historical | 📦 Batch 5/10: GPSC, GULF, GUNKUL, HANA, HMPRO, ICHI, IRPC, IVL, JAS, JMART
+2026-03-11 17:18:48 [INFO] Trinity.Historical | ⏭️  GPSC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:48 [INFO] Trinity.Historical | ⏭️  GULF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:48 [INFO] Trinity.Historical | ⏭️  GUNKUL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:48 [INFO] Trinity.Historical | ⏭️  HANA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:48 [INFO] Trinity.Historical | ⏭️  HMPRO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:48 [INFO] Trinity.Historical | ⏭️  ICHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:48 [INFO] Trinity.Historical | ⏭️  IRPC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:48 [INFO] Trinity.Historical | ⏭️  IVL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:48 [INFO] Trinity.Historical | ⏭️  JAS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:48 [INFO] Trinity.Historical | ⏭️  JMART | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:49 [INFO] Trinity.Historical | 📦 Batch 6/10: JMT, JTS, KBANK, KCE, KKP, KTB, KTC, LH, M, MEGA
+2026-03-11 17:18:49 [INFO] Trinity.Historical | ⏭️  JMT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:49 [INFO] Trinity.Historical | ⏭️  JTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:49 [INFO] Trinity.Historical | ⏭️  KBANK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:49 [INFO] Trinity.Historical | ⏭️  KCE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:49 [INFO] Trinity.Historical | ⏭️  KKP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:49 [INFO] Trinity.Historical | ⏭️  KTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:49 [INFO] Trinity.Historical | ⏭️  KTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:49 [INFO] Trinity.Historical | ⏭️  LH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:49 [INFO] Trinity.Historical | ⏭️  M | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:49 [INFO] Trinity.Historical | ⏭️  MEGA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:50 [INFO] Trinity.Historical | 📦 Batch 7/10: MINT, MOSHI, MTC, OR, OSP, PLANB, PR9, PRM, PTG, PTT
+2026-03-11 17:18:51 [INFO] Trinity.Historical | ⏭️  MINT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:51 [INFO] Trinity.Historical | ⏭️  MOSHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:51 [INFO] Trinity.Historical | ⏭️  MTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:51 [INFO] Trinity.Historical | ⏭️  OR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:51 [INFO] Trinity.Historical | ⏭️  OSP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:51 [INFO] Trinity.Historical | ⏭️  PLANB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:51 [INFO] Trinity.Historical | ⏭️  PR9 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:51 [INFO] Trinity.Historical | ⏭️  PRM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:51 [INFO] Trinity.Historical | ⏭️  PTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:51 [INFO] Trinity.Historical | ⏭️  PTT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:52 [INFO] Trinity.Historical | 📦 Batch 8/10: PTTEP, PTTGC, QH, RATCH, RCL, SAWAD, SCB, SCC, SCGP, SIRI
+2026-03-11 17:18:52 [INFO] Trinity.Historical | ⏭️  PTTEP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:52 [INFO] Trinity.Historical | ⏭️  PTTGC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:52 [INFO] Trinity.Historical | ⏭️  QH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:52 [INFO] Trinity.Historical | ⏭️  RATCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:52 [INFO] Trinity.Historical | ⏭️  RCL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:52 [INFO] Trinity.Historical | ⏭️  SAWAD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:52 [INFO] Trinity.Historical | ⏭️  SCB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:52 [INFO] Trinity.Historical | ⏭️  SCC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:52 [INFO] Trinity.Historical | ⏭️  SCGP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:52 [INFO] Trinity.Historical | ⏭️  SIRI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:53 [INFO] Trinity.Historical | 📦 Batch 9/10: SISB, SJWD, SPALI, SPRC, STA, STECON, STGT, TASCO, TCAP, TFG
+2026-03-11 17:18:53 [INFO] Trinity.Historical | ⏭️  SISB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:53 [INFO] Trinity.Historical | ⏭️  SJWD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:53 [INFO] Trinity.Historical | ⏭️  SPALI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:53 [INFO] Trinity.Historical | ⏭️  SPRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:53 [INFO] Trinity.Historical | ⏭️  STA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:53 [INFO] Trinity.Historical | ⏭️  STECON | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:53 [INFO] Trinity.Historical | ⏭️  STGT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:53 [INFO] Trinity.Historical | ⏭️  TASCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:53 [INFO] Trinity.Historical | ⏭️  TCAP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:53 [INFO] Trinity.Historical | ⏭️  TFG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:54 [INFO] Trinity.Historical | 📦 Batch 10/10: TIDLOR, TISCO, TLI, TOA, TOP, TRUE, TTB, TU, VGI, WHA
+2026-03-11 17:18:54 [INFO] Trinity.Historical | ⏭️  TIDLOR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:54 [INFO] Trinity.Historical | ⏭️  TISCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:54 [INFO] Trinity.Historical | ⏭️  TLI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:54 [INFO] Trinity.Historical | ⏭️  TOA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:54 [INFO] Trinity.Historical | ⏭️  TOP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:54 [INFO] Trinity.Historical | ⏭️  TRUE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:54 [INFO] Trinity.Historical | ⏭️  TTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:54 [INFO] Trinity.Historical | ⏭️  TU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:54 [INFO] Trinity.Historical | ⏭️  VGI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:54 [INFO] Trinity.Historical | ⏭️  WHA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:18:54 [INFO] Trinity.Historical | 🔄 อัปเดต Prediction Accuracy สำหรับ 0 หุ้น...
+2026-03-11 17:18:54 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:18:54 [INFO] Trinity.Historical | 🏁 Batch Process Completed in 13.2s
+2026-03-11 17:18:54 [INFO] Trinity.Historical |    📊 New rows archived : 0
+2026-03-11 17:18:54 [INFO] Trinity.Historical |    ❌ Failed symbols    : 0
+2026-03-11 17:18:54 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:20:34 [INFO] Trinity.Historical | 🔁 Force Backfill mode: 1 วัน
+2026-03-11 17:20:34 [INFO] Trinity.Historical | 📅 Backfill start date: 2026-03-10
+2026-03-11 17:20:34 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:20:34 [INFO] Trinity.Historical | 🚀 Trinity EOD Archive | 2026-03-11 17:20:34
+2026-03-11 17:20:34 [INFO] Trinity.Historical | 🔖 Batch Process Started | symbols=100
+2026-03-11 17:20:34 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:20:34 [INFO] Trinity.Historical | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-11 17:20:35 [WARNING] Trinity.Historical | ⚠️ AAV | No Data from yfinance
+2026-03-11 17:20:35 [WARNING] Trinity.Historical | ⚠️ ADVANC | No Data from yfinance
+2026-03-11 17:20:35 [WARNING] Trinity.Historical | ⚠️ AEONTS | No Data from yfinance
+2026-03-11 17:20:35 [WARNING] Trinity.Historical | ⚠️ AMATA | No Data from yfinance
+2026-03-11 17:20:35 [WARNING] Trinity.Historical | ⚠️ AOT | No Data from yfinance
+2026-03-11 17:20:35 [WARNING] Trinity.Historical | ⚠️ AP | No Data from yfinance
+2026-03-11 17:20:35 [WARNING] Trinity.Historical | ⚠️ AURA | No Data from yfinance
+2026-03-11 17:20:35 [WARNING] Trinity.Historical | ⚠️ AWC | No Data from yfinance
+2026-03-11 17:20:35 [WARNING] Trinity.Historical | ⚠️ BA | No Data from yfinance
+2026-03-11 17:20:35 [WARNING] Trinity.Historical | ⚠️ BAM | No Data from yfinance
+2026-03-11 17:20:36 [INFO] Trinity.Historical | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-11 17:20:37 [WARNING] Trinity.Historical | ⚠️ BANPU | No Data from yfinance
+2026-03-11 17:20:37 [WARNING] Trinity.Historical | ⚠️ BBL | No Data from yfinance
+2026-03-11 17:20:37 [WARNING] Trinity.Historical | ⚠️ BCH | No Data from yfinance
+2026-03-11 17:20:37 [WARNING] Trinity.Historical | ⚠️ BCP | No Data from yfinance
+2026-03-11 17:20:37 [WARNING] Trinity.Historical | ⚠️ BCPG | No Data from yfinance
+2026-03-11 17:20:37 [WARNING] Trinity.Historical | ⚠️ BDMS | No Data from yfinance
+2026-03-11 17:20:37 [WARNING] Trinity.Historical | ⚠️ BEM | No Data from yfinance
+2026-03-11 17:20:37 [WARNING] Trinity.Historical | ⚠️ BGRIM | No Data from yfinance
+2026-03-11 17:20:37 [WARNING] Trinity.Historical | ⚠️ BH | No Data from yfinance
+2026-03-11 17:20:37 [WARNING] Trinity.Historical | ⚠️ BJC | No Data from yfinance
+2026-03-11 17:20:38 [INFO] Trinity.Historical | 📦 Batch 3/10: BLA, BTG, BTS, CBG, CCET, CENTEL, CHG, CK, COM7, CPALL
+2026-03-11 17:20:39 [WARNING] Trinity.Historical | ⚠️ BLA | No Data from yfinance
+2026-03-11 17:20:39 [WARNING] Trinity.Historical | ⚠️ BTG | No Data from yfinance
+2026-03-11 17:20:39 [WARNING] Trinity.Historical | ⚠️ BTS | No Data from yfinance
+2026-03-11 17:20:39 [WARNING] Trinity.Historical | ⚠️ CBG | No Data from yfinance
+2026-03-11 17:20:39 [WARNING] Trinity.Historical | ⚠️ CCET | No Data from yfinance
+2026-03-11 17:20:39 [WARNING] Trinity.Historical | ⚠️ CENTEL | No Data from yfinance
+2026-03-11 17:20:39 [WARNING] Trinity.Historical | ⚠️ CHG | No Data from yfinance
+2026-03-11 17:20:39 [WARNING] Trinity.Historical | ⚠️ CK | No Data from yfinance
+2026-03-11 17:20:39 [WARNING] Trinity.Historical | ⚠️ COM7 | No Data from yfinance
+2026-03-11 17:20:39 [WARNING] Trinity.Historical | ⚠️ CPALL | No Data from yfinance
+2026-03-11 17:20:40 [INFO] Trinity.Historical | 📦 Batch 4/10: CPF, CPN, CRC, DELTA, DOHOME, EA, EGCO, ERW, GFPT, GLOBAL
+2026-03-11 17:20:41 [WARNING] Trinity.Historical | ⚠️ CPF | No Data from yfinance
+2026-03-11 17:20:41 [WARNING] Trinity.Historical | ⚠️ CPN | No Data from yfinance
+2026-03-11 17:20:41 [WARNING] Trinity.Historical | ⚠️ CRC | No Data from yfinance
+2026-03-11 17:20:41 [WARNING] Trinity.Historical | ⚠️ DELTA | No Data from yfinance
+2026-03-11 17:20:41 [WARNING] Trinity.Historical | ⚠️ DOHOME | No Data from yfinance
+2026-03-11 17:20:41 [WARNING] Trinity.Historical | ⚠️ EA | No Data from yfinance
+2026-03-11 17:20:41 [WARNING] Trinity.Historical | ⚠️ EGCO | No Data from yfinance
+2026-03-11 17:20:41 [WARNING] Trinity.Historical | ⚠️ ERW | No Data from yfinance
+2026-03-11 17:20:41 [WARNING] Trinity.Historical | ⚠️ GFPT | No Data from yfinance
+2026-03-11 17:20:41 [WARNING] Trinity.Historical | ⚠️ GLOBAL | No Data from yfinance
+2026-03-11 17:20:42 [INFO] Trinity.Historical | 📦 Batch 5/10: GPSC, GULF, GUNKUL, HANA, HMPRO, ICHI, IRPC, IVL, JAS, JMART
+2026-03-11 17:20:42 [WARNING] Trinity.Historical | ⚠️ GPSC | No Data from yfinance
+2026-03-11 17:20:42 [WARNING] Trinity.Historical | ⚠️ GULF | No Data from yfinance
+2026-03-11 17:20:42 [WARNING] Trinity.Historical | ⚠️ GUNKUL | No Data from yfinance
+2026-03-11 17:20:42 [WARNING] Trinity.Historical | ⚠️ HANA | No Data from yfinance
+2026-03-11 17:20:42 [WARNING] Trinity.Historical | ⚠️ HMPRO | No Data from yfinance
+2026-03-11 17:20:42 [WARNING] Trinity.Historical | ⚠️ ICHI | No Data from yfinance
+2026-03-11 17:20:42 [WARNING] Trinity.Historical | ⚠️ IRPC | No Data from yfinance
+2026-03-11 17:20:42 [WARNING] Trinity.Historical | ⚠️ IVL | No Data from yfinance
+2026-03-11 17:20:42 [WARNING] Trinity.Historical | ⚠️ JAS | No Data from yfinance
+2026-03-11 17:20:42 [WARNING] Trinity.Historical | ⚠️ JMART | No Data from yfinance
+2026-03-11 17:20:43 [INFO] Trinity.Historical | 📦 Batch 6/10: JMT, JTS, KBANK, KCE, KKP, KTB, KTC, LH, M, MEGA
+2026-03-11 17:20:44 [WARNING] Trinity.Historical | ⚠️ JMT | No Data from yfinance
+2026-03-11 17:20:44 [WARNING] Trinity.Historical | ⚠️ JTS | No Data from yfinance
+2026-03-11 17:20:44 [WARNING] Trinity.Historical | ⚠️ KBANK | No Data from yfinance
+2026-03-11 17:20:44 [WARNING] Trinity.Historical | ⚠️ KCE | No Data from yfinance
+2026-03-11 17:20:44 [WARNING] Trinity.Historical | ⚠️ KKP | No Data from yfinance
+2026-03-11 17:20:44 [WARNING] Trinity.Historical | ⚠️ KTB | No Data from yfinance
+2026-03-11 17:20:44 [WARNING] Trinity.Historical | ⚠️ KTC | No Data from yfinance
+2026-03-11 17:20:44 [WARNING] Trinity.Historical | ⚠️ LH | No Data from yfinance
+2026-03-11 17:20:44 [WARNING] Trinity.Historical | ⚠️ M | No Data from yfinance
+2026-03-11 17:20:44 [WARNING] Trinity.Historical | ⚠️ MEGA | No Data from yfinance
+2026-03-11 17:20:45 [INFO] Trinity.Historical | 📦 Batch 7/10: MINT, MOSHI, MTC, OR, OSP, PLANB, PR9, PRM, PTG, PTT
+2026-03-11 17:20:46 [WARNING] Trinity.Historical | ⚠️ MINT | No Data from yfinance
+2026-03-11 17:20:46 [WARNING] Trinity.Historical | ⚠️ MOSHI | No Data from yfinance
+2026-03-11 17:20:46 [WARNING] Trinity.Historical | ⚠️ MTC | No Data from yfinance
+2026-03-11 17:20:46 [WARNING] Trinity.Historical | ⚠️ OR | No Data from yfinance
+2026-03-11 17:20:46 [WARNING] Trinity.Historical | ⚠️ OSP | No Data from yfinance
+2026-03-11 17:20:46 [WARNING] Trinity.Historical | ⚠️ PLANB | No Data from yfinance
+2026-03-11 17:20:46 [WARNING] Trinity.Historical | ⚠️ PR9 | No Data from yfinance
+2026-03-11 17:20:46 [WARNING] Trinity.Historical | ⚠️ PRM | No Data from yfinance
+2026-03-11 17:20:46 [WARNING] Trinity.Historical | ⚠️ PTG | No Data from yfinance
+2026-03-11 17:20:46 [WARNING] Trinity.Historical | ⚠️ PTT | No Data from yfinance
+2026-03-11 17:20:47 [INFO] Trinity.Historical | 📦 Batch 8/10: PTTEP, PTTGC, QH, RATCH, RCL, SAWAD, SCB, SCC, SCGP, SIRI
+2026-03-11 17:20:48 [WARNING] Trinity.Historical | ⚠️ PTTEP | No Data from yfinance
+2026-03-11 17:20:48 [WARNING] Trinity.Historical | ⚠️ PTTGC | No Data from yfinance
+2026-03-11 17:20:48 [WARNING] Trinity.Historical | ⚠️ QH | No Data from yfinance
+2026-03-11 17:20:48 [WARNING] Trinity.Historical | ⚠️ RATCH | No Data from yfinance
+2026-03-11 17:20:48 [WARNING] Trinity.Historical | ⚠️ RCL | No Data from yfinance
+2026-03-11 17:20:48 [WARNING] Trinity.Historical | ⚠️ SAWAD | No Data from yfinance
+2026-03-11 17:20:48 [WARNING] Trinity.Historical | ⚠️ SCB | No Data from yfinance
+2026-03-11 17:20:48 [WARNING] Trinity.Historical | ⚠️ SCC | No Data from yfinance
+2026-03-11 17:20:48 [WARNING] Trinity.Historical | ⚠️ SCGP | No Data from yfinance
+2026-03-11 17:20:48 [WARNING] Trinity.Historical | ⚠️ SIRI | No Data from yfinance
+2026-03-11 17:20:49 [INFO] Trinity.Historical | 📦 Batch 9/10: SISB, SJWD, SPALI, SPRC, STA, STECON, STGT, TASCO, TCAP, TFG
+2026-03-11 17:20:50 [WARNING] Trinity.Historical | ⚠️ SISB | No Data from yfinance
+2026-03-11 17:20:50 [WARNING] Trinity.Historical | ⚠️ SJWD | No Data from yfinance
+2026-03-11 17:20:50 [WARNING] Trinity.Historical | ⚠️ SPALI | No Data from yfinance
+2026-03-11 17:20:50 [WARNING] Trinity.Historical | ⚠️ SPRC | No Data from yfinance
+2026-03-11 17:20:50 [WARNING] Trinity.Historical | ⚠️ STA | No Data from yfinance
+2026-03-11 17:20:50 [WARNING] Trinity.Historical | ⚠️ STECON | No Data from yfinance
+2026-03-11 17:20:50 [WARNING] Trinity.Historical | ⚠️ STGT | No Data from yfinance
+2026-03-11 17:20:50 [WARNING] Trinity.Historical | ⚠️ TASCO | No Data from yfinance
+2026-03-11 17:20:50 [WARNING] Trinity.Historical | ⚠️ TCAP | No Data from yfinance
+2026-03-11 17:20:50 [WARNING] Trinity.Historical | ⚠️ TFG | No Data from yfinance
+2026-03-11 17:20:51 [INFO] Trinity.Historical | 📦 Batch 10/10: TIDLOR, TISCO, TLI, TOA, TOP, TRUE, TTB, TU, VGI, WHA
+2026-03-11 17:20:51 [WARNING] Trinity.Historical | ⚠️ TIDLOR | No Data from yfinance
+2026-03-11 17:20:51 [WARNING] Trinity.Historical | ⚠️ TISCO | No Data from yfinance
+2026-03-11 17:20:51 [WARNING] Trinity.Historical | ⚠️ TLI | No Data from yfinance
+2026-03-11 17:20:51 [WARNING] Trinity.Historical | ⚠️ TOA | No Data from yfinance
+2026-03-11 17:20:51 [WARNING] Trinity.Historical | ⚠️ TOP | No Data from yfinance
+2026-03-11 17:20:51 [WARNING] Trinity.Historical | ⚠️ TRUE | No Data from yfinance
+2026-03-11 17:20:51 [WARNING] Trinity.Historical | ⚠️ TTB | No Data from yfinance
+2026-03-11 17:20:51 [WARNING] Trinity.Historical | ⚠️ TU | No Data from yfinance
+2026-03-11 17:20:51 [WARNING] Trinity.Historical | ⚠️ VGI | No Data from yfinance
+2026-03-11 17:20:51 [WARNING] Trinity.Historical | ⚠️ WHA | No Data from yfinance
+2026-03-11 17:20:51 [INFO] Trinity.Historical | 🔄 อัปเดต Prediction Accuracy สำหรับ 0 หุ้น...
+2026-03-11 17:20:51 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:20:51 [INFO] Trinity.Historical | 🏁 Batch Process Completed in 17.5s
+2026-03-11 17:20:51 [INFO] Trinity.Historical |    📊 New rows archived : 0
+2026-03-11 17:20:51 [INFO] Trinity.Historical |    ❌ Failed symbols    : 100
+2026-03-11 17:20:51 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:25:31 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:25:31 [INFO] Trinity.Historical | 🚀 Trinity EOD Archive | 2026-03-11 17:25:31
+2026-03-11 17:25:31 [INFO] Trinity.Historical | 🔖 Batch Process Started | symbols=100
+2026-03-11 17:25:31 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:25:31 [INFO] Trinity.Historical | 🔍 ตรวจสอบวันที่ล่าสุดใน DB สำหรับแต่ละหุ้น...
+2026-03-11 17:25:31 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?select=symbol%2C%20date&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&order=date.desc "HTTP/2 200 OK"
+2026-03-11 17:25:31 [INFO] Trinity.Historical | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-11 17:25:32 [INFO] Trinity.Historical | ⏭️  AAV | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:32 [INFO] Trinity.Historical | ⏭️  ADVANC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:32 [INFO] Trinity.Historical | ⏭️  AEONTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:32 [INFO] Trinity.Historical | ⏭️  AMATA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:32 [INFO] Trinity.Historical | ⏭️  AOT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:32 [INFO] Trinity.Historical | ⏭️  AP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:32 [INFO] Trinity.Historical | ⏭️  AURA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:32 [INFO] Trinity.Historical | ⏭️  AWC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:32 [INFO] Trinity.Historical | ⏭️  BA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:32 [INFO] Trinity.Historical | ⏭️  BAM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:33 [INFO] Trinity.Historical | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-11 17:25:33 [INFO] Trinity.Historical | ⏭️  BANPU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:33 [INFO] Trinity.Historical | ⏭️  BBL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:33 [INFO] Trinity.Historical | ⏭️  BCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:33 [INFO] Trinity.Historical | ⏭️  BCP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:33 [INFO] Trinity.Historical | ⏭️  BCPG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:33 [INFO] Trinity.Historical | ⏭️  BDMS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:33 [INFO] Trinity.Historical | ⏭️  BEM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:33 [INFO] Trinity.Historical | ⏭️  BGRIM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:33 [INFO] Trinity.Historical | ⏭️  BH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:25:33 [INFO] Trinity.Historical | ⏭️  BJC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:03 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:30:03 [INFO] Trinity.Historical | 🚀 Trinity EOD Archive | 2026-03-11 17:30:03
+2026-03-11 17:30:03 [INFO] Trinity.Historical | 🔖 Batch Process Started | symbols=100
+2026-03-11 17:30:03 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:30:03 [INFO] Trinity.Historical | 🔍 ตรวจสอบวันที่ล่าสุดใน DB สำหรับแต่ละหุ้น...
+2026-03-11 17:30:04 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?select=symbol%2C%20date&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&order=date.desc "HTTP/2 200 OK"
+2026-03-11 17:30:04 [INFO] Trinity.Historical | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-11 17:30:05 [INFO] Trinity.Historical | ⏭️  AAV | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:05 [INFO] Trinity.Historical | ⏭️  ADVANC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:05 [INFO] Trinity.Historical | ⏭️  AEONTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:05 [INFO] Trinity.Historical | ⏭️  AMATA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:05 [INFO] Trinity.Historical | ⏭️  AOT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:05 [INFO] Trinity.Historical | ⏭️  AP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:05 [INFO] Trinity.Historical | ⏭️  AURA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:05 [INFO] Trinity.Historical | ⏭️  AWC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:05 [INFO] Trinity.Historical | ⏭️  BA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:05 [INFO] Trinity.Historical | ⏭️  BAM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:06 [INFO] Trinity.Historical | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-11 17:30:06 [INFO] Trinity.Historical | ⏭️  BANPU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:06 [INFO] Trinity.Historical | ⏭️  BBL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:06 [INFO] Trinity.Historical | ⏭️  BCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:06 [INFO] Trinity.Historical | ⏭️  BCP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:06 [INFO] Trinity.Historical | ⏭️  BCPG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:06 [INFO] Trinity.Historical | ⏭️  BDMS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:06 [INFO] Trinity.Historical | ⏭️  BEM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:06 [INFO] Trinity.Historical | ⏭️  BGRIM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:06 [INFO] Trinity.Historical | ⏭️  BH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:06 [INFO] Trinity.Historical | ⏭️  BJC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:07 [INFO] Trinity.Historical | 📦 Batch 3/10: BLA, BTG, BTS, CBG, CCET, CENTEL, CHG, CK, COM7, CPALL
+2026-03-11 17:30:07 [INFO] Trinity.Historical | ⏭️  BLA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:07 [INFO] Trinity.Historical | ⏭️  BTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:07 [INFO] Trinity.Historical | ⏭️  BTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:07 [INFO] Trinity.Historical | ⏭️  CBG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:07 [INFO] Trinity.Historical | ⏭️  CCET | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:07 [INFO] Trinity.Historical | ⏭️  CENTEL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:07 [INFO] Trinity.Historical | ⏭️  CHG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:07 [INFO] Trinity.Historical | ⏭️  CK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:07 [INFO] Trinity.Historical | ⏭️  COM7 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:07 [INFO] Trinity.Historical | ⏭️  CPALL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:08 [INFO] Trinity.Historical | 📦 Batch 4/10: CPF, CPN, CRC, DELTA, DOHOME, EA, EGCO, ERW, GFPT, GLOBAL
+2026-03-11 17:30:08 [INFO] Trinity.Historical | ⏭️  CPF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:08 [INFO] Trinity.Historical | ⏭️  CPN | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:08 [INFO] Trinity.Historical | ⏭️  CRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:08 [INFO] Trinity.Historical | ⏭️  DELTA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:08 [INFO] Trinity.Historical | ⏭️  DOHOME | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:08 [INFO] Trinity.Historical | ⏭️  EA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:08 [INFO] Trinity.Historical | ⏭️  EGCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:08 [INFO] Trinity.Historical | ⏭️  ERW | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:08 [INFO] Trinity.Historical | ⏭️  GFPT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:08 [INFO] Trinity.Historical | ⏭️  GLOBAL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:09 [INFO] Trinity.Historical | 📦 Batch 5/10: GPSC, GULF, GUNKUL, HANA, HMPRO, ICHI, IRPC, IVL, JAS, JMART
+2026-03-11 17:30:10 [INFO] Trinity.Historical | ⏭️  GPSC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:10 [INFO] Trinity.Historical | ⏭️  GULF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:10 [INFO] Trinity.Historical | ⏭️  GUNKUL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:10 [INFO] Trinity.Historical | ⏭️  HANA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:10 [INFO] Trinity.Historical | ⏭️  HMPRO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:10 [INFO] Trinity.Historical | ⏭️  ICHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:10 [INFO] Trinity.Historical | ⏭️  IRPC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:10 [INFO] Trinity.Historical | ⏭️  IVL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:10 [INFO] Trinity.Historical | ⏭️  JAS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:10 [INFO] Trinity.Historical | ⏭️  JMART | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:11 [INFO] Trinity.Historical | 📦 Batch 6/10: JMT, JTS, KBANK, KCE, KKP, KTB, KTC, LH, M, MEGA
+2026-03-11 17:30:11 [INFO] Trinity.Historical | ⏭️  JMT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:11 [INFO] Trinity.Historical | ⏭️  JTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:11 [INFO] Trinity.Historical | ⏭️  KBANK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:11 [INFO] Trinity.Historical | ⏭️  KCE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:11 [INFO] Trinity.Historical | ⏭️  KKP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:11 [INFO] Trinity.Historical | ⏭️  KTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:11 [INFO] Trinity.Historical | ⏭️  KTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:11 [INFO] Trinity.Historical | ⏭️  LH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:11 [INFO] Trinity.Historical | ⏭️  M | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:11 [INFO] Trinity.Historical | ⏭️  MEGA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:12 [INFO] Trinity.Historical | 📦 Batch 7/10: MINT, MOSHI, MTC, OR, OSP, PLANB, PR9, PRM, PTG, PTT
+2026-03-11 17:30:12 [INFO] Trinity.Historical | ⏭️  MINT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:12 [INFO] Trinity.Historical | ⏭️  MOSHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:12 [INFO] Trinity.Historical | ⏭️  MTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:12 [INFO] Trinity.Historical | ⏭️  OR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:12 [INFO] Trinity.Historical | ⏭️  OSP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:12 [INFO] Trinity.Historical | ⏭️  PLANB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:12 [INFO] Trinity.Historical | ⏭️  PR9 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:12 [INFO] Trinity.Historical | ⏭️  PRM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:12 [INFO] Trinity.Historical | ⏭️  PTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:12 [INFO] Trinity.Historical | ⏭️  PTT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:13 [INFO] Trinity.Historical | 📦 Batch 8/10: PTTEP, PTTGC, QH, RATCH, RCL, SAWAD, SCB, SCC, SCGP, SIRI
+2026-03-11 17:30:13 [INFO] Trinity.Historical | ⏭️  PTTEP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:13 [INFO] Trinity.Historical | ⏭️  PTTGC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:13 [INFO] Trinity.Historical | ⏭️  QH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:13 [INFO] Trinity.Historical | ⏭️  RATCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:13 [INFO] Trinity.Historical | ⏭️  RCL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:13 [INFO] Trinity.Historical | ⏭️  SAWAD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:13 [INFO] Trinity.Historical | ⏭️  SCB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:13 [INFO] Trinity.Historical | ⏭️  SCC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:13 [INFO] Trinity.Historical | ⏭️  SCGP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:13 [INFO] Trinity.Historical | ⏭️  SIRI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:14 [INFO] Trinity.Historical | 📦 Batch 9/10: SISB, SJWD, SPALI, SPRC, STA, STECON, STGT, TASCO, TCAP, TFG
+2026-03-11 17:30:15 [INFO] Trinity.Historical | ⏭️  SISB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:15 [INFO] Trinity.Historical | ⏭️  SJWD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:15 [INFO] Trinity.Historical | ⏭️  SPALI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:15 [INFO] Trinity.Historical | ⏭️  SPRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:15 [INFO] Trinity.Historical | ⏭️  STA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:15 [INFO] Trinity.Historical | ⏭️  STECON | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:15 [INFO] Trinity.Historical | ⏭️  STGT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:15 [INFO] Trinity.Historical | ⏭️  TASCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:15 [INFO] Trinity.Historical | ⏭️  TCAP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:15 [INFO] Trinity.Historical | ⏭️  TFG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:16 [INFO] Trinity.Historical | 📦 Batch 10/10: TIDLOR, TISCO, TLI, TOA, TOP, TRUE, TTB, TU, VGI, WHA
+2026-03-11 17:30:16 [INFO] Trinity.Historical | ⏭️  TIDLOR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:16 [INFO] Trinity.Historical | ⏭️  TISCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:16 [INFO] Trinity.Historical | ⏭️  TLI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:16 [INFO] Trinity.Historical | ⏭️  TOA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:16 [INFO] Trinity.Historical | ⏭️  TOP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:16 [INFO] Trinity.Historical | ⏭️  TRUE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:16 [INFO] Trinity.Historical | ⏭️  TTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:16 [INFO] Trinity.Historical | ⏭️  TU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:16 [INFO] Trinity.Historical | ⏭️  VGI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:16 [INFO] Trinity.Historical | ⏭️  WHA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-11 17:30:16 [INFO] Trinity.Historical | 🔄 อัปเดต Prediction Accuracy สำหรับ 0 หุ้น...
+2026-03-11 17:30:16 [INFO] Trinity.Historical | ============================================================
+2026-03-11 17:30:16 [INFO] Trinity.Historical | 🏁 Batch Process Completed in 12.4s
+2026-03-11 17:30:16 [INFO] Trinity.Historical |    📊 New rows archived : 0
+2026-03-11 17:30:16 [INFO] Trinity.Historical |    ❌ Failed symbols    : 0
+2026-03-11 17:30:16 [INFO] Trinity.Historical | ============================================================
+2026-03-12 09:20:18 [INFO] Trinity.Historical | ============================================================
+2026-03-12 09:20:18 [INFO] Trinity.Historical | 🚀 Trinity EOD Archive | 2026-03-12 09:20:18
+2026-03-12 09:20:18 [INFO] Trinity.Historical | 🔖 Batch Process Started | symbols=100
+2026-03-12 09:20:18 [INFO] Trinity.Historical | ============================================================
+2026-03-12 09:20:18 [INFO] Trinity.Historical | 🔍 ตรวจสอบวันที่ล่าสุดใน DB สำหรับแต่ละหุ้น...
+2026-03-12 09:20:20 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?select=symbol%2C%20date&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&order=date.desc "HTTP/2 200 OK"
+2026-03-12 09:20:20 [INFO] Trinity.Historical | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-12 09:20:21 [INFO] Trinity.Historical | ✅ Symbol AAV Updated | +1 rows | ฿1.10
+2026-03-12 09:20:21 [INFO] Trinity.Historical | ✅ Symbol ADVANC Updated | +1 rows | ฿360.00
+2026-03-12 09:20:21 [INFO] Trinity.Historical | ✅ Symbol AEONTS Updated | +1 rows | ฿91.75
+2026-03-12 09:20:21 [INFO] Trinity.Historical | ✅ Symbol AMATA Updated | +1 rows | ฿18.50
+2026-03-12 09:20:21 [INFO] Trinity.Historical | ✅ Symbol AOT Updated | +1 rows | ฿51.00
+2026-03-12 09:20:21 [INFO] Trinity.Historical | ✅ Symbol AP Updated | +1 rows | ฿8.80
+2026-03-12 09:20:21 [INFO] Trinity.Historical | ✅ Symbol AURA Updated | +1 rows | ฿13.30
+2026-03-12 09:20:21 [INFO] Trinity.Historical | ✅ Symbol AWC Updated | +1 rows | ฿2.06
+2026-03-12 09:20:21 [INFO] Trinity.Historical | ✅ Symbol BA Updated | +1 rows | ฿14.00
+2026-03-12 09:20:21 [INFO] Trinity.Historical | ✅ Symbol BAM Updated | +1 rows | ฿7.15
+2026-03-12 09:20:21 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22date%22%2C%22open_price%22%2C%22backup_at%22%2C%22close_price%22%2C%22low_price%22%2C%22symbol%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22high_price%22%2C%22macd_val%22%2C%22volume%22 "HTTP/2 201 Created"
+2026-03-12 09:20:21 [INFO] Trinity.Historical | 💾 Batch 1: upserted 10 rows
+2026-03-12 09:20:22 [INFO] Trinity.Historical | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-12 09:20:22 [INFO] Trinity.Historical | ✅ Symbol BANPU Updated | +1 rows | ฿5.70
+2026-03-12 09:20:22 [INFO] Trinity.Historical | ✅ Symbol BBL Updated | +1 rows | ฿167.00
+2026-03-12 09:20:22 [INFO] Trinity.Historical | ✅ Symbol BCH Updated | +1 rows | ฿9.75
+2026-03-12 09:20:22 [INFO] Trinity.Historical | ✅ Symbol BCP Updated | +1 rows | ฿36.25
+2026-03-12 09:20:22 [INFO] Trinity.Historical | ✅ Symbol BCPG Updated | +1 rows | ฿6.35
+2026-03-12 09:20:22 [INFO] Trinity.Historical | ✅ Symbol BDMS Updated | +1 rows | ฿18.70
+2026-03-12 09:20:22 [INFO] Trinity.Historical | ✅ Symbol BEM Updated | +1 rows | ฿5.30
+2026-03-12 09:20:22 [INFO] Trinity.Historical | ✅ Symbol BGRIM Updated | +1 rows | ฿11.60
+2026-03-12 09:20:22 [INFO] Trinity.Historical | ✅ Symbol BH Updated | +1 rows | ฿179.00
+2026-03-12 09:20:22 [INFO] Trinity.Historical | ✅ Symbol BJC Updated | +1 rows | ฿13.60
+2026-03-12 09:20:22 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22date%22%2C%22open_price%22%2C%22backup_at%22%2C%22close_price%22%2C%22low_price%22%2C%22symbol%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22high_price%22%2C%22macd_val%22%2C%22volume%22 "HTTP/2 201 Created"
+2026-03-12 09:20:22 [INFO] Trinity.Historical | 💾 Batch 2: upserted 10 rows
+2026-03-12 09:20:23 [INFO] Trinity.Historical | 📦 Batch 3/10: BLA, BTG, BTS, CBG, CCET, CENTEL, CHG, CK, COM7, CPALL
+2026-03-12 09:20:24 [INFO] Trinity.Historical | ✅ Symbol BLA Updated | +1 rows | ฿19.60
+2026-03-12 09:20:24 [INFO] Trinity.Historical | ✅ Symbol BTG Updated | +1 rows | ฿20.00
+2026-03-12 09:20:24 [INFO] Trinity.Historical | ✅ Symbol BTS Updated | +1 rows | ฿2.06
+2026-03-12 09:20:24 [INFO] Trinity.Historical | ✅ Symbol CBG Updated | +1 rows | ฿35.50
+2026-03-12 09:20:24 [INFO] Trinity.Historical | ✅ Symbol CCET Updated | +1 rows | ฿4.78
+2026-03-12 09:20:24 [INFO] Trinity.Historical | ✅ Symbol CENTEL Updated | +1 rows | ฿33.25
+2026-03-12 09:20:24 [INFO] Trinity.Historical | ✅ Symbol CHG Updated | +1 rows | ฿1.48
+2026-03-12 09:20:24 [INFO] Trinity.Historical | ✅ Symbol CK Updated | +1 rows | ฿15.40
+2026-03-12 09:20:24 [INFO] Trinity.Historical | ✅ Symbol COM7 Updated | +1 rows | ฿23.50
+2026-03-12 09:20:24 [INFO] Trinity.Historical | ✅ Symbol CPALL Updated | +1 rows | ฿46.75
+2026-03-12 09:20:24 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22date%22%2C%22open_price%22%2C%22backup_at%22%2C%22close_price%22%2C%22low_price%22%2C%22symbol%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22high_price%22%2C%22macd_val%22%2C%22volume%22 "HTTP/2 201 Created"
+2026-03-12 09:20:24 [INFO] Trinity.Historical | 💾 Batch 3: upserted 10 rows
+2026-03-12 09:20:25 [INFO] Trinity.Historical | 📦 Batch 4/10: CPF, CPN, CRC, DELTA, DOHOME, EA, EGCO, ERW, GFPT, GLOBAL
+2026-03-12 09:20:25 [INFO] Trinity.Historical | ✅ Symbol CPF Updated | +1 rows | ฿18.80
+2026-03-12 09:20:25 [INFO] Trinity.Historical | ✅ Symbol CPN Updated | +1 rows | ฿64.00
+2026-03-12 09:20:25 [INFO] Trinity.Historical | ✅ Symbol CRC Updated | +1 rows | ฿18.00
+2026-03-12 09:20:25 [INFO] Trinity.Historical | ✅ Symbol DELTA Updated | +1 rows | ฿258.00
+2026-03-12 09:20:25 [INFO] Trinity.Historical | ✅ Symbol DOHOME Updated | +1 rows | ฿3.28
+2026-03-12 09:20:25 [INFO] Trinity.Historical | ✅ Symbol EA Updated | +1 rows | ฿2.68
+2026-03-12 09:20:25 [INFO] Trinity.Historical | ✅ Symbol EGCO Updated | +1 rows | ฿113.00
+2026-03-12 09:20:25 [INFO] Trinity.Historical | ✅ Symbol ERW Updated | +1 rows | ฿2.62
+2026-03-12 09:20:25 [INFO] Trinity.Historical | ✅ Symbol GFPT Updated | +1 rows | ฿9.05
+2026-03-12 09:20:25 [INFO] Trinity.Historical | ✅ Symbol GLOBAL Updated | +1 rows | ฿6.65
+2026-03-12 09:20:25 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22date%22%2C%22open_price%22%2C%22backup_at%22%2C%22close_price%22%2C%22low_price%22%2C%22symbol%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22high_price%22%2C%22macd_val%22%2C%22volume%22 "HTTP/2 201 Created"
+2026-03-12 09:20:25 [INFO] Trinity.Historical | 💾 Batch 4: upserted 10 rows
+2026-03-12 09:20:26 [INFO] Trinity.Historical | 📦 Batch 5/10: GPSC, GULF, GUNKUL, HANA, HMPRO, ICHI, IRPC, IVL, JAS, JMART
+2026-03-12 09:20:27 [INFO] Trinity.Historical | ✅ Symbol GPSC Updated | +1 rows | ฿33.50
+2026-03-12 09:20:27 [INFO] Trinity.Historical | ✅ Symbol GULF Updated | +1 rows | ฿54.50
+2026-03-12 09:20:27 [INFO] Trinity.Historical | ✅ Symbol GUNKUL Updated | +1 rows | ฿2.22
+2026-03-12 09:20:27 [INFO] Trinity.Historical | ✅ Symbol HANA Updated | +1 rows | ฿24.00
+2026-03-12 09:20:27 [INFO] Trinity.Historical | ✅ Symbol HMPRO Updated | +1 rows | ฿6.35
+2026-03-12 09:20:27 [INFO] Trinity.Historical | ✅ Symbol ICHI Updated | +1 rows | ฿14.30
+2026-03-12 09:20:27 [INFO] Trinity.Historical | ✅ Symbol IRPC Updated | +1 rows | ฿1.14
+2026-03-12 09:20:27 [INFO] Trinity.Historical | ✅ Symbol IVL Updated | +1 rows | ฿18.90
+2026-03-12 09:20:27 [INFO] Trinity.Historical | ✅ Symbol JAS Updated | +1 rows | ฿1.25
+2026-03-12 09:20:27 [INFO] Trinity.Historical | ✅ Symbol JMART Updated | +1 rows | ฿7.15
+2026-03-12 09:20:27 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22date%22%2C%22open_price%22%2C%22backup_at%22%2C%22close_price%22%2C%22low_price%22%2C%22symbol%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22high_price%22%2C%22macd_val%22%2C%22volume%22 "HTTP/2 201 Created"
+2026-03-12 09:20:27 [INFO] Trinity.Historical | 💾 Batch 5: upserted 10 rows
+2026-03-12 09:20:28 [INFO] Trinity.Historical | 📦 Batch 6/10: JMT, JTS, KBANK, KCE, KKP, KTB, KTC, LH, M, MEGA
+2026-03-12 09:20:28 [INFO] Trinity.Historical | ✅ Symbol JMT Updated | +1 rows | ฿8.80
+2026-03-12 09:20:28 [INFO] Trinity.Historical | ✅ Symbol JTS Updated | +1 rows | ฿58.25
+2026-03-12 09:20:28 [INFO] Trinity.Historical | ✅ Symbol KBANK Updated | +1 rows | ฿189.50
+2026-03-12 09:20:28 [INFO] Trinity.Historical | ✅ Symbol KCE Updated | +1 rows | ฿19.60
+2026-03-12 09:20:28 [INFO] Trinity.Historical | ✅ Symbol KKP Updated | +1 rows | ฿72.00
+2026-03-12 09:20:28 [INFO] Trinity.Historical | ✅ Symbol KTB Updated | +1 rows | ฿34.25
+2026-03-12 09:20:28 [INFO] Trinity.Historical | ✅ Symbol KTC Updated | +1 rows | ฿28.75
+2026-03-12 09:20:28 [INFO] Trinity.Historical | ✅ Symbol LH Updated | +1 rows | ฿3.76
+2026-03-12 09:20:28 [INFO] Trinity.Historical | ✅ Symbol M Updated | +1 rows | ฿20.00
+2026-03-12 09:20:28 [INFO] Trinity.Historical | ✅ Symbol MEGA Updated | +1 rows | ฿35.25
+2026-03-12 09:20:28 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22date%22%2C%22open_price%22%2C%22backup_at%22%2C%22close_price%22%2C%22low_price%22%2C%22symbol%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22high_price%22%2C%22macd_val%22%2C%22volume%22 "HTTP/2 201 Created"
+2026-03-12 09:20:28 [INFO] Trinity.Historical | 💾 Batch 6: upserted 10 rows
+2026-03-12 09:20:29 [INFO] Trinity.Historical | 📦 Batch 7/10: MINT, MOSHI, MTC, OR, OSP, PLANB, PR9, PRM, PTG, PTT
+2026-03-12 09:20:30 [INFO] Trinity.Historical | ✅ Symbol MINT Updated | +1 rows | ฿23.00
+2026-03-12 09:20:30 [INFO] Trinity.Historical | ✅ Symbol MOSHI Updated | +1 rows | ฿33.00
+2026-03-12 09:20:30 [INFO] Trinity.Historical | ✅ Symbol MTC Updated | +1 rows | ฿31.25
+2026-03-12 09:20:30 [INFO] Trinity.Historical | ✅ Symbol OR Updated | +1 rows | ฿11.10
+2026-03-12 09:20:30 [INFO] Trinity.Historical | ✅ Symbol OSP Updated | +1 rows | ฿14.30
+2026-03-12 09:20:30 [INFO] Trinity.Historical | ✅ Symbol PLANB Updated | +1 rows | ฿4.20
+2026-03-12 09:20:30 [INFO] Trinity.Historical | ✅ Symbol PR9 Updated | +1 rows | ฿17.00
+2026-03-12 09:20:30 [INFO] Trinity.Historical | ✅ Symbol PRM Updated | +1 rows | ฿7.50
+2026-03-12 09:20:30 [INFO] Trinity.Historical | ✅ Symbol PTG Updated | +1 rows | ฿8.00
+2026-03-12 09:20:30 [INFO] Trinity.Historical | ✅ Symbol PTT Updated | +1 rows | ฿33.50
+2026-03-12 09:20:30 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22date%22%2C%22open_price%22%2C%22backup_at%22%2C%22close_price%22%2C%22low_price%22%2C%22symbol%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22high_price%22%2C%22macd_val%22%2C%22volume%22 "HTTP/2 201 Created"
+2026-03-12 09:20:30 [INFO] Trinity.Historical | 💾 Batch 7: upserted 10 rows
+2026-03-12 09:20:31 [INFO] Trinity.Historical | 📦 Batch 8/10: PTTEP, PTTGC, QH, RATCH, RCL, SAWAD, SCB, SCC, SCGP, SIRI
+2026-03-12 09:20:31 [INFO] Trinity.Historical | ✅ Symbol PTTEP Updated | +1 rows | ฿143.50
+2026-03-12 09:20:31 [INFO] Trinity.Historical | ✅ Symbol PTTGC Updated | +1 rows | ฿26.75
+2026-03-12 09:20:31 [INFO] Trinity.Historical | ✅ Symbol QH Updated | +1 rows | ฿1.36
+2026-03-12 09:20:31 [INFO] Trinity.Historical | ✅ Symbol RATCH Updated | +1 rows | ฿28.20
+2026-03-12 09:20:31 [INFO] Trinity.Historical | ✅ Symbol RCL Updated | +1 rows | ฿29.50
+2026-03-12 09:20:31 [INFO] Trinity.Historical | ✅ Symbol SAWAD Updated | +1 rows | ฿24.60
+2026-03-12 09:20:31 [INFO] Trinity.Historical | ✅ Symbol SCB Updated | +1 rows | ฿144.00
+2026-03-12 09:20:31 [INFO] Trinity.Historical | ✅ Symbol SCC Updated | +1 rows | ฿175.00
+2026-03-12 09:20:31 [INFO] Trinity.Historical | ✅ Symbol SCGP Updated | +1 rows | ฿17.50
+2026-03-12 09:20:31 [INFO] Trinity.Historical | ✅ Symbol SIRI Updated | +1 rows | ฿1.49
+2026-03-12 09:20:31 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22date%22%2C%22open_price%22%2C%22backup_at%22%2C%22close_price%22%2C%22low_price%22%2C%22symbol%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22high_price%22%2C%22macd_val%22%2C%22volume%22 "HTTP/2 201 Created"
+2026-03-12 09:20:31 [INFO] Trinity.Historical | 💾 Batch 8: upserted 10 rows
+2026-03-12 09:20:32 [INFO] Trinity.Historical | 📦 Batch 9/10: SISB, SJWD, SPALI, SPRC, STA, STECON, STGT, TASCO, TCAP, TFG
+2026-03-12 09:20:32 [INFO] Trinity.Historical | ✅ Symbol SISB Updated | +1 rows | ฿10.80
+2026-03-12 09:20:32 [INFO] Trinity.Historical | ✅ Symbol SJWD Updated | +1 rows | ฿7.50
+2026-03-12 09:20:32 [INFO] Trinity.Historical | ✅ Symbol SPALI Updated | +1 rows | ฿17.40
+2026-03-12 09:20:32 [INFO] Trinity.Historical | ✅ Symbol SPRC Updated | +1 rows | ฿7.50
+2026-03-12 09:20:32 [INFO] Trinity.Historical | ✅ Symbol STA Updated | +1 rows | ฿15.50
+2026-03-12 09:20:32 [INFO] Trinity.Historical | ✅ Symbol STECON Updated | +1 rows | ฿11.90
+2026-03-12 09:20:32 [INFO] Trinity.Historical | ✅ Symbol STGT Updated | +1 rows | ฿9.65
+2026-03-12 09:20:32 [INFO] Trinity.Historical | ✅ Symbol TASCO Updated | +1 rows | ฿12.90
+2026-03-12 09:20:32 [INFO] Trinity.Historical | ✅ Symbol TCAP Updated | +1 rows | ฿56.50
+2026-03-12 09:20:32 [INFO] Trinity.Historical | ✅ Symbol TFG Updated | +1 rows | ฿7.20
+2026-03-12 09:20:32 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22date%22%2C%22open_price%22%2C%22backup_at%22%2C%22close_price%22%2C%22low_price%22%2C%22symbol%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22high_price%22%2C%22macd_val%22%2C%22volume%22 "HTTP/2 201 Created"
+2026-03-12 09:20:32 [INFO] Trinity.Historical | 💾 Batch 9: upserted 10 rows
+2026-03-12 09:20:33 [INFO] Trinity.Historical | 📦 Batch 10/10: TIDLOR, TISCO, TLI, TOA, TOP, TRUE, TTB, TU, VGI, WHA
+2026-03-12 09:20:34 [INFO] Trinity.Historical | ✅ Symbol TIDLOR Updated | +1 rows | ฿17.00
+2026-03-12 09:20:34 [INFO] Trinity.Historical | ✅ Symbol TISCO Updated | +1 rows | ฿112.50
+2026-03-12 09:20:34 [INFO] Trinity.Historical | ✅ Symbol TLI Updated | +1 rows | ฿10.10
+2026-03-12 09:20:34 [INFO] Trinity.Historical | ✅ Symbol TOA Updated | +1 rows | ฿13.00
+2026-03-12 09:20:34 [INFO] Trinity.Historical | ✅ Symbol TOP Updated | +1 rows | ฿47.25
+2026-03-12 09:20:34 [INFO] Trinity.Historical | ✅ Symbol TRUE Updated | +1 rows | ฿13.10
+2026-03-12 09:20:34 [INFO] Trinity.Historical | ✅ Symbol TTB Updated | +1 rows | ฿2.20
+2026-03-12 09:20:34 [INFO] Trinity.Historical | ✅ Symbol TU Updated | +1 rows | ฿11.00
+2026-03-12 09:20:34 [INFO] Trinity.Historical | ✅ Symbol VGI Updated | +1 rows | ฿0.93
+2026-03-12 09:20:34 [INFO] Trinity.Historical | ✅ Symbol WHA Updated | +1 rows | ฿4.08
+2026-03-12 09:20:34 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22date%22%2C%22open_price%22%2C%22backup_at%22%2C%22close_price%22%2C%22low_price%22%2C%22symbol%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22high_price%22%2C%22macd_val%22%2C%22volume%22 "HTTP/2 201 Created"
+2026-03-12 09:20:34 [INFO] Trinity.Historical | 💾 Batch 10: upserted 10 rows
+2026-03-12 09:20:34 [INFO] Trinity.Historical | 🔄 อัปเดต Prediction Accuracy สำหรับ 100 หุ้น...
+2026-03-12 09:20:34 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_predictions_v3?select=id%2C%20symbol%2C%20prediction_date%2C%20predicted_price%2C%20horizon_type&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&prediction_date=in.%282026-03-11%29&actual_price=is.null "HTTP/2 200 OK"
+2026-03-12 09:20:34 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_predictions_v3?on_conflict=id&columns=%22actual_price%22%2C%22error_percent%22%2C%22id%22 "HTTP/2 400 Bad Request"
+2026-03-12 09:20:34 [WARNING] Trinity.Historical | ⚠️ [upsert_prediction_accuracy] attempt 1/3: {'code': '23502', 'details': 'Failing row contains (1, null, null, null, null, null, 1.1, 3.6364, null, null, null, 2026-03-12 02:20:34.395179+00).', 'hint': None, 'message': 'null value in column "symbol" of relation "stock_predictions_v3" violates not-null constraint'} — retry in 2s
+2026-03-12 09:20:36 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_predictions_v3?on_conflict=id&columns=%22actual_price%22%2C%22error_percent%22%2C%22id%22 "HTTP/2 400 Bad Request"
+2026-03-12 09:20:36 [WARNING] Trinity.Historical | ⚠️ [upsert_prediction_accuracy] attempt 2/3: {'code': '23502', 'details': 'Failing row contains (1, null, null, null, null, null, 1.1, 3.6364, null, null, null, 2026-03-12 02:20:36.560159+00).', 'hint': None, 'message': 'null value in column "symbol" of relation "stock_predictions_v3" violates not-null constraint'} — retry in 4s
+2026-03-12 09:20:40 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_predictions_v3?on_conflict=id&columns=%22actual_price%22%2C%22error_percent%22%2C%22id%22 "HTTP/2 400 Bad Request"
+2026-03-12 09:20:40 [ERROR] Trinity.Historical | ❌ [upsert_prediction_accuracy] ล้มเหลวทุก 3 retry: {'code': '23502', 'details': 'Failing row contains (1, null, null, null, null, null, 1.1, 3.6364, null, null, null, 2026-03-12 02:20:40.774803+00).', 'hint': None, 'message': 'null value in column "symbol" of relation "stock_predictions_v3" violates not-null constraint'}
+2026-03-12 09:20:40 [ERROR] Trinity.Historical | ❌ update_prediction_accuracy error: {'code': '23502', 'details': 'Failing row contains (1, null, null, null, null, null, 1.1, 3.6364, null, null, null, 2026-03-12 02:20:40.774803+00).', 'hint': None, 'message': 'null value in column "symbol" of relation "stock_predictions_v3" violates not-null constraint'}
+2026-03-12 09:20:40 [INFO] Trinity.Historical | ============================================================
+2026-03-12 09:20:40 [INFO] Trinity.Historical | 🏁 Batch Process Completed in 22.8s
+2026-03-12 09:20:40 [INFO] Trinity.Historical |    📊 New rows archived : 100
+2026-03-12 09:20:40 [INFO] Trinity.Historical |    ❌ Failed symbols    : 0
+2026-03-12 09:20:41 [INFO] Trinity.Historical | ============================================================
+2026-03-12 09:25:37 [INFO] Trinity.Historical | ============================================================
+2026-03-12 09:25:37 [INFO] Trinity.Historical | 🚀 Trinity EOD Archive | 2026-03-12 09:25:37
+2026-03-12 09:25:37 [INFO] Trinity.Historical | 🔖 Batch Process Started | symbols=100
+2026-03-12 09:25:37 [INFO] Trinity.Historical | ============================================================
+2026-03-12 09:25:37 [INFO] Trinity.Historical | 🔍 ตรวจสอบวันที่ล่าสุดใน DB สำหรับแต่ละหุ้น...
+2026-03-12 09:25:38 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?select=symbol%2C%20date&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&order=date.desc "HTTP/2 200 OK"
+2026-03-12 09:25:38 [INFO] Trinity.Historical | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-12 09:25:38 [INFO] Trinity.Historical | ⏭️  AAV | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:38 [INFO] Trinity.Historical | ⏭️  ADVANC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:38 [INFO] Trinity.Historical | ⏭️  AEONTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:38 [INFO] Trinity.Historical | ⏭️  AMATA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:38 [INFO] Trinity.Historical | ⏭️  AOT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:38 [INFO] Trinity.Historical | ⏭️  AP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:38 [INFO] Trinity.Historical | ⏭️  AURA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:38 [INFO] Trinity.Historical | ⏭️  AWC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:38 [INFO] Trinity.Historical | ⏭️  BA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:38 [INFO] Trinity.Historical | ⏭️  BAM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:39 [INFO] Trinity.Historical | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-12 09:25:40 [INFO] Trinity.Historical | ⏭️  BANPU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:40 [INFO] Trinity.Historical | ⏭️  BBL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:40 [INFO] Trinity.Historical | ⏭️  BCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:40 [INFO] Trinity.Historical | ⏭️  BCP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:40 [INFO] Trinity.Historical | ⏭️  BCPG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:40 [INFO] Trinity.Historical | ⏭️  BDMS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:40 [INFO] Trinity.Historical | ⏭️  BEM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:40 [INFO] Trinity.Historical | ⏭️  BGRIM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:40 [INFO] Trinity.Historical | ⏭️  BH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:40 [INFO] Trinity.Historical | ⏭️  BJC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:41 [INFO] Trinity.Historical | 📦 Batch 3/10: BLA, BTG, BTS, CBG, CCET, CENTEL, CHG, CK, COM7, CPALL
+2026-03-12 09:25:41 [INFO] Trinity.Historical | ⏭️  BLA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:41 [INFO] Trinity.Historical | ⏭️  BTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:41 [INFO] Trinity.Historical | ⏭️  BTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:41 [INFO] Trinity.Historical | ⏭️  CBG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:41 [INFO] Trinity.Historical | ⏭️  CCET | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:41 [INFO] Trinity.Historical | ⏭️  CENTEL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:41 [INFO] Trinity.Historical | ⏭️  CHG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:41 [INFO] Trinity.Historical | ⏭️  CK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:41 [INFO] Trinity.Historical | ⏭️  COM7 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:41 [INFO] Trinity.Historical | ⏭️  CPALL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:42 [INFO] Trinity.Historical | 📦 Batch 4/10: CPF, CPN, CRC, DELTA, DOHOME, EA, EGCO, ERW, GFPT, GLOBAL
+2026-03-12 09:25:42 [INFO] Trinity.Historical | ⏭️  CPF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:42 [INFO] Trinity.Historical | ⏭️  CPN | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:42 [INFO] Trinity.Historical | ⏭️  CRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:42 [INFO] Trinity.Historical | ⏭️  DELTA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:42 [INFO] Trinity.Historical | ⏭️  DOHOME | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:42 [INFO] Trinity.Historical | ⏭️  EA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:42 [INFO] Trinity.Historical | ⏭️  EGCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:42 [INFO] Trinity.Historical | ⏭️  ERW | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:42 [INFO] Trinity.Historical | ⏭️  GFPT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:42 [INFO] Trinity.Historical | ⏭️  GLOBAL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:43 [INFO] Trinity.Historical | 📦 Batch 5/10: GPSC, GULF, GUNKUL, HANA, HMPRO, ICHI, IRPC, IVL, JAS, JMART
+2026-03-12 09:25:43 [INFO] Trinity.Historical | ⏭️  GPSC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:43 [INFO] Trinity.Historical | ⏭️  GULF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:43 [INFO] Trinity.Historical | ⏭️  GUNKUL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:43 [INFO] Trinity.Historical | ⏭️  HANA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:43 [INFO] Trinity.Historical | ⏭️  HMPRO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:43 [INFO] Trinity.Historical | ⏭️  ICHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:43 [INFO] Trinity.Historical | ⏭️  IRPC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:43 [INFO] Trinity.Historical | ⏭️  IVL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:43 [INFO] Trinity.Historical | ⏭️  JAS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:43 [INFO] Trinity.Historical | ⏭️  JMART | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:44 [INFO] Trinity.Historical | 📦 Batch 6/10: JMT, JTS, KBANK, KCE, KKP, KTB, KTC, LH, M, MEGA
+2026-03-12 09:25:44 [INFO] Trinity.Historical | ⏭️  JMT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:44 [INFO] Trinity.Historical | ⏭️  JTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:44 [INFO] Trinity.Historical | ⏭️  KBANK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:44 [INFO] Trinity.Historical | ⏭️  KCE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:44 [INFO] Trinity.Historical | ⏭️  KKP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:44 [INFO] Trinity.Historical | ⏭️  KTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:45 [INFO] Trinity.Historical | ⏭️  KTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:45 [INFO] Trinity.Historical | ⏭️  LH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:45 [INFO] Trinity.Historical | ⏭️  M | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:45 [INFO] Trinity.Historical | ⏭️  MEGA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:46 [INFO] Trinity.Historical | 📦 Batch 7/10: MINT, MOSHI, MTC, OR, OSP, PLANB, PR9, PRM, PTG, PTT
+2026-03-12 09:25:46 [INFO] Trinity.Historical | ⏭️  MINT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:46 [INFO] Trinity.Historical | ⏭️  MOSHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:46 [INFO] Trinity.Historical | ⏭️  MTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:46 [INFO] Trinity.Historical | ⏭️  OR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:46 [INFO] Trinity.Historical | ⏭️  OSP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:46 [INFO] Trinity.Historical | ⏭️  PLANB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:46 [INFO] Trinity.Historical | ⏭️  PR9 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:46 [INFO] Trinity.Historical | ⏭️  PRM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:46 [INFO] Trinity.Historical | ⏭️  PTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:46 [INFO] Trinity.Historical | ⏭️  PTT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:47 [INFO] Trinity.Historical | 📦 Batch 8/10: PTTEP, PTTGC, QH, RATCH, RCL, SAWAD, SCB, SCC, SCGP, SIRI
+2026-03-12 09:25:47 [INFO] Trinity.Historical | ⏭️  PTTEP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:47 [INFO] Trinity.Historical | ⏭️  PTTGC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:47 [INFO] Trinity.Historical | ⏭️  QH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:47 [INFO] Trinity.Historical | ⏭️  RATCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:47 [INFO] Trinity.Historical | ⏭️  RCL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:47 [INFO] Trinity.Historical | ⏭️  SAWAD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:47 [INFO] Trinity.Historical | ⏭️  SCB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:47 [INFO] Trinity.Historical | ⏭️  SCC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:47 [INFO] Trinity.Historical | ⏭️  SCGP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:47 [INFO] Trinity.Historical | ⏭️  SIRI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:48 [INFO] Trinity.Historical | 📦 Batch 9/10: SISB, SJWD, SPALI, SPRC, STA, STECON, STGT, TASCO, TCAP, TFG
+2026-03-12 09:25:48 [INFO] Trinity.Historical | ⏭️  SISB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:48 [INFO] Trinity.Historical | ⏭️  SJWD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:48 [INFO] Trinity.Historical | ⏭️  SPALI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:48 [INFO] Trinity.Historical | ⏭️  SPRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:48 [INFO] Trinity.Historical | ⏭️  STA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:48 [INFO] Trinity.Historical | ⏭️  STECON | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:48 [INFO] Trinity.Historical | ⏭️  STGT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:48 [INFO] Trinity.Historical | ⏭️  TASCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:48 [INFO] Trinity.Historical | ⏭️  TCAP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:48 [INFO] Trinity.Historical | ⏭️  TFG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:49 [INFO] Trinity.Historical | 📦 Batch 10/10: TIDLOR, TISCO, TLI, TOA, TOP, TRUE, TTB, TU, VGI, WHA
+2026-03-12 09:25:49 [INFO] Trinity.Historical | ⏭️  TIDLOR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:49 [INFO] Trinity.Historical | ⏭️  TISCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:49 [INFO] Trinity.Historical | ⏭️  TLI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:49 [INFO] Trinity.Historical | ⏭️  TOA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:49 [INFO] Trinity.Historical | ⏭️  TOP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:49 [INFO] Trinity.Historical | ⏭️  TRUE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:49 [INFO] Trinity.Historical | ⏭️  TTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:49 [INFO] Trinity.Historical | ⏭️  TU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:49 [INFO] Trinity.Historical | ⏭️  VGI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:49 [INFO] Trinity.Historical | ⏭️  WHA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 09:25:49 [INFO] Trinity.Historical | 🔄 อัปเดต Prediction Accuracy สำหรับ 0 หุ้น...
+2026-03-12 09:25:49 [INFO] Trinity.Historical | ============================================================
+2026-03-12 09:25:49 [INFO] Trinity.Historical | 🏁 Batch Process Completed in 12.2s
+2026-03-12 09:25:49 [INFO] Trinity.Historical |    📊 New rows archived : 0
+2026-03-12 09:25:49 [INFO] Trinity.Historical |    ❌ Failed symbols    : 0
+2026-03-12 09:25:49 [INFO] Trinity.Historical | ============================================================
+2026-03-12 10:41:16 [INFO] Trinity.Historical | ============================================================
+2026-03-12 10:41:16 [INFO] Trinity.Historical | 🚀 Trinity EOD Archive | 2026-03-12 10:41:16
+2026-03-12 10:41:16 [INFO] Trinity.Historical | 🔖 Batch Process Started | symbols=100
+2026-03-12 10:41:16 [INFO] Trinity.Historical | ============================================================
+2026-03-12 10:41:16 [INFO] Trinity.Historical | 🔍 ตรวจสอบวันที่ล่าสุดใน DB สำหรับแต่ละหุ้น...
+2026-03-12 10:41:16 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?select=symbol%2C%20date&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&order=date.desc "HTTP/2 200 OK"
+2026-03-12 10:41:16 [INFO] Trinity.Historical | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-12 10:41:17 [INFO] Trinity.Historical | ⏭️  AAV | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:17 [INFO] Trinity.Historical | ⏭️  ADVANC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:17 [INFO] Trinity.Historical | ⏭️  AEONTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:17 [INFO] Trinity.Historical | ⏭️  AMATA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:17 [INFO] Trinity.Historical | ⏭️  AOT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:17 [INFO] Trinity.Historical | ⏭️  AP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:17 [INFO] Trinity.Historical | ⏭️  AURA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:17 [INFO] Trinity.Historical | ⏭️  AWC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:17 [INFO] Trinity.Historical | ⏭️  BA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:17 [INFO] Trinity.Historical | ⏭️  BAM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:18 [INFO] Trinity.Historical | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-12 10:41:18 [INFO] Trinity.Historical | ⏭️  BANPU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:18 [INFO] Trinity.Historical | ⏭️  BBL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:18 [INFO] Trinity.Historical | ⏭️  BCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:18 [INFO] Trinity.Historical | ⏭️  BCP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:18 [INFO] Trinity.Historical | ⏭️  BCPG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:18 [INFO] Trinity.Historical | ⏭️  BDMS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:18 [INFO] Trinity.Historical | ⏭️  BEM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:18 [INFO] Trinity.Historical | ⏭️  BGRIM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:18 [INFO] Trinity.Historical | ⏭️  BH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:18 [INFO] Trinity.Historical | ⏭️  BJC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:19 [INFO] Trinity.Historical | 📦 Batch 3/10: BLA, BTG, BTS, CBG, CCET, CENTEL, CHG, CK, COM7, CPALL
+2026-03-12 10:41:21 [INFO] Trinity.Historical | ⏭️  BLA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:21 [INFO] Trinity.Historical | ⏭️  BTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:21 [INFO] Trinity.Historical | ⏭️  BTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:21 [INFO] Trinity.Historical | ⏭️  CBG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:21 [INFO] Trinity.Historical | ⏭️  CCET | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:21 [INFO] Trinity.Historical | ⏭️  CENTEL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:21 [INFO] Trinity.Historical | ⏭️  CHG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:21 [INFO] Trinity.Historical | ⏭️  CK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:21 [INFO] Trinity.Historical | ⏭️  COM7 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:21 [INFO] Trinity.Historical | ⏭️  CPALL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:22 [INFO] Trinity.Historical | 📦 Batch 4/10: CPF, CPN, CRC, DELTA, DOHOME, EA, EGCO, ERW, GFPT, GLOBAL
+2026-03-12 10:41:23 [INFO] Trinity.Historical | ⏭️  CPF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:23 [INFO] Trinity.Historical | ⏭️  CPN | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:23 [INFO] Trinity.Historical | ⏭️  CRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:23 [INFO] Trinity.Historical | ⏭️  DELTA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:23 [INFO] Trinity.Historical | ⏭️  DOHOME | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:23 [INFO] Trinity.Historical | ⏭️  EA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:23 [INFO] Trinity.Historical | ⏭️  EGCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:23 [INFO] Trinity.Historical | ⏭️  ERW | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:23 [INFO] Trinity.Historical | ⏭️  GFPT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:23 [INFO] Trinity.Historical | ⏭️  GLOBAL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:24 [INFO] Trinity.Historical | 📦 Batch 5/10: GPSC, GULF, GUNKUL, HANA, HMPRO, ICHI, IRPC, IVL, JAS, JMART
+2026-03-12 10:41:34 [ERROR] yfinance | 
+1 Failed download:
+2026-03-12 10:41:34 [ERROR] yfinance | ['IRPC.BK']: TypeError("'NoneType' object is not subscriptable")
+2026-03-12 10:41:34 [INFO] Trinity.Historical | ⏭️  GPSC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:34 [INFO] Trinity.Historical | ⏭️  GULF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:34 [INFO] Trinity.Historical | ⏭️  GUNKUL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:34 [INFO] Trinity.Historical | ⏭️  HANA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:34 [INFO] Trinity.Historical | ⏭️  HMPRO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:34 [INFO] Trinity.Historical | ⏭️  ICHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:34 [WARNING] Trinity.Historical | ⚠️ IRPC | No Data from yfinance
+2026-03-12 10:41:34 [INFO] Trinity.Historical | ⏭️  IVL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:34 [INFO] Trinity.Historical | ⏭️  JAS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:34 [INFO] Trinity.Historical | ⏭️  JMART | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:35 [INFO] Trinity.Historical | 📦 Batch 6/10: JMT, JTS, KBANK, KCE, KKP, KTB, KTC, LH, M, MEGA
+2026-03-12 10:41:36 [INFO] Trinity.Historical | ⏭️  JMT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:36 [INFO] Trinity.Historical | ⏭️  JTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:36 [INFO] Trinity.Historical | ⏭️  KBANK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:36 [INFO] Trinity.Historical | ⏭️  KCE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:36 [INFO] Trinity.Historical | ⏭️  KKP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:36 [INFO] Trinity.Historical | ⏭️  KTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:36 [INFO] Trinity.Historical | ⏭️  KTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:36 [INFO] Trinity.Historical | ⏭️  LH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:36 [INFO] Trinity.Historical | ⏭️  M | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:36 [INFO] Trinity.Historical | ⏭️  MEGA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:37 [INFO] Trinity.Historical | 📦 Batch 7/10: MINT, MOSHI, MTC, OR, OSP, PLANB, PR9, PRM, PTG, PTT
+2026-03-12 10:41:37 [INFO] Trinity.Historical | ⏭️  MINT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:37 [INFO] Trinity.Historical | ⏭️  MOSHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:37 [INFO] Trinity.Historical | ⏭️  MTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:37 [INFO] Trinity.Historical | ⏭️  OR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:37 [INFO] Trinity.Historical | ⏭️  OSP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:37 [INFO] Trinity.Historical | ⏭️  PLANB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:37 [INFO] Trinity.Historical | ⏭️  PR9 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:37 [INFO] Trinity.Historical | ⏭️  PRM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:37 [INFO] Trinity.Historical | ⏭️  PTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:37 [INFO] Trinity.Historical | ⏭️  PTT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:38 [INFO] Trinity.Historical | 📦 Batch 8/10: PTTEP, PTTGC, QH, RATCH, RCL, SAWAD, SCB, SCC, SCGP, SIRI
+2026-03-12 10:41:39 [INFO] Trinity.Historical | ⏭️  PTTEP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:39 [INFO] Trinity.Historical | ⏭️  PTTGC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:39 [INFO] Trinity.Historical | ⏭️  QH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:39 [INFO] Trinity.Historical | ⏭️  RATCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:39 [INFO] Trinity.Historical | ⏭️  RCL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:39 [INFO] Trinity.Historical | ⏭️  SAWAD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:39 [INFO] Trinity.Historical | ⏭️  SCB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:39 [INFO] Trinity.Historical | ⏭️  SCC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:39 [INFO] Trinity.Historical | ⏭️  SCGP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:39 [INFO] Trinity.Historical | ⏭️  SIRI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:40 [INFO] Trinity.Historical | 📦 Batch 9/10: SISB, SJWD, SPALI, SPRC, STA, STECON, STGT, TASCO, TCAP, TFG
+2026-03-12 10:41:40 [INFO] Trinity.Historical | ⏭️  SISB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:40 [INFO] Trinity.Historical | ⏭️  SJWD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:40 [INFO] Trinity.Historical | ⏭️  SPALI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:40 [INFO] Trinity.Historical | ⏭️  SPRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:40 [INFO] Trinity.Historical | ⏭️  STA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:40 [INFO] Trinity.Historical | ⏭️  STECON | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:40 [INFO] Trinity.Historical | ⏭️  STGT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:40 [INFO] Trinity.Historical | ⏭️  TASCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:40 [INFO] Trinity.Historical | ⏭️  TCAP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:40 [INFO] Trinity.Historical | ⏭️  TFG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:41 [INFO] Trinity.Historical | 📦 Batch 10/10: TIDLOR, TISCO, TLI, TOA, TOP, TRUE, TTB, TU, VGI, WHA
+2026-03-12 10:41:41 [INFO] Trinity.Historical | ⏭️  TIDLOR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:41 [INFO] Trinity.Historical | ⏭️  TISCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:41 [INFO] Trinity.Historical | ⏭️  TLI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:41 [INFO] Trinity.Historical | ⏭️  TOA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:41 [INFO] Trinity.Historical | ⏭️  TOP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:41 [INFO] Trinity.Historical | ⏭️  TRUE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:41 [INFO] Trinity.Historical | ⏭️  TTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:41 [INFO] Trinity.Historical | ⏭️  TU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:41 [INFO] Trinity.Historical | ⏭️  VGI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:41 [INFO] Trinity.Historical | ⏭️  WHA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 10:41:41 [INFO] Trinity.Historical | 🔄 อัปเดต Prediction Accuracy สำหรับ 0 หุ้น...
+2026-03-12 10:41:41 [INFO] Trinity.Historical | ============================================================
+2026-03-12 10:41:41 [INFO] Trinity.Historical | 🏁 Batch Process Completed in 25.6s
+2026-03-12 10:41:41 [INFO] Trinity.Historical |    📊 New rows archived : 0
+2026-03-12 10:41:41 [INFO] Trinity.Historical |    ❌ Failed symbols    : 1
+2026-03-12 10:41:41 [INFO] Trinity.Historical | ============================================================
+2026-03-12 21:39:46 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 24
+2026-03-12 21:39:46 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 25
+2026-03-12 21:39:46 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 32
+2026-03-12 21:39:46 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 33
+2026-03-12 21:39:46 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 34
+2026-03-12 21:39:46 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 35
+2026-03-12 21:39:46 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 36
+2026-03-12 21:39:46 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 37
+2026-03-12 21:39:46 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 38
+2026-03-12 21:39:46 [INFO] Trinity.Historical | ============================================================
+2026-03-12 21:39:46 [INFO] Trinity.Historical | 🚀 Trinity EOD Archive | 2026-03-12 21:39:46
+2026-03-12 21:39:46 [INFO] Trinity.Historical | 🔖 Batch Process Started | symbols=100
+2026-03-12 21:39:46 [INFO] Trinity.Historical | ============================================================
+2026-03-12 21:39:46 [INFO] Trinity.Historical | 🔍 ตรวจสอบวันที่ล่าสุดใน DB สำหรับแต่ละหุ้น...
+2026-03-12 21:39:47 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?select=symbol%2C%20date&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&order=date.desc "HTTP/2 200 OK"
+2026-03-12 21:39:47 [INFO] Trinity.Historical | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-12 21:39:48 [INFO] Trinity.Historical | ⏭️  AAV | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:48 [INFO] Trinity.Historical | ⏭️  ADVANC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:48 [INFO] Trinity.Historical | ⏭️  AEONTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:48 [INFO] Trinity.Historical | ⏭️  AMATA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:48 [INFO] Trinity.Historical | ⏭️  AOT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:48 [INFO] Trinity.Historical | ⏭️  AP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:48 [INFO] Trinity.Historical | ⏭️  AURA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:48 [INFO] Trinity.Historical | ⏭️  AWC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:48 [INFO] Trinity.Historical | ⏭️  BA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:48 [INFO] Trinity.Historical | ⏭️  BAM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:49 [INFO] Trinity.Historical | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-12 21:39:49 [INFO] Trinity.Historical | ⏭️  BANPU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:49 [INFO] Trinity.Historical | ⏭️  BBL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:49 [INFO] Trinity.Historical | ⏭️  BCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:49 [INFO] Trinity.Historical | ⏭️  BCP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:49 [INFO] Trinity.Historical | ⏭️  BCPG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:49 [INFO] Trinity.Historical | ⏭️  BDMS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:49 [INFO] Trinity.Historical | ⏭️  BEM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:49 [INFO] Trinity.Historical | ⏭️  BGRIM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:49 [INFO] Trinity.Historical | ⏭️  BH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:49 [INFO] Trinity.Historical | ⏭️  BJC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:50 [INFO] Trinity.Historical | 📦 Batch 3/10: BLA, BTG, BTS, CBG, CCET, CENTEL, CHG, CK, COM7, CPALL
+2026-03-12 21:39:50 [INFO] Trinity.Historical | ⏭️  BLA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:50 [INFO] Trinity.Historical | ⏭️  BTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:50 [INFO] Trinity.Historical | ⏭️  BTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:50 [INFO] Trinity.Historical | ⏭️  CBG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:50 [INFO] Trinity.Historical | ⏭️  CCET | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:50 [INFO] Trinity.Historical | ⏭️  CENTEL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:50 [INFO] Trinity.Historical | ⏭️  CHG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:50 [INFO] Trinity.Historical | ⏭️  CK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:50 [INFO] Trinity.Historical | ⏭️  COM7 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:50 [INFO] Trinity.Historical | ⏭️  CPALL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:51 [INFO] Trinity.Historical | 📦 Batch 4/10: CPF, CPN, CRC, DELTA, DOHOME, EA, EGCO, ERW, GFPT, GLOBAL
+2026-03-12 21:39:52 [INFO] Trinity.Historical | ⏭️  CPF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:52 [INFO] Trinity.Historical | ⏭️  CPN | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:52 [INFO] Trinity.Historical | ⏭️  CRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:52 [INFO] Trinity.Historical | ⏭️  DELTA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:52 [INFO] Trinity.Historical | ⏭️  DOHOME | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:52 [INFO] Trinity.Historical | ⏭️  EA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:52 [INFO] Trinity.Historical | ⏭️  EGCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:52 [INFO] Trinity.Historical | ⏭️  ERW | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:52 [INFO] Trinity.Historical | ⏭️  GFPT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:52 [INFO] Trinity.Historical | ⏭️  GLOBAL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:53 [INFO] Trinity.Historical | 📦 Batch 5/10: GPSC, GULF, GUNKUL, HANA, HMPRO, ICHI, IRPC, IVL, JAS, JMART
+2026-03-12 21:39:53 [INFO] Trinity.Historical | ⏭️  GPSC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:53 [INFO] Trinity.Historical | ⏭️  GULF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:53 [INFO] Trinity.Historical | ⏭️  GUNKUL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:53 [INFO] Trinity.Historical | ⏭️  HANA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:53 [INFO] Trinity.Historical | ⏭️  HMPRO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:53 [INFO] Trinity.Historical | ⏭️  ICHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:53 [INFO] Trinity.Historical | ⏭️  IRPC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:53 [INFO] Trinity.Historical | ⏭️  IVL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:53 [INFO] Trinity.Historical | ⏭️  JAS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:53 [INFO] Trinity.Historical | ⏭️  JMART | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:54 [INFO] Trinity.Historical | 📦 Batch 6/10: JMT, JTS, KBANK, KCE, KKP, KTB, KTC, LH, M, MEGA
+2026-03-12 21:39:57 [INFO] Trinity.Historical | ⏭️  JMT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:57 [INFO] Trinity.Historical | ⏭️  JTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:57 [INFO] Trinity.Historical | ⏭️  KBANK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:57 [INFO] Trinity.Historical | ⏭️  KCE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:57 [INFO] Trinity.Historical | ⏭️  KKP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:57 [INFO] Trinity.Historical | ⏭️  KTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:57 [INFO] Trinity.Historical | ⏭️  KTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:57 [INFO] Trinity.Historical | ⏭️  LH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:57 [INFO] Trinity.Historical | ⏭️  M | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:57 [INFO] Trinity.Historical | ⏭️  MEGA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:58 [INFO] Trinity.Historical | 📦 Batch 7/10: MINT, MOSHI, MTC, OR, OSP, PLANB, PR9, PRM, PTG, PTT
+2026-03-12 21:39:58 [INFO] Trinity.Historical | ⏭️  MINT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:58 [INFO] Trinity.Historical | ⏭️  MOSHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:58 [INFO] Trinity.Historical | ⏭️  MTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:58 [INFO] Trinity.Historical | ⏭️  OR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:58 [INFO] Trinity.Historical | ⏭️  OSP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:58 [INFO] Trinity.Historical | ⏭️  PLANB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:58 [INFO] Trinity.Historical | ⏭️  PR9 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:58 [INFO] Trinity.Historical | ⏭️  PRM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:58 [INFO] Trinity.Historical | ⏭️  PTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:58 [INFO] Trinity.Historical | ⏭️  PTT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:39:59 [INFO] Trinity.Historical | 📦 Batch 8/10: PTTEP, PTTGC, QH, RATCH, RCL, SAWAD, SCB, SCC, SCGP, SIRI
+2026-03-12 21:40:00 [INFO] Trinity.Historical | ⏭️  PTTEP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:00 [INFO] Trinity.Historical | ⏭️  PTTGC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:00 [INFO] Trinity.Historical | ⏭️  QH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:00 [INFO] Trinity.Historical | ⏭️  RATCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:00 [INFO] Trinity.Historical | ⏭️  RCL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:00 [INFO] Trinity.Historical | ⏭️  SAWAD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:00 [INFO] Trinity.Historical | ⏭️  SCB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:00 [INFO] Trinity.Historical | ⏭️  SCC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:00 [INFO] Trinity.Historical | ⏭️  SCGP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:00 [INFO] Trinity.Historical | ⏭️  SIRI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:01 [INFO] Trinity.Historical | 📦 Batch 9/10: SISB, SJWD, SPALI, SPRC, STA, STECON, STGT, TASCO, TCAP, TFG
+2026-03-12 21:40:01 [INFO] Trinity.Historical | ⏭️  SISB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:01 [INFO] Trinity.Historical | ⏭️  SJWD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:01 [INFO] Trinity.Historical | ⏭️  SPALI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:01 [INFO] Trinity.Historical | ⏭️  SPRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:01 [INFO] Trinity.Historical | ⏭️  STA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:01 [INFO] Trinity.Historical | ⏭️  STECON | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:01 [INFO] Trinity.Historical | ⏭️  STGT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:01 [INFO] Trinity.Historical | ⏭️  TASCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:01 [INFO] Trinity.Historical | ⏭️  TCAP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:01 [INFO] Trinity.Historical | ⏭️  TFG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:02 [INFO] Trinity.Historical | 📦 Batch 10/10: TIDLOR, TISCO, TLI, TOA, TOP, TRUE, TTB, TU, VGI, WHA
+2026-03-12 21:40:02 [INFO] Trinity.Historical | ⏭️  TIDLOR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:02 [INFO] Trinity.Historical | ⏭️  TISCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:02 [INFO] Trinity.Historical | ⏭️  TLI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:02 [INFO] Trinity.Historical | ⏭️  TOA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:02 [INFO] Trinity.Historical | ⏭️  TOP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:02 [INFO] Trinity.Historical | ⏭️  TRUE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:02 [INFO] Trinity.Historical | ⏭️  TTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:02 [INFO] Trinity.Historical | ⏭️  TU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:02 [INFO] Trinity.Historical | ⏭️  VGI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:02 [INFO] Trinity.Historical | ⏭️  WHA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:02 [INFO] Trinity.Historical | 🔄 อัปเดต Prediction Accuracy สำหรับ 0 หุ้น...
+2026-03-12 21:40:02 [INFO] Trinity.Historical | ============================================================
+2026-03-12 21:40:02 [INFO] Trinity.Historical | 🏁 Batch Process Completed in 15.8s
+2026-03-12 21:40:02 [INFO] Trinity.Historical |    📊 New rows archived : 0
+2026-03-12 21:40:02 [INFO] Trinity.Historical |    ❌ Failed symbols    : 0
+2026-03-12 21:40:02 [INFO] Trinity.Historical | ============================================================
+2026-03-12 21:40:38 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 24
+2026-03-12 21:40:38 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 25
+2026-03-12 21:40:38 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 32
+2026-03-12 21:40:38 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 33
+2026-03-12 21:40:38 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 34
+2026-03-12 21:40:38 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 35
+2026-03-12 21:40:38 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 36
+2026-03-12 21:40:38 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 37
+2026-03-12 21:40:38 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 38
+2026-03-12 21:40:39 [INFO] Trinity.Historical | ============================================================
+2026-03-12 21:40:39 [INFO] Trinity.Historical | 🚀 Trinity EOD Archive | 2026-03-12 21:40:39
+2026-03-12 21:40:39 [INFO] Trinity.Historical | 🔖 Batch Process Started | symbols=100
+2026-03-12 21:40:39 [INFO] Trinity.Historical | ============================================================
+2026-03-12 21:40:39 [INFO] Trinity.Historical | 🔍 ตรวจสอบวันที่ล่าสุดใน DB สำหรับแต่ละหุ้น...
+2026-03-12 21:40:39 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?select=symbol%2C%20date&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&order=date.desc "HTTP/2 200 OK"
+2026-03-12 21:40:39 [INFO] Trinity.Historical | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-12 21:40:40 [INFO] Trinity.Historical | ⏭️  AAV | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:40 [INFO] Trinity.Historical | ⏭️  ADVANC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:40 [INFO] Trinity.Historical | ⏭️  AEONTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:40 [INFO] Trinity.Historical | ⏭️  AMATA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:40 [INFO] Trinity.Historical | ⏭️  AOT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:40 [INFO] Trinity.Historical | ⏭️  AP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:40 [INFO] Trinity.Historical | ⏭️  AURA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:40 [INFO] Trinity.Historical | ⏭️  AWC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:40 [INFO] Trinity.Historical | ⏭️  BA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:40 [INFO] Trinity.Historical | ⏭️  BAM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:41 [INFO] Trinity.Historical | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-12 21:40:41 [INFO] Trinity.Historical | ⏭️  BANPU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:41 [INFO] Trinity.Historical | ⏭️  BBL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:41 [INFO] Trinity.Historical | ⏭️  BCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:41 [INFO] Trinity.Historical | ⏭️  BCP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:41 [INFO] Trinity.Historical | ⏭️  BCPG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:41 [INFO] Trinity.Historical | ⏭️  BDMS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:41 [INFO] Trinity.Historical | ⏭️  BEM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:41 [INFO] Trinity.Historical | ⏭️  BGRIM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:41 [INFO] Trinity.Historical | ⏭️  BH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:41 [INFO] Trinity.Historical | ⏭️  BJC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:42 [INFO] Trinity.Historical | 📦 Batch 3/10: BLA, BTG, BTS, CBG, CCET, CENTEL, CHG, CK, COM7, CPALL
+2026-03-12 21:40:42 [INFO] Trinity.Historical | ⏭️  BLA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:42 [INFO] Trinity.Historical | ⏭️  BTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:42 [INFO] Trinity.Historical | ⏭️  BTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:42 [INFO] Trinity.Historical | ⏭️  CBG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:42 [INFO] Trinity.Historical | ⏭️  CCET | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:42 [INFO] Trinity.Historical | ⏭️  CENTEL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:42 [INFO] Trinity.Historical | ⏭️  CHG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:42 [INFO] Trinity.Historical | ⏭️  CK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:42 [INFO] Trinity.Historical | ⏭️  COM7 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:42 [INFO] Trinity.Historical | ⏭️  CPALL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:43 [INFO] Trinity.Historical | 📦 Batch 4/10: CPF, CPN, CRC, DELTA, DOHOME, EA, EGCO, ERW, GFPT, GLOBAL
+2026-03-12 21:40:44 [INFO] Trinity.Historical | ⏭️  CPF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:44 [INFO] Trinity.Historical | ⏭️  CPN | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:44 [INFO] Trinity.Historical | ⏭️  CRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:44 [INFO] Trinity.Historical | ⏭️  DELTA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:44 [INFO] Trinity.Historical | ⏭️  DOHOME | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:44 [INFO] Trinity.Historical | ⏭️  EA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:44 [INFO] Trinity.Historical | ⏭️  EGCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:44 [INFO] Trinity.Historical | ⏭️  ERW | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:44 [INFO] Trinity.Historical | ⏭️  GFPT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:44 [INFO] Trinity.Historical | ⏭️  GLOBAL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:45 [INFO] Trinity.Historical | 📦 Batch 5/10: GPSC, GULF, GUNKUL, HANA, HMPRO, ICHI, IRPC, IVL, JAS, JMART
+2026-03-12 21:40:45 [INFO] Trinity.Historical | ⏭️  GPSC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:45 [INFO] Trinity.Historical | ⏭️  GULF | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:45 [INFO] Trinity.Historical | ⏭️  GUNKUL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:45 [INFO] Trinity.Historical | ⏭️  HANA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:45 [INFO] Trinity.Historical | ⏭️  HMPRO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:45 [INFO] Trinity.Historical | ⏭️  ICHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:45 [INFO] Trinity.Historical | ⏭️  IRPC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:45 [INFO] Trinity.Historical | ⏭️  IVL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:45 [INFO] Trinity.Historical | ⏭️  JAS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:45 [INFO] Trinity.Historical | ⏭️  JMART | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:46 [INFO] Trinity.Historical | 📦 Batch 6/10: JMT, JTS, KBANK, KCE, KKP, KTB, KTC, LH, M, MEGA
+2026-03-12 21:40:46 [INFO] Trinity.Historical | ⏭️  JMT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:46 [INFO] Trinity.Historical | ⏭️  JTS | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:46 [INFO] Trinity.Historical | ⏭️  KBANK | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:46 [INFO] Trinity.Historical | ⏭️  KCE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:46 [INFO] Trinity.Historical | ⏭️  KKP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:46 [INFO] Trinity.Historical | ⏭️  KTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:46 [INFO] Trinity.Historical | ⏭️  KTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:46 [INFO] Trinity.Historical | ⏭️  LH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:46 [INFO] Trinity.Historical | ⏭️  M | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:46 [INFO] Trinity.Historical | ⏭️  MEGA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:47 [INFO] Trinity.Historical | 📦 Batch 7/10: MINT, MOSHI, MTC, OR, OSP, PLANB, PR9, PRM, PTG, PTT
+2026-03-12 21:40:47 [INFO] Trinity.Historical | ⏭️  MINT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:47 [INFO] Trinity.Historical | ⏭️  MOSHI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:47 [INFO] Trinity.Historical | ⏭️  MTC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:47 [INFO] Trinity.Historical | ⏭️  OR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:47 [INFO] Trinity.Historical | ⏭️  OSP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:47 [INFO] Trinity.Historical | ⏭️  PLANB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:47 [INFO] Trinity.Historical | ⏭️  PR9 | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:47 [INFO] Trinity.Historical | ⏭️  PRM | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:47 [INFO] Trinity.Historical | ⏭️  PTG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:47 [INFO] Trinity.Historical | ⏭️  PTT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:48 [INFO] Trinity.Historical | 📦 Batch 8/10: PTTEP, PTTGC, QH, RATCH, RCL, SAWAD, SCB, SCC, SCGP, SIRI
+2026-03-12 21:40:49 [INFO] Trinity.Historical | ⏭️  PTTEP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:49 [INFO] Trinity.Historical | ⏭️  PTTGC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:49 [INFO] Trinity.Historical | ⏭️  QH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:49 [INFO] Trinity.Historical | ⏭️  RATCH | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:49 [INFO] Trinity.Historical | ⏭️  RCL | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:49 [INFO] Trinity.Historical | ⏭️  SAWAD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:49 [INFO] Trinity.Historical | ⏭️  SCB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:49 [INFO] Trinity.Historical | ⏭️  SCC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:49 [INFO] Trinity.Historical | ⏭️  SCGP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:49 [INFO] Trinity.Historical | ⏭️  SIRI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:50 [INFO] Trinity.Historical | 📦 Batch 9/10: SISB, SJWD, SPALI, SPRC, STA, STECON, STGT, TASCO, TCAP, TFG
+2026-03-12 21:40:50 [INFO] Trinity.Historical | ⏭️  SISB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:50 [INFO] Trinity.Historical | ⏭️  SJWD | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:50 [INFO] Trinity.Historical | ⏭️  SPALI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:50 [INFO] Trinity.Historical | ⏭️  SPRC | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:50 [INFO] Trinity.Historical | ⏭️  STA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:50 [INFO] Trinity.Historical | ⏭️  STECON | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:50 [INFO] Trinity.Historical | ⏭️  STGT | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:50 [INFO] Trinity.Historical | ⏭️  TASCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:50 [INFO] Trinity.Historical | ⏭️  TCAP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:50 [INFO] Trinity.Historical | ⏭️  TFG | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:51 [INFO] Trinity.Historical | 📦 Batch 10/10: TIDLOR, TISCO, TLI, TOA, TOP, TRUE, TTB, TU, VGI, WHA
+2026-03-12 21:40:51 [INFO] Trinity.Historical | ⏭️  TIDLOR | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:51 [INFO] Trinity.Historical | ⏭️  TISCO | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:51 [INFO] Trinity.Historical | ⏭️  TLI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:51 [INFO] Trinity.Historical | ⏭️  TOA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:51 [INFO] Trinity.Historical | ⏭️  TOP | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:51 [INFO] Trinity.Historical | ⏭️  TRUE | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:51 [INFO] Trinity.Historical | ⏭️  TTB | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:51 [INFO] Trinity.Historical | ⏭️  TU | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:51 [INFO] Trinity.Historical | ⏭️  VGI | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:51 [INFO] Trinity.Historical | ⏭️  WHA | ข้อมูลเป็นปัจจุบันแล้ว
+2026-03-12 21:40:51 [INFO] Trinity.Historical | 🔄 อัปเดต Prediction Accuracy สำหรับ 0 หุ้น...
+2026-03-12 21:40:51 [INFO] Trinity.Historical | ============================================================
+2026-03-12 21:40:51 [INFO] Trinity.Historical | 🏁 Batch Process Completed in 12.5s
+2026-03-12 21:40:51 [INFO] Trinity.Historical |    📊 New rows archived : 0
+2026-03-12 21:40:51 [INFO] Trinity.Historical |    ❌ Failed symbols    : 0
+2026-03-12 21:40:51 [INFO] Trinity.Historical | ============================================================
+2026-03-12 21:46:33 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 24
+2026-03-12 21:46:33 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 25
+2026-03-12 21:46:33 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 32
+2026-03-12 21:46:33 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 33
+2026-03-12 21:46:33 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 34
+2026-03-12 21:46:33 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 35
+2026-03-12 21:46:33 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 36
+2026-03-12 21:46:33 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 37
+2026-03-12 21:46:33 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 38
+2026-03-12 21:46:33 [INFO] Trinity.Historical | ============================================================
+2026-03-12 21:46:33 [INFO] Trinity.Historical | 🚀 Trinity EOD Archive | 2026-03-12 21:46:33
+2026-03-12 21:46:33 [INFO] Trinity.Historical | 🔖 Batch Process Started | symbols=100
+2026-03-12 21:46:33 [INFO] Trinity.Historical | ============================================================
+2026-03-12 21:46:33 [INFO] Trinity.Historical | 🔍 ตรวจสอบวันที่ล่าสุดใน DB สำหรับแต่ละหุ้น...
+2026-03-12 21:46:33 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?select=symbol%2C%20date&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&order=date.desc "HTTP/2 200 OK"
+2026-03-12 21:46:33 [INFO] Trinity.Historical | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-12 21:46:34 [INFO] Trinity.Historical | ✅ Symbol AAV Updated | +1 rows | ฿1.10
+2026-03-12 21:46:34 [INFO] Trinity.Historical | ✅ Symbol ADVANC Updated | +1 rows | ฿368.00
+2026-03-12 21:46:34 [INFO] Trinity.Historical | ✅ Symbol AEONTS Updated | +1 rows | ฿91.25
+2026-03-12 21:46:34 [INFO] Trinity.Historical | ✅ Symbol AMATA Updated | +1 rows | ฿18.70
+2026-03-12 21:46:34 [INFO] Trinity.Historical | ✅ Symbol AOT Updated | +1 rows | ฿50.50
+2026-03-12 21:46:34 [INFO] Trinity.Historical | ✅ Symbol AP Updated | +1 rows | ฿8.75
+2026-03-12 21:46:34 [INFO] Trinity.Historical | ✅ Symbol AURA Updated | +1 rows | ฿13.40
+2026-03-12 21:46:34 [INFO] Trinity.Historical | ✅ Symbol AWC Updated | +1 rows | ฿2.08
+2026-03-12 21:46:34 [INFO] Trinity.Historical | ✅ Symbol BA Updated | +1 rows | ฿14.10
+2026-03-12 21:46:34 [INFO] Trinity.Historical | ✅ Symbol BAM Updated | +1 rows | ฿7.20
+2026-03-12 21:46:34 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22low_price%22%2C%22date%22%2C%22macd_signal%22%2C%22symbol%22%2C%22open_price%22%2C%22volume%22%2C%22macd_val%22%2C%22high_price%22%2C%22close_price%22%2C%22backup_at%22%2C%22rsi_14%22 "HTTP/2 201 Created"
+2026-03-12 21:46:34 [INFO] Trinity.Historical | 💾 Batch 1: upserted 10 rows
+2026-03-12 21:46:35 [INFO] Trinity.Historical | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-12 21:46:35 [INFO] Trinity.Historical | ✅ Symbol BANPU Updated | +1 rows | ฿6.00
+2026-03-12 21:46:35 [INFO] Trinity.Historical | ✅ Symbol BBL Updated | +1 rows | ฿168.50
+2026-03-12 21:46:35 [INFO] Trinity.Historical | ✅ Symbol BCH Updated | +1 rows | ฿9.90
+2026-03-12 21:46:35 [INFO] Trinity.Historical | ✅ Symbol BCP Updated | +1 rows | ฿37.75
+2026-03-12 21:46:35 [INFO] Trinity.Historical | ✅ Symbol BCPG Updated | +1 rows | ฿6.45
+2026-03-12 21:46:35 [INFO] Trinity.Historical | ✅ Symbol BDMS Updated | +1 rows | ฿18.70
+2026-03-12 21:46:35 [INFO] Trinity.Historical | ✅ Symbol BEM Updated | +1 rows | ฿5.45
+2026-03-12 21:46:35 [INFO] Trinity.Historical | ✅ Symbol BGRIM Updated | +1 rows | ฿11.80
+2026-03-12 21:46:35 [INFO] Trinity.Historical | ✅ Symbol BH Updated | +1 rows | ฿176.50
+2026-03-12 21:46:35 [INFO] Trinity.Historical | ✅ Symbol BJC Updated | +1 rows | ฿14.10
+2026-03-12 21:46:35 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22low_price%22%2C%22date%22%2C%22macd_signal%22%2C%22symbol%22%2C%22open_price%22%2C%22volume%22%2C%22macd_val%22%2C%22high_price%22%2C%22close_price%22%2C%22backup_at%22%2C%22rsi_14%22 "HTTP/2 201 Created"
+2026-03-12 21:46:35 [INFO] Trinity.Historical | 💾 Batch 2: upserted 10 rows
+2026-03-12 21:46:36 [INFO] Trinity.Historical | 📦 Batch 3/10: BLA, BTG, BTS, CBG, CCET, CENTEL, CHG, CK, COM7, CPALL
+2026-03-12 21:46:36 [INFO] Trinity.Historical | ✅ Symbol BLA Updated | +1 rows | ฿19.80
+2026-03-12 21:46:36 [INFO] Trinity.Historical | ✅ Symbol BTG Updated | +1 rows | ฿20.80
+2026-03-12 21:46:36 [INFO] Trinity.Historical | ✅ Symbol BTS Updated | +1 rows | ฿2.10
+2026-03-12 21:46:36 [INFO] Trinity.Historical | ✅ Symbol CBG Updated | +1 rows | ฿35.75
+2026-03-12 21:46:36 [INFO] Trinity.Historical | ✅ Symbol CCET Updated | +1 rows | ฿4.86
+2026-03-12 21:46:36 [INFO] Trinity.Historical | ✅ Symbol CENTEL Updated | +1 rows | ฿34.00
+2026-03-12 21:46:36 [INFO] Trinity.Historical | ✅ Symbol CHG Updated | +1 rows | ฿1.49
+2026-03-12 21:46:36 [INFO] Trinity.Historical | ✅ Symbol CK Updated | +1 rows | ฿15.80
+2026-03-12 21:46:36 [INFO] Trinity.Historical | ✅ Symbol COM7 Updated | +1 rows | ฿23.90
+2026-03-12 21:46:36 [INFO] Trinity.Historical | ✅ Symbol CPALL Updated | +1 rows | ฿47.25
+2026-03-12 21:46:37 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22low_price%22%2C%22date%22%2C%22macd_signal%22%2C%22symbol%22%2C%22open_price%22%2C%22volume%22%2C%22macd_val%22%2C%22high_price%22%2C%22close_price%22%2C%22backup_at%22%2C%22rsi_14%22 "HTTP/2 201 Created"
+2026-03-12 21:46:37 [INFO] Trinity.Historical | 💾 Batch 3: upserted 10 rows
+2026-03-12 21:46:38 [INFO] Trinity.Historical | 📦 Batch 4/10: CPF, CPN, CRC, DELTA, DOHOME, EA, EGCO, ERW, GFPT, GLOBAL
+2026-03-12 21:46:38 [INFO] Trinity.Historical | ✅ Symbol CPF Updated | +1 rows | ฿19.10
+2026-03-12 21:46:38 [INFO] Trinity.Historical | ✅ Symbol CPN Updated | +1 rows | ฿66.50
+2026-03-12 21:46:38 [INFO] Trinity.Historical | ✅ Symbol CRC Updated | +1 rows | ฿18.90
+2026-03-12 21:46:38 [INFO] Trinity.Historical | ✅ Symbol DELTA Updated | +1 rows | ฿262.00
+2026-03-12 21:46:38 [INFO] Trinity.Historical | ✅ Symbol DOHOME Updated | +1 rows | ฿3.34
+2026-03-12 21:46:38 [INFO] Trinity.Historical | ✅ Symbol EA Updated | +1 rows | ฿2.70
+2026-03-12 21:46:38 [INFO] Trinity.Historical | ✅ Symbol EGCO Updated | +1 rows | ฿114.50
+2026-03-12 21:46:38 [INFO] Trinity.Historical | ✅ Symbol ERW Updated | +1 rows | ฿2.60
+2026-03-12 21:46:38 [INFO] Trinity.Historical | ✅ Symbol GFPT Updated | +1 rows | ฿9.05
+2026-03-12 21:46:38 [INFO] Trinity.Historical | ✅ Symbol GLOBAL Updated | +1 rows | ฿6.80
+2026-03-12 21:46:38 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22low_price%22%2C%22date%22%2C%22macd_signal%22%2C%22symbol%22%2C%22open_price%22%2C%22volume%22%2C%22macd_val%22%2C%22high_price%22%2C%22close_price%22%2C%22backup_at%22%2C%22rsi_14%22 "HTTP/2 201 Created"
+2026-03-12 21:46:38 [INFO] Trinity.Historical | 💾 Batch 4: upserted 10 rows
+2026-03-12 21:46:39 [INFO] Trinity.Historical | 📦 Batch 5/10: GPSC, GULF, GUNKUL, HANA, HMPRO, ICHI, IRPC, IVL, JAS, JMART
+2026-03-12 21:46:39 [INFO] Trinity.Historical | ✅ Symbol GPSC Updated | +1 rows | ฿34.00
+2026-03-12 21:46:39 [INFO] Trinity.Historical | ✅ Symbol GULF Updated | +1 rows | ฿56.25
+2026-03-12 21:46:39 [INFO] Trinity.Historical | ✅ Symbol GUNKUL Updated | +1 rows | ฿2.24
+2026-03-12 21:46:39 [INFO] Trinity.Historical | ✅ Symbol HANA Updated | +1 rows | ฿24.90
+2026-03-12 21:46:39 [INFO] Trinity.Historical | ✅ Symbol HMPRO Updated | +1 rows | ฿6.45
+2026-03-12 21:46:39 [INFO] Trinity.Historical | ✅ Symbol ICHI Updated | +1 rows | ฿14.40
+2026-03-12 21:46:39 [INFO] Trinity.Historical | ✅ Symbol IRPC Updated | +1 rows | ฿1.25
+2026-03-12 21:46:39 [INFO] Trinity.Historical | ✅ Symbol IVL Updated | +1 rows | ฿20.30
+2026-03-12 21:46:39 [INFO] Trinity.Historical | ✅ Symbol JAS Updated | +1 rows | ฿1.27
+2026-03-12 21:46:39 [INFO] Trinity.Historical | ✅ Symbol JMART Updated | +1 rows | ฿7.25
+2026-03-12 21:46:39 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22low_price%22%2C%22date%22%2C%22macd_signal%22%2C%22symbol%22%2C%22open_price%22%2C%22volume%22%2C%22macd_val%22%2C%22high_price%22%2C%22close_price%22%2C%22backup_at%22%2C%22rsi_14%22 "HTTP/2 201 Created"
+2026-03-12 21:46:39 [INFO] Trinity.Historical | 💾 Batch 5: upserted 10 rows
+2026-03-12 21:46:40 [INFO] Trinity.Historical | 📦 Batch 6/10: JMT, JTS, KBANK, KCE, KKP, KTB, KTC, LH, M, MEGA
+2026-03-12 21:46:40 [INFO] Trinity.Historical | ✅ Symbol JMT Updated | +1 rows | ฿9.10
+2026-03-12 21:46:40 [INFO] Trinity.Historical | ✅ Symbol JTS Updated | +1 rows | ฿60.00
+2026-03-12 21:46:40 [INFO] Trinity.Historical | ✅ Symbol KBANK Updated | +1 rows | ฿189.00
+2026-03-12 21:46:40 [INFO] Trinity.Historical | ✅ Symbol KCE Updated | +1 rows | ฿20.30
+2026-03-12 21:46:40 [INFO] Trinity.Historical | ✅ Symbol KKP Updated | +1 rows | ฿72.75
+2026-03-12 21:46:40 [INFO] Trinity.Historical | ✅ Symbol KTB Updated | +1 rows | ฿35.00
+2026-03-12 21:46:40 [INFO] Trinity.Historical | ✅ Symbol KTC Updated | +1 rows | ฿29.75
+2026-03-12 21:46:40 [INFO] Trinity.Historical | ✅ Symbol LH Updated | +1 rows | ฿3.80
+2026-03-12 21:46:40 [INFO] Trinity.Historical | ✅ Symbol M Updated | +1 rows | ฿19.90
+2026-03-12 21:46:40 [INFO] Trinity.Historical | ✅ Symbol MEGA Updated | +1 rows | ฿34.50
+2026-03-12 21:46:40 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22low_price%22%2C%22date%22%2C%22macd_signal%22%2C%22symbol%22%2C%22open_price%22%2C%22volume%22%2C%22macd_val%22%2C%22high_price%22%2C%22close_price%22%2C%22backup_at%22%2C%22rsi_14%22 "HTTP/2 201 Created"
+2026-03-12 21:46:40 [INFO] Trinity.Historical | 💾 Batch 6: upserted 10 rows
+2026-03-12 21:46:42 [INFO] Trinity.Historical | 📦 Batch 7/10: MINT, MOSHI, MTC, OR, OSP, PLANB, PR9, PRM, PTG, PTT
+2026-03-12 21:46:42 [INFO] Trinity.Historical | ✅ Symbol MINT Updated | +1 rows | ฿22.70
+2026-03-12 21:46:42 [INFO] Trinity.Historical | ✅ Symbol MOSHI Updated | +1 rows | ฿33.00
+2026-03-12 21:46:42 [INFO] Trinity.Historical | ✅ Symbol MTC Updated | +1 rows | ฿32.00
+2026-03-12 21:46:42 [INFO] Trinity.Historical | ✅ Symbol OR Updated | +1 rows | ฿11.30
+2026-03-12 21:46:42 [INFO] Trinity.Historical | ✅ Symbol OSP Updated | +1 rows | ฿14.60
+2026-03-12 21:46:42 [INFO] Trinity.Historical | ✅ Symbol PLANB Updated | +1 rows | ฿4.34
+2026-03-12 21:46:42 [INFO] Trinity.Historical | ✅ Symbol PR9 Updated | +1 rows | ฿17.00
+2026-03-12 21:46:42 [INFO] Trinity.Historical | ✅ Symbol PRM Updated | +1 rows | ฿7.45
+2026-03-12 21:46:42 [INFO] Trinity.Historical | ✅ Symbol PTG Updated | +1 rows | ฿8.15
+2026-03-12 21:46:42 [INFO] Trinity.Historical | ✅ Symbol PTT Updated | +1 rows | ฿35.00
+2026-03-12 21:46:42 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22low_price%22%2C%22date%22%2C%22macd_signal%22%2C%22symbol%22%2C%22open_price%22%2C%22volume%22%2C%22macd_val%22%2C%22high_price%22%2C%22close_price%22%2C%22backup_at%22%2C%22rsi_14%22 "HTTP/2 201 Created"
+2026-03-12 21:46:42 [INFO] Trinity.Historical | 💾 Batch 7: upserted 10 rows
+2026-03-12 21:46:43 [INFO] Trinity.Historical | 📦 Batch 8/10: PTTEP, PTTGC, QH, RATCH, RCL, SAWAD, SCB, SCC, SCGP, SIRI
+2026-03-12 21:46:43 [INFO] Trinity.Historical | ✅ Symbol PTTEP Updated | +1 rows | ฿144.50
+2026-03-12 21:46:43 [INFO] Trinity.Historical | ✅ Symbol PTTGC Updated | +1 rows | ฿28.25
+2026-03-12 21:46:43 [INFO] Trinity.Historical | ✅ Symbol QH Updated | +1 rows | ฿1.39
+2026-03-12 21:46:43 [INFO] Trinity.Historical | ✅ Symbol RATCH Updated | +1 rows | ฿29.00
+2026-03-12 21:46:43 [INFO] Trinity.Historical | ✅ Symbol RCL Updated | +1 rows | ฿29.75
+2026-03-12 21:46:43 [INFO] Trinity.Historical | ✅ Symbol SAWAD Updated | +1 rows | ฿25.50
+2026-03-12 21:46:43 [INFO] Trinity.Historical | ✅ Symbol SCB Updated | +1 rows | ฿143.50
+2026-03-12 21:46:43 [INFO] Trinity.Historical | ✅ Symbol SCC Updated | +1 rows | ฿181.00
+2026-03-12 21:46:43 [INFO] Trinity.Historical | ✅ Symbol SCGP Updated | +1 rows | ฿17.90
+2026-03-12 21:46:43 [INFO] Trinity.Historical | ✅ Symbol SIRI Updated | +1 rows | ฿1.51
+2026-03-12 21:46:43 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22low_price%22%2C%22date%22%2C%22macd_signal%22%2C%22symbol%22%2C%22open_price%22%2C%22volume%22%2C%22macd_val%22%2C%22high_price%22%2C%22close_price%22%2C%22backup_at%22%2C%22rsi_14%22 "HTTP/2 201 Created"
+2026-03-12 21:46:43 [INFO] Trinity.Historical | 💾 Batch 8: upserted 10 rows
+2026-03-12 21:46:44 [INFO] Trinity.Historical | 📦 Batch 9/10: SISB, SJWD, SPALI, SPRC, STA, STECON, STGT, TASCO, TCAP, TFG
+2026-03-12 21:46:45 [INFO] Trinity.Historical | ✅ Symbol SISB Updated | +1 rows | ฿11.10
+2026-03-12 21:46:45 [INFO] Trinity.Historical | ✅ Symbol SJWD Updated | +1 rows | ฿7.60
+2026-03-12 21:46:45 [INFO] Trinity.Historical | ✅ Symbol SPALI Updated | +1 rows | ฿17.50
+2026-03-12 21:46:45 [INFO] Trinity.Historical | ✅ Symbol SPRC Updated | +1 rows | ฿8.15
+2026-03-12 21:46:45 [INFO] Trinity.Historical | ✅ Symbol STA Updated | +1 rows | ฿15.70
+2026-03-12 21:46:45 [INFO] Trinity.Historical | ✅ Symbol STECON Updated | +1 rows | ฿12.50
+2026-03-12 21:46:45 [INFO] Trinity.Historical | ✅ Symbol STGT Updated | +1 rows | ฿9.50
+2026-03-12 21:46:45 [INFO] Trinity.Historical | ✅ Symbol TASCO Updated | +1 rows | ฿13.00
+2026-03-12 21:46:45 [INFO] Trinity.Historical | ✅ Symbol TCAP Updated | +1 rows | ฿56.50
+2026-03-12 21:46:45 [INFO] Trinity.Historical | ✅ Symbol TFG Updated | +1 rows | ฿7.10
+2026-03-12 21:46:45 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22low_price%22%2C%22date%22%2C%22macd_signal%22%2C%22symbol%22%2C%22open_price%22%2C%22volume%22%2C%22macd_val%22%2C%22high_price%22%2C%22close_price%22%2C%22backup_at%22%2C%22rsi_14%22 "HTTP/2 201 Created"
+2026-03-12 21:46:45 [INFO] Trinity.Historical | 💾 Batch 9: upserted 10 rows
+2026-03-12 21:46:46 [INFO] Trinity.Historical | 📦 Batch 10/10: TIDLOR, TISCO, TLI, TOA, TOP, TRUE, TTB, TU, VGI, WHA
+2026-03-12 21:46:46 [INFO] Trinity.Historical | ✅ Symbol TIDLOR Updated | +1 rows | ฿17.20
+2026-03-12 21:46:46 [INFO] Trinity.Historical | ✅ Symbol TISCO Updated | +1 rows | ฿113.00
+2026-03-12 21:46:46 [INFO] Trinity.Historical | ✅ Symbol TLI Updated | +1 rows | ฿10.30
+2026-03-12 21:46:46 [INFO] Trinity.Historical | ✅ Symbol TOA Updated | +1 rows | ฿13.30
+2026-03-12 21:46:46 [INFO] Trinity.Historical | ✅ Symbol TOP Updated | +1 rows | ฿49.50
+2026-03-12 21:46:46 [INFO] Trinity.Historical | ✅ Symbol TRUE Updated | +1 rows | ฿13.50
+2026-03-12 21:46:46 [INFO] Trinity.Historical | ✅ Symbol TTB Updated | +1 rows | ฿2.22
+2026-03-12 21:46:46 [INFO] Trinity.Historical | ✅ Symbol TU Updated | +1 rows | ฿10.90
+2026-03-12 21:46:46 [INFO] Trinity.Historical | ✅ Symbol VGI Updated | +1 rows | ฿0.94
+2026-03-12 21:46:46 [INFO] Trinity.Historical | ✅ Symbol WHA Updated | +1 rows | ฿4.16
+2026-03-12 21:46:46 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?on_conflict=symbol%2Cdate&columns=%22low_price%22%2C%22date%22%2C%22macd_signal%22%2C%22symbol%22%2C%22open_price%22%2C%22volume%22%2C%22macd_val%22%2C%22high_price%22%2C%22close_price%22%2C%22backup_at%22%2C%22rsi_14%22 "HTTP/2 201 Created"
+2026-03-12 21:46:46 [INFO] Trinity.Historical | 💾 Batch 10: upserted 10 rows
+2026-03-12 21:46:46 [INFO] Trinity.Historical | 🔄 อัปเดต Prediction Accuracy สำหรับ 100 หุ้น...
+2026-03-12 21:46:46 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_predictions_v3?select=id%2C%20symbol%2C%20prediction_date%2C%20predicted_price%2C%20horizon_type&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&prediction_date=in.%282026-03-12%29&actual_price=is.null "HTTP/2 200 OK"
+2026-03-12 21:46:46 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_predictions_v3?on_conflict=id&columns=%22id%22%2C%22actual_price%22%2C%22prediction_date%22%2C%22symbol%22%2C%22error_percent%22 "HTTP/2 400 Bad Request"
+2026-03-12 21:46:46 [WARNING] Trinity.Historical | ⚠️ [upsert_prediction_accuracy] attempt 1/3: {'code': '23502', 'details': 'Failing row contains (4013, SCC, 2026-03-12, null, null, null, 181, 3, null, null, null, 2026-03-12 14:46:46.820528+00).', 'hint': None, 'message': 'null value in column "predicted_price" of relation "stock_predictions_v3" violates not-null constraint'} — retry in 2s
+2026-03-12 21:46:48 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_predictions_v3?on_conflict=id&columns=%22id%22%2C%22actual_price%22%2C%22prediction_date%22%2C%22symbol%22%2C%22error_percent%22 "HTTP/2 400 Bad Request"
+2026-03-12 21:46:48 [WARNING] Trinity.Historical | ⚠️ [upsert_prediction_accuracy] attempt 2/3: {'code': '23502', 'details': 'Failing row contains (4013, SCC, 2026-03-12, null, null, null, 181, 3, null, null, null, 2026-03-12 14:46:48.946337+00).', 'hint': None, 'message': 'null value in column "predicted_price" of relation "stock_predictions_v3" violates not-null constraint'} — retry in 4s
+2026-03-12 21:46:53 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_predictions_v3?on_conflict=id&columns=%22id%22%2C%22actual_price%22%2C%22prediction_date%22%2C%22symbol%22%2C%22error_percent%22 "HTTP/2 400 Bad Request"
+2026-03-12 21:46:53 [ERROR] Trinity.Historical | ❌ [upsert_prediction_accuracy] ล้มเหลวทุก 3 retry: {'code': '23502', 'details': 'Failing row contains (4013, SCC, 2026-03-12, null, null, null, 181, 3, null, null, null, 2026-03-12 14:46:53.057197+00).', 'hint': None, 'message': 'null value in column "predicted_price" of relation "stock_predictions_v3" violates not-null constraint'}
+2026-03-12 21:46:53 [ERROR] Trinity.Historical | ❌ update_prediction_accuracy error: {'code': '23502', 'details': 'Failing row contains (4013, SCC, 2026-03-12, null, null, null, 181, 3, null, null, null, 2026-03-12 14:46:53.057197+00).', 'hint': None, 'message': 'null value in column "predicted_price" of relation "stock_predictions_v3" violates not-null constraint'}
+2026-03-12 21:46:53 [INFO] Trinity.Historical | ============================================================
+2026-03-12 21:46:53 [INFO] Trinity.Historical | 🏁 Batch Process Completed in 19.6s
+2026-03-12 21:46:53 [INFO] Trinity.Historical |    📊 New rows archived : 100
+2026-03-12 21:46:53 [INFO] Trinity.Historical |    ❌ Failed symbols    : 0
+2026-03-12 21:46:53 [INFO] Trinity.Historical | ============================================================

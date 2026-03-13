@@ -1,0 +1,35 @@
+2026-03-11 16:30:10 [INFO] Trinity.Orchestrator | ============================================================
+2026-03-11 16:30:10 [INFO] Trinity.Orchestrator | 🌙 Trinity EOD Pipeline เริ่มต้น | 2026-03-11 16:30:10
+2026-03-11 16:30:10 [INFO] Trinity.Orchestrator | 🔖 Batch Process Started — EOD Sequence
+2026-03-11 16:30:10 [INFO] Trinity.Orchestrator | ============================================================
+2026-03-11 16:30:10 [INFO] Trinity.Orchestrator | ▶️  Running: stock_sync.py
+2026-03-11 16:30:25 [INFO] Trinity.Orchestrator | ✅ stock_sync.py เสร็จใน 15.6s
+2026-03-11 16:30:25 [INFO] Trinity.Orchestrator | ▶️  Running: historical.py
+2026-03-11 16:30:39 [INFO] Trinity.Orchestrator | ✅ historical.py เสร็จใน 13.8s
+2026-03-11 16:30:39 [INFO] Trinity.Orchestrator | ▶️  Running: forward_test.py
+2026-03-11 16:30:41 [INFO] Trinity.Orchestrator | ✅ forward_test.py เสร็จใน 1.5s
+2026-03-11 16:30:41 [INFO] Trinity.Orchestrator | ▶️  Running: model_forecast_v3.py
+2026-03-11 16:33:09 [INFO] Trinity.Orchestrator | ✅ model_forecast_v3.py เสร็จใน 148.3s
+2026-03-11 16:33:09 [INFO] Trinity.Orchestrator | ▶️  Running: news.py --mode full
+2026-03-11 16:42:08 [INFO] Trinity.Orchestrator | ✅ news.py --mode full เสร็จใน 539.1s
+2026-03-11 16:42:08 [INFO] Trinity.Orchestrator | ============================================================
+2026-03-11 16:42:08 [INFO] Trinity.Orchestrator | 📋 EOD Pipeline Summary:
+2026-03-11 16:42:08 [INFO] Trinity.Orchestrator |   ✅ stock_sync
+2026-03-11 16:42:08 [INFO] Trinity.Orchestrator |   ✅ historical
+2026-03-11 16:42:08 [INFO] Trinity.Orchestrator |   ✅ forward_test
+2026-03-11 16:42:08 [INFO] Trinity.Orchestrator |   ✅ forecast
+2026-03-11 16:42:08 [INFO] Trinity.Orchestrator |   ✅ news
+2026-03-11 16:42:08 [INFO] Trinity.Orchestrator | 🏁 Batch Process Completed — 5/5 scripts OK
+2026-03-11 16:42:08 [INFO] Trinity.Orchestrator | ============================================================
+2026-03-11 17:25:17 [INFO] Trinity.Orchestrator | ⏰ Full Scheduler เริ่มทำงาน
+2026-03-11 17:25:17 [INFO] Trinity.Orchestrator |   • ทุก 1 นาที  : intraday sync
+2026-03-11 17:25:17 [INFO] Trinity.Orchestrator |   • 17:05 น.   : EOD pipeline
+2026-03-11 17:25:17 [INFO] Trinity.Orchestrator |   • 08:00 น.   : Morning news
+2026-03-11 17:25:17 [INFO] Trinity.Orchestrator | 🚀 รัน EOD sequence ทันทีเพราะตลาดปิดแล้ว
+2026-03-11 17:25:17 [INFO] Trinity.Orchestrator | ============================================================
+2026-03-11 17:25:17 [INFO] Trinity.Orchestrator | 🌙 Trinity EOD Pipeline เริ่มต้น | 2026-03-11 17:25:17
+2026-03-11 17:25:17 [INFO] Trinity.Orchestrator | 🔖 Batch Process Started — EOD Sequence
+2026-03-11 17:25:17 [INFO] Trinity.Orchestrator | ============================================================
+2026-03-11 17:25:17 [INFO] Trinity.Orchestrator | ▶️  Running: stock_sync.py
+2026-03-11 17:25:30 [INFO] Trinity.Orchestrator | ✅ stock_sync.py เสร็จใน 13.1s
+2026-03-11 17:25:30 [INFO] Trinity.Orchestrator | ▶️  Running: historical.py

@@ -1,0 +1,184 @@
+2026-03-12 12:14:10 [INFO] Trinity.Analytics | ============================================================
+2026-03-12 12:14:10 [INFO] Trinity.Analytics | 🏁 Trinity Analytics V3 | 2026-03-12 12:14:10
+2026-03-12 12:14:10 [INFO] Trinity.Analytics | 🔖 Batch Process Started
+2026-03-12 12:14:10 [INFO] Trinity.Analytics | ============================================================
+2026-03-12 12:14:10 [INFO] Trinity.Analytics | 📊 Fetching completed predictions for MAPE evaluation...
+2026-03-12 12:14:10 [WARNING] Trinity.Analytics | ⚠️ [fetch_evaluation_data] attempt 1/3: 'SyncSelectRequestBuilder' object is not callable — retry in 2s
+2026-03-12 12:14:12 [WARNING] Trinity.Analytics | ⚠️ [fetch_evaluation_data] attempt 2/3: 'SyncSelectRequestBuilder' object is not callable — retry in 4s
+2026-03-12 12:14:16 [ERROR] Trinity.Analytics | ❌ [fetch_evaluation_data] ล้มเหลวทุก 3 retry: 'SyncSelectRequestBuilder' object is not callable
+2026-03-12 12:14:16 [ERROR] Trinity.Analytics | ❌ fetch_evaluation_data error: 'SyncSelectRequestBuilder' object is not callable
+2026-03-12 12:14:16 [WARNING] Trinity.Analytics | ⚠️ ยังไม่มีข้อมูล actual_price เพียงพอ — ข้าม MAPE evaluation
+2026-03-12 12:14:16 [INFO] Trinity.Analytics | 📡 Fetching historical data for 100 symbols (120 days)...
+2026-03-12 12:14:17 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?select=symbol%2Cdate%2Cclose_price%2Cvolume%2Crsi_14%2Cmacd_val%2Cmacd_signal&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&date=gte.2025-11-12&order=date "HTTP/2 200 OK"
+2026-03-12 12:14:17 [INFO] Trinity.Analytics | ✅ Loaded 100 symbols from DB
+2026-03-12 12:14:17 [INFO] Trinity.Analytics | 🔮 Fetching Chronos predictions for 100 symbols...
+2026-03-12 12:14:18 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_predictions_v3?select=symbol%2Chorizon_type%2Cpredicted_price%2Clower_bound%2Cupper_bound%2Cprediction_date&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&prediction_date=gte.2026-03-13&order=prediction_date "HTTP/2 200 OK"
+2026-03-12 12:14:18 [INFO] Trinity.Analytics | ✅ วิเคราะห์ Technical ครบ 0 หุ้น
+2026-03-12 12:14:18 [INFO] Trinity.Analytics | 🤖 Generating AI Strategic Insight...
+2026-03-12 12:14:25 [INFO] httpx | HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 12:14:25 [INFO] Trinity.Analytics | ============================================================
+2026-03-12 12:14:25 [INFO] Trinity.Analytics | 💡 AI STRATEGIC INSIGHT
+2026-03-12 12:14:25 [INFO] Trinity.Analytics | ============================================================
+2026-03-12 12:14:25 [INFO] Trinity.Analytics | ### การวิเคราะห์และคำแนะนำ
+
+1. **ความเสถียรของโมเดลเมื่อระยะเวลาพยากรณ์ยาวขึ้น (Model Decay Analysis):**
+   - จากข้อมูลที่ให้มา โมเดลไม่มีข้อมูลสำหรับ MAPE ในทุก Horizon (7D, 15D, 30D) ซึ่งทำให้ไม่สามารถประเมินความเสถียรของโมเดลได้ในขณะนี้
+   - **Recommendation:** ควรเก็บรวบรวมข้อมูลเพิ่มเติมและทำการทดสอบโมเดลในระยะเวลาต่างๆ เพื่อประเมินความเสถียรและการเสื่อมของโมเดลเมื่อระยะเวลาพยากรณ์ยาวขึ้น
+
+2. **การเลือก Horizon สำหรับการเทรดจริง:**
+   - เนื่องจากไม่มีข้อมูล MAPE สำหรับ Horizon ใดๆ ทำให้ไม่สามารถเลือก Horizon ที่เหมาะสมได้ในขณะนี้
+   - **Recommendation:** หลังจากที่มีการเก็บข้อมูลเพิ่มเติมและประเมิน MAPE ได้ ควรเลือก Horizon ที่มีค่า MAPE ต่ำที่สุด ซึ่งแสดงถึงความแม่นยำที่สูงกว่า
+
+3. **วิเคราะห์สาเหตุที่หุ้น Worst 5 มีความคลาดเคลื่อนสูง:**
+   - ข้อมูลไม่เพียงพอในการวิเคราะห์สาเหตุของความคลาดเคลื่อน เนื่องจากไม่มีรายชื่อหุ้น Worst 5
+   - **Recommendation:** ควรตรวจสอบปัจจัยภายนอก เช่น ข่าวเศรษฐกิจหรือเหตุการณ์ที่ไม่ปกติที่อาจส่งผลกระทบต่อราคาหุ้นในช่วงที่ทำการทดสอบ
+
+4. **Consensus View ระหว่าง Technical + Chronos:**
+   - ไม่มีข้อมูลให้วิเคราะห์ความสอดคล้องหรือขัดแย้งระหว่าง Technical และ Chronos
+   - **Recommendation:** ควรทำการวิเคราะห์เชิงลึกในหุ้นที่สนใจ เพื่อดูว่าการวิเคราะห์ทางเทคนิคและการพยากรณ์ด้วย Chronos นั้นสอดคล้องหรือขัดแย้งกันอย่างไร และใช้ข้อมูลนี้ในการตัดสินใจลงทุน
+
+### สรุป
+- ข้อมูลที่มีอยู่ไม่เพียงพอในการทำการวิเคราะห์ที่มีประสิทธิภาพ
+- แนะนำให้เก็บข้อมูลเพิ่มเติมและทำการทดสอบโมเดลในระยะเวลาต่างๆ เพื่อให้สามารถเลือก Horizon ที่เหมาะสมและวิเคราะห์ความคลาดเคลื่อนได้อย่างถูกต้อง
+- ใช้การวิเคราะห์เชิงลึกในการพิจารณาความสอดคล้องระหว่างการวิเคราะห์ทางเทคนิคและการพยากรณ์ด้วย Chronos เพื่อการตัดสินใจที่มีข้อมูลรองรับ
+2026-03-12 12:14:25 [INFO] Trinity.Analytics | ============================================================
+2026-03-12 12:14:26 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/model_insights "HTTP/2 400 Bad Request"
+2026-03-12 12:14:26 [WARNING] Trinity.Analytics | ⚠️ [save_insight] attempt 1/3: {'code': 'PGRST204', 'details': None, 'hint': None, 'message': "Could not find the 'overall_mape' column of 'model_insights' in the schema cache"} — retry in 2s
+2026-03-12 12:14:28 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/model_insights "HTTP/2 400 Bad Request"
+2026-03-12 12:14:28 [WARNING] Trinity.Analytics | ⚠️ [save_insight] attempt 2/3: {'code': 'PGRST204', 'details': None, 'hint': None, 'message': "Could not find the 'overall_mape' column of 'model_insights' in the schema cache"} — retry in 4s
+2026-03-12 12:18:02 [INFO] Trinity.Analytics | ============================================================
+2026-03-12 12:18:02 [INFO] Trinity.Analytics | 🏁 Trinity Analytics V3 | 2026-03-12 12:18:02
+2026-03-12 12:18:02 [INFO] Trinity.Analytics | 🔖 Batch Process Started
+2026-03-12 12:18:02 [INFO] Trinity.Analytics | ============================================================
+2026-03-12 12:18:02 [INFO] Trinity.Analytics | 📊 Fetching completed predictions for MAPE evaluation...
+2026-03-12 12:18:02 [WARNING] Trinity.Analytics | ⚠️ [fetch_evaluation_data] attempt 1/3: 'SyncSelectRequestBuilder' object is not callable — retry in 2s
+2026-03-12 12:18:04 [WARNING] Trinity.Analytics | ⚠️ [fetch_evaluation_data] attempt 2/3: 'SyncSelectRequestBuilder' object is not callable — retry in 4s
+2026-03-12 12:18:08 [ERROR] Trinity.Analytics | ❌ [fetch_evaluation_data] ล้มเหลวทุก 3 retry: 'SyncSelectRequestBuilder' object is not callable
+2026-03-12 12:18:08 [ERROR] Trinity.Analytics | ❌ fetch_evaluation_data error: 'SyncSelectRequestBuilder' object is not callable
+2026-03-12 12:18:08 [WARNING] Trinity.Analytics | ⚠️ ยังไม่มีข้อมูล actual_price เพียงพอ — ข้าม MAPE evaluation
+2026-03-12 12:18:08 [INFO] Trinity.Analytics | 📡 Fetching historical data for 100 symbols (120 days)...
+2026-03-12 12:18:09 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?select=symbol%2Cdate%2Cclose_price%2Cvolume%2Crsi_14%2Cmacd_val%2Cmacd_signal&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&date=gte.2025-11-12&order=date "HTTP/2 200 OK"
+2026-03-12 12:18:09 [INFO] Trinity.Analytics | ✅ Loaded 100 symbols from DB
+2026-03-12 12:18:09 [INFO] Trinity.Analytics | 🔮 Fetching Chronos predictions for 100 symbols...
+2026-03-12 12:18:09 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_predictions_v3?select=symbol%2Chorizon_type%2Cpredicted_price%2Clower_bound%2Cupper_bound%2Cprediction_date&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&prediction_date=gte.2026-03-13&order=prediction_date "HTTP/2 200 OK"
+2026-03-12 12:18:09 [INFO] Trinity.Analytics | ✅ วิเคราะห์ Technical ครบ 0 หุ้น
+2026-03-12 12:18:09 [INFO] Trinity.Analytics | 🤖 Generating AI Strategic Insight...
+2026-03-12 12:21:04 [INFO] Trinity.Analytics | ============================================================
+2026-03-12 12:21:04 [INFO] Trinity.Analytics | 🏁 Trinity Analytics V3 | 2026-03-12 12:21:04
+2026-03-12 12:21:04 [INFO] Trinity.Analytics | 🔖 Batch Process Started
+2026-03-12 12:21:04 [INFO] Trinity.Analytics | ============================================================
+2026-03-12 12:21:04 [INFO] Trinity.Analytics | 📊 Fetching completed predictions for MAPE evaluation...
+2026-03-12 12:21:04 [WARNING] Trinity.Analytics | ⚠️ [fetch_evaluation_data] attempt 1/3: 'SyncSelectRequestBuilder' object is not callable — retry in 2s
+2026-03-12 12:21:06 [WARNING] Trinity.Analytics | ⚠️ [fetch_evaluation_data] attempt 2/3: 'SyncSelectRequestBuilder' object is not callable — retry in 4s
+2026-03-12 12:21:10 [ERROR] Trinity.Analytics | ❌ [fetch_evaluation_data] ล้มเหลวทุก 3 retry: 'SyncSelectRequestBuilder' object is not callable
+2026-03-12 12:21:10 [ERROR] Trinity.Analytics | ❌ fetch_evaluation_data error: 'SyncSelectRequestBuilder' object is not callable
+2026-03-12 12:21:10 [WARNING] Trinity.Analytics | ⚠️ ยังไม่มีข้อมูล actual_price เพียงพอ — ข้าม MAPE evaluation
+2026-03-12 12:21:10 [INFO] Trinity.Analytics | 📡 Fetching historical data for 100 symbols (120 days)...
+2026-03-12 12:21:11 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?select=symbol%2Cdate%2Cclose_price%2Cvolume%2Crsi_14%2Cmacd_val%2Cmacd_signal&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&date=gte.2025-11-12&order=date "HTTP/2 200 OK"
+2026-03-12 12:21:11 [INFO] Trinity.Analytics | ✅ Loaded 100 symbols from DB
+2026-03-12 12:21:11 [INFO] Trinity.Analytics | 🔮 Fetching Chronos predictions for 100 symbols...
+2026-03-12 12:21:11 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_predictions_v3?select=symbol%2Chorizon_type%2Cpredicted_price%2Clower_bound%2Cupper_bound%2Cprediction_date&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&prediction_date=gte.2026-03-13&order=prediction_date "HTTP/2 200 OK"
+2026-03-12 12:21:11 [INFO] Trinity.Analytics | ✅ วิเคราะห์ Technical ครบ 0 หุ้น
+2026-03-12 12:21:11 [INFO] Trinity.Analytics | 🤖 Generating AI Strategic Insight...
+2026-03-12 12:21:20 [INFO] httpx | HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 12:21:20 [INFO] Trinity.Analytics | ============================================================
+2026-03-12 12:21:20 [INFO] Trinity.Analytics | 💡 AI STRATEGIC INSIGHT
+2026-03-12 12:21:20 [INFO] Trinity.Analytics | ============================================================
+2026-03-12 12:21:20 [INFO] Trinity.Analytics | ### การวิเคราะห์และคำแนะนำ
+
+1. **ความเสถียรของโมเดลเมื่อระยะเวลาพยากรณ์ยาวขึ้น (Model Decay Analysis):**
+   - จากข้อมูลที่ให้มา โมเดล Chronos AI ไม่มีค่า MAPE ที่สามารถประเมินได้ในทุก Horizon (7D, 15D, 30D) ซึ่งแสดงให้เห็นว่าไม่มีข้อมูลเพียงพอในการวิเคราะห์ความเสถียรของโมเดลเมื่อระยะเวลาพยากรณ์ยาวขึ้น
+   - **Recommendation:** ควรเก็บรวบรวมข้อมูลเพิ่มเติมและทดสอบโมเดลในแต่ละ Horizon เพื่อวิเคราะห์ความเสถียรและการเสื่อมของโมเดล (Model Decay) อย่างละเอียด
+
+2. **แนะนำ Horizon ในการเทรดจริง:**
+   - เนื่องจากไม่มีข้อมูล MAPE ที่ชัดเจนในแต่ละ Horizon จึงไม่สามารถให้คำแนะนำที่เฉพาะเจาะจงได้
+   - **Quantitative Reasoning:** การเลือก Horizon ควรพิจารณาจากการทดสอบย้อนหลัง (Backtesting) ที่แสดงให้เห็นถึงความแม่นยำและความเสถียรของโมเดลในช่วงเวลานั้นๆ รวมถึงการพิจารณาความผันผวนของตลาดในระยะเวลาที่เลือก
+   - **Recommendation:** ดำเนินการทดสอบย้อนหลังเพิ่มเติมเพื่อเลือก Horizon ที่เหมาะสมที่สุด
+
+3. **วิเคราะห์สาเหตุที่หุ้น Worst 5 มีความคลาดเคลื่อนสูง:**
+   - ไม่มีข้อมูลเกี่ยวกับหุ้นที่มีความคลาดเคลื่อนสูงที่สุด (Worst 5) ที่สามารถวิเคราะห์ได้
+   - **Recommendation:** ตรวจสอบปัจจัยที่อาจส่งผลต่อความคลาดเคลื่อน เช่น ความผันผวนของตลาด การเปลี่ยนแปลงในปัจจัยพื้นฐานของหุ้น หรือความผิดพลาดในการเก็บข้อมูล
+
+4. **Consensus View ระหว่าง Technical + Chronos:**
+   - ไม่มีข้อมูลเพียงพอในการประเมินว่าการวิเคราะห์ทางเทคนิค (Technical Analysis) และการพยากรณ์ด้วย Chronos สอดคล้องหรือขัดแย้งกัน
+   - **Recommendation:** ควรทำการวิเคราะห์เชิงลึกเพิ่มเติมเพื่อสังเคราะห์ข้อมูลจากทั้งสองแหล่ง และตรวจสอบว่ามีความสอดคล้องหรือขัดแย้งกันอย่างไร
+
+### Actionable Recommendations
+- เก็บรวบรวมข้อมูลเพิ่มเติมเพื่อปรับปรุงความแม่นยำของโมเดลและทำการทดสอบย้อนหลังในแต่ละ Horizon
+- วิเคราะห์ปัจจัยที่อาจส่งผลต่อความคลาดเคลื่อนของโมเดลในหุ้นที่มีความคลาดเคลื่อนสูง
+- สังเคราะห์ข้อมูลจากการวิเคราะห์ทางเทคนิคและการพยากรณ์ด้วย Chronos เพื่อให้ได้มุมมองที่ครอบคลุมและชัดเจนยิ่งขึ้น
+
+การดำเนินการตามคำแนะนำเหล่านี้จะช่วยเพิ่มประสิทธิภาพในการใช้โมเดล Chronos AI ในการตัดสินใจลงทุนในตลาดหุ้นไทย.
+2026-03-12 12:21:20 [INFO] Trinity.Analytics | ============================================================
+2026-03-12 12:21:21 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/model_insights "HTTP/2 400 Bad Request"
+2026-03-12 12:21:21 [WARNING] Trinity.Analytics | ⚠️ [save_insight] attempt 1/3: {'code': 'PGRST204', 'details': None, 'hint': None, 'message': "Could not find the 'total_samples' column of 'model_insights' in the schema cache"} — retry in 2s
+2026-03-12 12:21:23 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/model_insights "HTTP/2 400 Bad Request"
+2026-03-12 12:21:23 [WARNING] Trinity.Analytics | ⚠️ [save_insight] attempt 2/3: {'code': 'PGRST204', 'details': None, 'hint': None, 'message': "Could not find the 'total_samples' column of 'model_insights' in the schema cache"} — retry in 4s
+2026-03-12 12:21:27 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/model_insights "HTTP/2 400 Bad Request"
+2026-03-12 12:21:27 [ERROR] Trinity.Analytics | ❌ [save_insight] ล้มเหลวทุก 3 retry: {'code': 'PGRST204', 'details': None, 'hint': None, 'message': "Could not find the 'total_samples' column of 'model_insights' in the schema cache"}
+2026-03-12 12:21:27 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/model_insights "HTTP/2 201 Created"
+2026-03-12 12:21:27 [INFO] Trinity.Analytics | ✅ Saved AI Insight (basic mode)
+2026-03-12 12:21:27 [INFO] Trinity.Analytics | 🏁 Analytics V3 เสร็จสมบูรณ์!
+2026-03-12 21:56:31 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 24
+2026-03-12 21:56:31 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 25
+2026-03-12 21:56:31 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 32
+2026-03-12 21:56:31 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 33
+2026-03-12 21:56:31 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 34
+2026-03-12 21:56:31 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 35
+2026-03-12 21:56:31 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 36
+2026-03-12 21:56:31 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 37
+2026-03-12 21:56:31 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 38
+2026-03-12 21:56:31 [INFO] Trinity.Analytics | ============================================================
+2026-03-12 21:56:31 [INFO] Trinity.Analytics | 🏁 Trinity Analytics V3 | 2026-03-12 21:56:31
+2026-03-12 21:56:31 [INFO] Trinity.Analytics | 🔖 Batch Process Started
+2026-03-12 21:56:31 [INFO] Trinity.Analytics | ============================================================
+2026-03-12 21:56:31 [INFO] Trinity.Analytics | 📊 Fetching completed predictions for MAPE evaluation...
+2026-03-12 21:56:31 [WARNING] Trinity.Analytics | ⚠️ [fetch_evaluation_data] attempt 1/3: 'SyncSelectRequestBuilder' object is not callable — retry in 2s
+2026-03-12 21:56:33 [WARNING] Trinity.Analytics | ⚠️ [fetch_evaluation_data] attempt 2/3: 'SyncSelectRequestBuilder' object is not callable — retry in 4s
+2026-03-12 21:56:37 [ERROR] Trinity.Analytics | ❌ [fetch_evaluation_data] ล้มเหลวทุก 3 retry: 'SyncSelectRequestBuilder' object is not callable
+2026-03-12 21:56:37 [ERROR] Trinity.Analytics | ❌ fetch_evaluation_data error: 'SyncSelectRequestBuilder' object is not callable
+2026-03-12 21:56:37 [WARNING] Trinity.Analytics | ⚠️ ยังไม่มีข้อมูล actual_price เพียงพอ — ข้าม MAPE evaluation
+2026-03-12 21:56:37 [INFO] Trinity.Analytics | 📡 Fetching historical data for 100 symbols (120 days)...
+2026-03-12 21:56:37 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_historical?select=symbol%2Cdate%2Cclose_price%2Cvolume%2Crsi_14%2Cmacd_val%2Cmacd_signal&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&date=gte.2025-11-12&order=date "HTTP/2 200 OK"
+2026-03-12 21:56:38 [INFO] Trinity.Analytics | ✅ Loaded 100 symbols from DB
+2026-03-12 21:56:38 [INFO] Trinity.Analytics | 🔮 Fetching Chronos predictions for 100 symbols...
+2026-03-12 21:56:38 [INFO] httpx | HTTP Request: GET https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_predictions_v3?select=symbol%2Chorizon_type%2Cpredicted_price%2Clower_bound%2Cupper_bound%2Cprediction_date&symbol=in.%28AAV%2CADVANC%2CAEONTS%2CAMATA%2CAOT%2CAP%2CAURA%2CAWC%2CBA%2CBAM%2CBANPU%2CBBL%2CBCH%2CBCP%2CBCPG%2CBDMS%2CBEM%2CBGRIM%2CBH%2CBJC%2CBLA%2CBTG%2CBTS%2CCBG%2CCCET%2CCENTEL%2CCHG%2CCK%2CCOM7%2CCPALL%2CCPF%2CCPN%2CCRC%2CDELTA%2CDOHOME%2CEA%2CEGCO%2CERW%2CGFPT%2CGLOBAL%2CGPSC%2CGULF%2CGUNKUL%2CHANA%2CHMPRO%2CICHI%2CIRPC%2CIVL%2CJAS%2CJMART%2CJMT%2CJTS%2CKBANK%2CKCE%2CKKP%2CKTB%2CKTC%2CLH%2CM%2CMEGA%2CMINT%2CMOSHI%2CMTC%2COR%2COSP%2CPLANB%2CPR9%2CPRM%2CPTG%2CPTT%2CPTTEP%2CPTTGC%2CQH%2CRATCH%2CRCL%2CSAWAD%2CSCB%2CSCC%2CSCGP%2CSIRI%2CSISB%2CSJWD%2CSPALI%2CSPRC%2CSTA%2CSTECON%2CSTGT%2CTASCO%2CTCAP%2CTFG%2CTIDLOR%2CTISCO%2CTLI%2CTOA%2CTOP%2CTRUE%2CTTB%2CTU%2CVGI%2CWHA%29&prediction_date=gte.2026-03-13&order=prediction_date "HTTP/2 200 OK"
+2026-03-12 21:56:38 [INFO] Trinity.Analytics | ✅ วิเคราะห์ Technical ครบ 0 หุ้น
+2026-03-12 21:56:38 [INFO] Trinity.Analytics | 🤖 Generating AI Strategic Insight...
+2026-03-12 21:56:47 [INFO] httpx | HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-12 21:56:47 [INFO] Trinity.Analytics | ============================================================
+2026-03-12 21:56:47 [INFO] Trinity.Analytics | 💡 AI STRATEGIC INSIGHT
+2026-03-12 21:56:47 [INFO] Trinity.Analytics | ============================================================
+2026-03-12 21:56:47 [INFO] Trinity.Analytics | **การประเมินและคำแนะนำ**
+
+1. **ความเสถียรของโมเดลเมื่อระยะเวลาพยากรณ์ยาวขึ้น (Model Decay Analysis):**
+   - เนื่องจากข้อมูลที่ให้มาไม่มีค่า MAPE สำหรับ Horizon ใดๆ ทั้งสิ้น (7D, 15D, 30D) ทำให้ไม่สามารถประเมินความเสถียรของโมเดลได้อย่างชัดเจน
+   - คำแนะนำ: ควรทำการทดสอบเพิ่มเติมเพื่อเก็บข้อมูล MAPE ในแต่ละ Horizon เพื่อประเมินความเสถียรของโมเดลเมื่อระยะเวลาพยากรณ์ยาวขึ้น
+
+2. **แนะนำ Horizon ที่ควรใช้ในการเทรดจริง:**
+   - เนื่องจากไม่มีข้อมูล MAPE ที่ชัดเจน การเลือก Horizon ที่เหมาะสมควรพิจารณาจากวัตถุประสงค์การลงทุนและความเสี่ยงที่ยอมรับได้
+   - หากต้องการลดความเสี่ยงจากความคลาดเคลื่อน ควรเริ่มต้นจาก Horizon สั้นๆ เช่น 7D และปรับเปลี่ยนตามผลการทดสอบเพิ่มเติม
+
+3. **วิเคราะห์สาเหตุที่หุ้น Worst 5 มีความคลาดเคลื่อนสูง:**
+   - ข้อมูลที่ให้มาไม่มีรายละเอียดเกี่ยวกับหุ้นที่มีความคลาดเคลื่อนสูงสุด ทำให้ไม่สามารถวิเคราะห์สาเหตุได้อย่างตรงจุด
+   - คำแนะนำ: ควรตรวจสอบปัจจัยภายนอกที่อาจมีผลต่อความคลาดเคลื่อน เช่น ความผันผวนของตลาดหรือเหตุการณ์ที่ไม่คาดคิด
+
+4. **Consensus View ระหว่าง Technical + Chronos:**
+   - เนื่องจากไม่มีข้อมูลในส่วนของ Technical และ Chronos Forecast ทำให้ไม่สามารถระบุได้ว่าทั้งสองสอดคล้องหรือขัดแย้งกัน
+   - คำแนะนำ: ควรทำการวิเคราะห์เพิ่มเติมเพื่อหา Consensus View ที่ชัดเจน ซึ่งสามารถช่วยในการตัดสินใจลงทุนได้ดียิ่งขึ้น
+
+**Actionable Recommendations:**
+- เก็บข้อมูลเพิ่มเติมเพื่อประเมินความเสถียรของโมเดลในแต่ละ Horizon
+- เริ่มต้นการเทรดด้วย Horizon สั้นๆ และปรับปรุงโมเดลตามผลการทดสอบ
+- ตรวจสอบปัจจัยภายนอกที่อาจส่งผลต่อความคลาดเคลื่อนของโมเดล
+- ทำการวิเคราะห์เพิ่มเติมเพื่อหา Consensus View ระหว่าง Technical และ Chronos Forecast
+2026-03-12 21:56:47 [INFO] Trinity.Analytics | ============================================================
+2026-03-12 21:56:47 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/model_insights "HTTP/2 400 Bad Request"
+2026-03-12 21:56:47 [WARNING] Trinity.Analytics | ⚠️ [save_insight] attempt 1/3: {'code': 'PGRST204', 'details': None, 'hint': None, 'message': "Could not find the 'total_samples' column of 'model_insights' in the schema cache"} — retry in 2s
+2026-03-12 21:56:49 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/model_insights "HTTP/2 400 Bad Request"
+2026-03-12 21:56:49 [WARNING] Trinity.Analytics | ⚠️ [save_insight] attempt 2/3: {'code': 'PGRST204', 'details': None, 'hint': None, 'message': "Could not find the 'total_samples' column of 'model_insights' in the schema cache"} — retry in 4s
+2026-03-12 21:56:53 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/model_insights "HTTP/2 400 Bad Request"
+2026-03-12 21:56:53 [ERROR] Trinity.Analytics | ❌ [save_insight] ล้มเหลวทุก 3 retry: {'code': 'PGRST204', 'details': None, 'hint': None, 'message': "Could not find the 'total_samples' column of 'model_insights' in the schema cache"}
+2026-03-12 21:56:53 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/model_insights "HTTP/2 201 Created"
+2026-03-12 21:56:53 [INFO] Trinity.Analytics | ✅ Saved AI Insight (basic mode)
+2026-03-12 21:56:53 [INFO] Trinity.Analytics | 🏁 Analytics V3 เสร็จสมบูรณ์!

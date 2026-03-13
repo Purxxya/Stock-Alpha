@@ -1,0 +1,703 @@
+2026-03-11 16:30:11 [INFO] Trinity.Sync | ============================================================
+2026-03-11 16:30:11 [INFO] Trinity.Sync | 🚀 Trinity Realtime Sync | 16:30:11 | Status: OPEN
+2026-03-11 16:30:11 [INFO] Trinity.Sync | 🔖 Batch Process Started | symbols=100
+2026-03-11 16:30:11 [INFO] Trinity.Sync | ============================================================
+2026-03-11 16:30:11 [INFO] Trinity.Sync | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-11 16:30:12 [INFO] Trinity.Sync | ✅ Symbol AAV Updated | ฿    1.11 |  +0.00% | RSI: 41.61
+2026-03-11 16:30:12 [INFO] Trinity.Sync | ✅ Symbol ADVANC Updated | ฿  362.00 |  -0.82% | RSI: 55.87
+2026-03-11 16:30:12 [INFO] Trinity.Sync | ✅ Symbol AEONTS Updated | ฿   92.00 |  -0.27% | RSI: 40.96
+2026-03-11 16:30:12 [INFO] Trinity.Sync | ✅ Symbol AMATA Updated | ฿   18.70 |  +3.89% | RSI: 58.62
+2026-03-11 16:30:12 [INFO] Trinity.Sync | ✅ Symbol AOT Updated | ฿   51.50 |  +3.52% | RSI: 48.25
+2026-03-11 16:30:12 [INFO] Trinity.Sync | ✅ Symbol AP Updated | ฿    8.90 |  +1.14% | RSI: 49.86
+2026-03-11 16:30:12 [INFO] Trinity.Sync | ✅ Symbol AURA Updated | ฿   13.20 |  +3.12% | RSI: 44.08
+2026-03-11 16:30:12 [INFO] Trinity.Sync | ✅ Symbol AWC Updated | ฿    2.08 |  +0.97% | RSI: 36.87
+2026-03-11 16:30:12 [INFO] Trinity.Sync | ✅ Symbol BA Updated | ฿   14.00 |  -2.78% | RSI: 34.84
+2026-03-11 16:30:12 [INFO] Trinity.Sync | ✅ Symbol BAM Updated | ฿    7.15 |  +0.70% | RSI: 39.89
+2026-03-11 16:30:13 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22percent_change%22%2C%22macd_signal%22%2C%22volume%22%2C%22last_price%22%2C%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22updated_at%22%2C%22open_price%22%2C%22market_status%22%2C%22macd_val%22%2C%22high_price%22 "HTTP/2 200 OK"
+2026-03-11 16:30:13 [INFO] Trinity.Sync | 💾 Batch 1 upsert: 10 rows saved
+2026-03-11 16:30:14 [INFO] Trinity.Sync | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-11 16:30:14 [INFO] Trinity.Sync | ✅ Symbol BANPU Updated | ฿    5.75 |  -2.54% | RSI: 50.59
+2026-03-11 16:30:14 [INFO] Trinity.Sync | ✅ Symbol BBL Updated | ฿  168.50 |  +1.20% | RSI: 51.62
+2026-03-11 16:30:14 [INFO] Trinity.Sync | ✅ Symbol BCH Updated | ฿    9.90 |  +0.51% | RSI: 41.30
+2026-03-11 16:30:14 [INFO] Trinity.Sync | ✅ Symbol BCP Updated | ฿   36.25 |  +5.07% | RSI: 59.53
+2026-03-11 16:30:14 [INFO] Trinity.Sync | ✅ Symbol BCPG Updated | ฿    6.50 |  -2.99% | RSI: 42.26
+2026-03-11 16:30:14 [INFO] Trinity.Sync | ✅ Symbol BDMS Updated | ฿   18.70 |  +0.00% | RSI: 35.91
+2026-03-11 16:30:14 [INFO] Trinity.Sync | ✅ Symbol BEM Updated | ฿    5.35 |  -0.93% | RSI: 45.64
+2026-03-11 16:30:14 [INFO] Trinity.Sync | ✅ Symbol BGRIM Updated | ฿   11.80 |  -0.84% | RSI: 34.69
+2026-03-11 16:30:14 [INFO] Trinity.Sync | ✅ Symbol BH Updated | ฿  180.00 |  +1.12% | RSI: 50.01
+2026-03-11 16:30:14 [INFO] Trinity.Sync | ✅ Symbol BJC Updated | ฿   13.70 |  +0.00% | RSI: 34.62
+2026-03-11 16:30:14 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22percent_change%22%2C%22macd_signal%22%2C%22volume%22%2C%22last_price%22%2C%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22updated_at%22%2C%22open_price%22%2C%22market_status%22%2C%22macd_val%22%2C%22high_price%22 "HTTP/2 200 OK"
+2026-03-11 16:30:14 [INFO] Trinity.Sync | 💾 Batch 2 upsert: 10 rows saved
+2026-03-11 16:30:15 [INFO] Trinity.Sync | 📦 Batch 3/10: BLA, BTG, BTS, CBG, CCET, CENTEL, CHG, CK, COM7, CPALL
+2026-03-11 16:30:15 [INFO] Trinity.Sync | ✅ Symbol BLA Updated | ฿   19.80 |  +2.06% | RSI: 39.94
+2026-03-11 16:30:15 [INFO] Trinity.Sync | ✅ Symbol BTG Updated | ฿   20.10 |  -4.29% | RSI: 64.60
+2026-03-11 16:30:15 [INFO] Trinity.Sync | ✅ Symbol BTS Updated | ฿    2.08 |  +0.97% | RSI: 37.91
+2026-03-11 16:30:15 [INFO] Trinity.Sync | ✅ Symbol CBG Updated | ฿   35.75 |  +1.42% | RSI: 27.29
+2026-03-11 16:30:15 [INFO] Trinity.Sync | ✅ Symbol CCET Updated | ฿    4.86 |  +1.25% | RSI: 48.34
+2026-03-11 16:30:15 [INFO] Trinity.Sync | ✅ Symbol CENTEL Updated | ฿   33.75 |  +2.27% | RSI: 43.41
+2026-03-11 16:30:15 [INFO] Trinity.Sync | ✅ Symbol CHG Updated | ฿    1.48 |  +0.68% | RSI: 36.62
+2026-03-11 16:30:15 [INFO] Trinity.Sync | ✅ Symbol CK Updated | ฿   15.50 |  +0.32% | RSI: 54.01
+2026-03-11 16:30:15 [INFO] Trinity.Sync | ✅ Symbol COM7 Updated | ฿   23.50 |  +6.33% | RSI: 59.48
+2026-03-11 16:30:15 [INFO] Trinity.Sync | ✅ Symbol CPALL Updated | ฿   46.75 |  -1.06% | RSI: 43.46
+2026-03-11 16:30:15 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22percent_change%22%2C%22macd_signal%22%2C%22volume%22%2C%22last_price%22%2C%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22updated_at%22%2C%22open_price%22%2C%22market_status%22%2C%22macd_val%22%2C%22high_price%22 "HTTP/2 200 OK"
+2026-03-11 16:30:15 [INFO] Trinity.Sync | 💾 Batch 3 upsert: 10 rows saved
+2026-03-11 16:30:16 [INFO] Trinity.Sync | 📦 Batch 4/10: CPF, CPN, CRC, DELTA, DOHOME, EA, EGCO, ERW, GFPT, GLOBAL
+2026-03-11 16:30:16 [INFO] Trinity.Sync | ✅ Symbol CPF Updated | ฿   19.00 |  -1.04% | RSI: 31.86
+2026-03-11 16:30:16 [INFO] Trinity.Sync | ✅ Symbol CPN Updated | ฿   63.75 |  +1.19% | RSI: 58.96
+2026-03-11 16:30:16 [INFO] Trinity.Sync | ✅ Symbol CRC Updated | ฿   18.10 |  -0.55% | RSI: 32.47
+2026-03-11 16:30:16 [INFO] Trinity.Sync | ✅ Symbol DELTA Updated | ฿  261.00 |  +1.95% | RSI: 60.82
+2026-03-11 16:30:16 [INFO] Trinity.Sync | ✅ Symbol DOHOME Updated | ฿    3.28 |  +0.61% | RSI: 39.56
+2026-03-11 16:30:16 [INFO] Trinity.Sync | ✅ Symbol EA Updated | ฿    2.70 |  -0.74% | RSI: 44.09
+2026-03-11 16:30:16 [INFO] Trinity.Sync | ✅ Symbol EGCO Updated | ฿  113.00 |  +0.00% | RSI: 39.99
+2026-03-11 16:30:16 [INFO] Trinity.Sync | ✅ Symbol ERW Updated | ฿    2.64 |  +0.76% | RSI: 44.03
+2026-03-11 16:30:16 [INFO] Trinity.Sync | ✅ Symbol GFPT Updated | ฿    9.00 |  +0.00% | RSI: 36.54
+2026-03-11 16:30:16 [INFO] Trinity.Sync | ✅ Symbol GLOBAL Updated | ฿    6.70 |  +3.08% | RSI: 44.80
+2026-03-11 16:30:16 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22percent_change%22%2C%22macd_signal%22%2C%22volume%22%2C%22last_price%22%2C%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22updated_at%22%2C%22open_price%22%2C%22market_status%22%2C%22macd_val%22%2C%22high_price%22 "HTTP/2 200 OK"
+2026-03-11 16:30:16 [INFO] Trinity.Sync | 💾 Batch 4 upsert: 10 rows saved
+2026-03-11 16:30:17 [INFO] Trinity.Sync | 📦 Batch 5/10: GPSC, GULF, GUNKUL, HANA, HMPRO, ICHI, IRPC, IVL, JAS, JMART
+2026-03-11 16:30:18 [INFO] Trinity.Sync | ✅ Symbol GPSC Updated | ฿   34.00 |  -1.45% | RSI: 37.18
+2026-03-11 16:30:18 [INFO] Trinity.Sync | ✅ Symbol GULF Updated | ฿   55.25 |  -1.34% | RSI: 55.52
+2026-03-11 16:30:18 [INFO] Trinity.Sync | ✅ Symbol GUNKUL Updated | ฿    2.26 |  +1.80% | RSI: 55.20
+2026-03-11 16:30:18 [INFO] Trinity.Sync | ✅ Symbol HANA Updated | ฿   24.00 |  +1.69% | RSI: 75.42
+2026-03-11 16:30:18 [INFO] Trinity.Sync | ✅ Symbol HMPRO Updated | ฿    6.40 |  +0.79% | RSI: 37.09
+2026-03-11 16:30:18 [INFO] Trinity.Sync | ✅ Symbol ICHI Updated | ฿   14.30 |  +0.70% | RSI: 52.37
+2026-03-11 16:30:18 [INFO] Trinity.Sync | ✅ Symbol IRPC Updated | ฿    1.15 |  -1.71% | RSI: 40.16
+2026-03-11 16:30:18 [INFO] Trinity.Sync | ✅ Symbol IVL Updated | ฿   19.20 |  +0.00% | RSI: 38.63
+2026-03-11 16:30:18 [INFO] Trinity.Sync | ✅ Symbol JAS Updated | ฿    1.26 | +11.50% | RSI: 48.66
+2026-03-11 16:30:18 [INFO] Trinity.Sync | ✅ Symbol JMART Updated | ฿    7.25 |  -2.03% | RSI: 49.10
+2026-03-11 16:30:18 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22percent_change%22%2C%22macd_signal%22%2C%22volume%22%2C%22last_price%22%2C%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22updated_at%22%2C%22open_price%22%2C%22market_status%22%2C%22macd_val%22%2C%22high_price%22 "HTTP/2 200 OK"
+2026-03-11 16:30:18 [INFO] Trinity.Sync | 💾 Batch 5 upsert: 10 rows saved
+2026-03-11 16:30:19 [INFO] Trinity.Sync | 📦 Batch 6/10: JMT, JTS, KBANK, KCE, KKP, KTB, KTC, LH, M, MEGA
+2026-03-11 16:30:20 [INFO] Trinity.Sync | ✅ Symbol JMT Updated | ฿    9.05 |  -0.55% | RSI: 45.13
+2026-03-11 16:30:20 [INFO] Trinity.Sync | ✅ Symbol JTS Updated | ฿   59.50 |  +5.31% | RSI: 49.67
+2026-03-11 16:30:20 [INFO] Trinity.Sync | ✅ Symbol KBANK Updated | ฿  190.00 |  +1.06% | RSI: 43.93
+2026-03-11 16:30:20 [INFO] Trinity.Sync | ✅ Symbol KCE Updated | ฿   19.80 |  +1.54% | RSI: 55.93
+2026-03-11 16:30:20 [INFO] Trinity.Sync | ✅ Symbol KKP Updated | ฿   72.25 |  +0.35% | RSI: 48.04
+2026-03-11 16:30:20 [INFO] Trinity.Sync | ✅ Symbol KTB Updated | ฿   34.50 |  +0.73% | RSI: 65.89
+2026-03-11 16:30:20 [INFO] Trinity.Sync | ✅ Symbol KTC Updated | ฿   29.00 |  +0.00% | RSI: 38.82
+2026-03-11 16:30:20 [INFO] Trinity.Sync | ✅ Symbol LH Updated | ฿    3.76 |  +0.00% | RSI: 36.20
+2026-03-11 16:30:20 [INFO] Trinity.Sync | ✅ Symbol M Updated | ฿   20.10 |  +4.69% | RSI: 46.44
+2026-03-11 16:30:20 [INFO] Trinity.Sync | ✅ Symbol MEGA Updated | ฿   35.50 |  +4.41% | RSI: 48.50
+2026-03-11 16:30:20 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22percent_change%22%2C%22macd_signal%22%2C%22volume%22%2C%22last_price%22%2C%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22updated_at%22%2C%22open_price%22%2C%22market_status%22%2C%22macd_val%22%2C%22high_price%22 "HTTP/2 200 OK"
+2026-03-11 16:30:20 [INFO] Trinity.Sync | 💾 Batch 6 upsert: 10 rows saved
+2026-03-11 16:30:21 [INFO] Trinity.Sync | 📦 Batch 7/10: MINT, MOSHI, MTC, OR, OSP, PLANB, PR9, PRM, PTG, PTT
+2026-03-11 16:30:21 [INFO] Trinity.Sync | ✅ Symbol MINT Updated | ฿   23.10 |  +4.52% | RSI: 44.19
+2026-03-11 16:30:21 [INFO] Trinity.Sync | ✅ Symbol MOSHI Updated | ฿   32.75 |  -0.76% | RSI: 30.19
+2026-03-11 16:30:21 [INFO] Trinity.Sync | ✅ Symbol MTC Updated | ฿   31.50 |  +1.61% | RSI: 37.15
+2026-03-11 16:30:21 [INFO] Trinity.Sync | ✅ Symbol OR Updated | ฿   11.20 |  +0.00% | RSI: 23.24
+2026-03-11 16:30:21 [INFO] Trinity.Sync | ✅ Symbol OSP Updated | ฿   14.50 |  -1.36% | RSI: 21.22
+2026-03-11 16:30:21 [INFO] Trinity.Sync | ✅ Symbol PLANB Updated | ฿    4.24 |  +0.00% | RSI: 47.26
+2026-03-11 16:30:21 [INFO] Trinity.Sync | ✅ Symbol PR9 Updated | ฿   16.90 |  -0.59% | RSI: 31.29
+2026-03-11 16:30:21 [INFO] Trinity.Sync | ✅ Symbol PRM Updated | ฿    7.50 |  +1.35% | RSI: 49.56
+2026-03-11 16:30:21 [INFO] Trinity.Sync | ✅ Symbol PTG Updated | ฿    8.10 |  +0.00% | RSI: 44.54
+2026-03-11 16:30:21 [INFO] Trinity.Sync | ✅ Symbol PTT Updated | ฿   33.50 |  +0.00% | RSI: 45.05
+2026-03-11 16:30:21 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22percent_change%22%2C%22macd_signal%22%2C%22volume%22%2C%22last_price%22%2C%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22updated_at%22%2C%22open_price%22%2C%22market_status%22%2C%22macd_val%22%2C%22high_price%22 "HTTP/2 200 OK"
+2026-03-11 16:30:21 [INFO] Trinity.Sync | 💾 Batch 7 upsert: 10 rows saved
+2026-03-11 16:30:22 [INFO] Trinity.Sync | 📦 Batch 8/10: PTTEP, PTTGC, QH, RATCH, RCL, SAWAD, SCB, SCC, SCGP, SIRI
+2026-03-11 16:30:22 [INFO] Trinity.Sync | ✅ Symbol PTTEP Updated | ฿  141.50 |  +1.07% | RSI: 65.28
+2026-03-11 16:30:22 [INFO] Trinity.Sync | ✅ Symbol PTTGC Updated | ฿   27.00 |  +0.00% | RSI: 57.47
+2026-03-11 16:30:22 [INFO] Trinity.Sync | ✅ Symbol QH Updated | ฿    1.38 |  +1.47% | RSI: 49.15
+2026-03-11 16:30:22 [INFO] Trinity.Sync | ✅ Symbol RATCH Updated | ฿   29.25 |  +0.86% | RSI: 41.01
+2026-03-11 16:30:22 [INFO] Trinity.Sync | ✅ Symbol RCL Updated | ฿   30.00 |  +1.69% | RSI: 62.49
+2026-03-11 16:30:22 [INFO] Trinity.Sync | ✅ Symbol SAWAD Updated | ฿   24.90 |  +1.22% | RSI: 40.02
+2026-03-11 16:30:22 [INFO] Trinity.Sync | ✅ Symbol SCB Updated | ฿  144.50 |  +0.35% | RSI: 53.43
+2026-03-11 16:30:22 [INFO] Trinity.Sync | ✅ Symbol SCC Updated | ฿  175.00 |  +2.64% | RSI: 28.49
+2026-03-11 16:30:22 [INFO] Trinity.Sync | ✅ Symbol SCGP Updated | ฿   17.80 |  +0.56% | RSI: 37.56
+2026-03-11 16:30:22 [INFO] Trinity.Sync | ✅ Symbol SIRI Updated | ฿    1.50 |  +0.67% | RSI: 53.78
+2026-03-11 16:30:23 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22percent_change%22%2C%22macd_signal%22%2C%22volume%22%2C%22last_price%22%2C%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22updated_at%22%2C%22open_price%22%2C%22market_status%22%2C%22macd_val%22%2C%22high_price%22 "HTTP/2 200 OK"
+2026-03-11 16:30:23 [INFO] Trinity.Sync | 💾 Batch 8 upsert: 10 rows saved
+2026-03-11 16:30:23 [INFO] Trinity.Sync | 📦 Batch 9/10: SISB, SJWD, SPALI, SPRC, STA, STECON, STGT, TASCO, TCAP, TFG
+2026-03-11 16:30:24 [INFO] Trinity.Sync | ✅ Symbol SISB Updated | ฿   10.90 |  -0.91% | RSI: 47.24
+2026-03-11 16:30:24 [INFO] Trinity.Sync | ✅ Symbol SJWD Updated | ฿    7.40 |  -1.33% | RSI: 38.72
+2026-03-11 16:30:24 [INFO] Trinity.Sync | ✅ Symbol SPALI Updated | ฿   17.50 |  +2.94% | RSI: 46.14
+2026-03-11 16:30:24 [INFO] Trinity.Sync | ✅ Symbol SPRC Updated | ฿    7.50 |  -1.96% | RSI: 60.26
+2026-03-11 16:30:24 [INFO] Trinity.Sync | ✅ Symbol STA Updated | ฿   15.60 |  +0.65% | RSI: 61.98
+2026-03-11 16:30:24 [INFO] Trinity.Sync | ✅ Symbol STECON Updated | ฿   12.20 |  -3.17% | RSI: 66.02
+2026-03-11 16:30:24 [INFO] Trinity.Sync | ✅ Symbol STGT Updated | ฿    9.70 |  +3.19% | RSI: 57.61
+2026-03-11 16:30:24 [INFO] Trinity.Sync | ✅ Symbol TASCO Updated | ฿   12.90 |  +0.00% | RSI: 37.70
+2026-03-11 16:30:24 [INFO] Trinity.Sync | ✅ Symbol TCAP Updated | ฿   56.75 |  +0.44% | RSI: 42.32
+2026-03-11 16:30:24 [INFO] Trinity.Sync | ✅ Symbol TFG Updated | ฿    7.15 |  +3.62% | RSI: 85.91
+2026-03-11 16:30:24 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22percent_change%22%2C%22macd_signal%22%2C%22volume%22%2C%22last_price%22%2C%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22updated_at%22%2C%22open_price%22%2C%22market_status%22%2C%22macd_val%22%2C%22high_price%22 "HTTP/2 200 OK"
+2026-03-11 16:30:24 [INFO] Trinity.Sync | 💾 Batch 9 upsert: 10 rows saved
+2026-03-11 16:30:25 [INFO] Trinity.Sync | 📦 Batch 10/10: TIDLOR, TISCO, TLI, TOA, TOP, TRUE, TTB, TU, VGI, WHA
+2026-03-11 16:30:25 [INFO] Trinity.Sync | ✅ Symbol TIDLOR Updated | ฿   17.20 |  -1.71% | RSI: 39.90
+2026-03-11 16:30:25 [INFO] Trinity.Sync | ✅ Symbol TISCO Updated | ฿  112.00 |  +0.45% | RSI: 47.12
+2026-03-11 16:30:25 [INFO] Trinity.Sync | ✅ Symbol TLI Updated | ฿   10.20 |  +0.99% | RSI: 30.74
+2026-03-11 16:30:25 [INFO] Trinity.Sync | ✅ Symbol TOA Updated | ฿   13.00 |  -2.99% | RSI: 30.98
+2026-03-11 16:30:25 [INFO] Trinity.Sync | ✅ Symbol TOP Updated | ฿   47.50 |  -1.04% | RSI: 47.59
+2026-03-11 16:30:25 [INFO] Trinity.Sync | ✅ Symbol TRUE Updated | ฿   13.30 |  +0.76% | RSI: 50.96
+2026-03-11 16:30:25 [INFO] Trinity.Sync | ✅ Symbol TTB Updated | ฿    2.22 |  +0.91% | RSI: 56.94
+2026-03-11 16:30:25 [INFO] Trinity.Sync | ✅ Symbol TU Updated | ฿   11.10 |  -0.89% | RSI: 40.23
+2026-03-11 16:30:25 [INFO] Trinity.Sync | ✅ Symbol VGI Updated | ฿    0.95 |  -3.06% | RSI: 40.60
+2026-03-11 16:30:25 [INFO] Trinity.Sync | ✅ Symbol WHA Updated | ฿    4.12 |  +3.52% | RSI: 56.48
+2026-03-11 16:30:25 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22percent_change%22%2C%22macd_signal%22%2C%22volume%22%2C%22last_price%22%2C%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22updated_at%22%2C%22open_price%22%2C%22market_status%22%2C%22macd_val%22%2C%22high_price%22 "HTTP/2 200 OK"
+2026-03-11 16:30:25 [INFO] Trinity.Sync | 💾 Batch 10 upsert: 10 rows saved
+2026-03-11 16:30:25 [INFO] Trinity.Sync | ============================================================
+2026-03-11 16:30:25 [INFO] Trinity.Sync | 🏁 Batch Process Completed in 13.8s | ✅ 100 | ❌ 0
+2026-03-11 16:30:25 [INFO] Trinity.Sync | ============================================================
+2026-03-11 17:25:18 [INFO] Trinity.Sync | ============================================================
+2026-03-11 17:25:18 [INFO] Trinity.Sync | 🚀 Trinity Realtime Sync | 17:25:18 | Status: CLOSED
+2026-03-11 17:25:18 [INFO] Trinity.Sync | 🔖 Batch Process Started | symbols=100
+2026-03-11 17:25:18 [INFO] Trinity.Sync | ============================================================
+2026-03-11 17:25:18 [INFO] Trinity.Sync | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-11 17:25:19 [INFO] Trinity.Sync | ✅ Symbol AAV Updated | ฿    1.10 |  -0.90% | RSI: 40.80
+2026-03-11 17:25:19 [INFO] Trinity.Sync | ✅ Symbol ADVANC Updated | ฿  360.00 |  -1.37% | RSI: 54.20
+2026-03-11 17:25:19 [INFO] Trinity.Sync | ✅ Symbol AEONTS Updated | ฿   91.75 |  -0.54% | RSI: 40.48
+2026-03-11 17:25:19 [INFO] Trinity.Sync | ✅ Symbol AMATA Updated | ฿   18.50 |  +2.78% | RSI: 56.63
+2026-03-11 17:25:19 [INFO] Trinity.Sync | ✅ Symbol AOT Updated | ฿   51.00 |  +2.51% | RSI: 46.71
+2026-03-11 17:25:19 [INFO] Trinity.Sync | ✅ Symbol AP Updated | ฿    8.80 |  +0.00% | RSI: 47.76
+2026-03-11 17:25:19 [INFO] Trinity.Sync | ✅ Symbol AURA Updated | ฿   13.30 |  +3.91% | RSI: 45.29
+2026-03-11 17:25:19 [INFO] Trinity.Sync | ✅ Symbol AWC Updated | ฿    2.06 |  +0.00% | RSI: 35.19
+2026-03-11 17:25:19 [INFO] Trinity.Sync | ✅ Symbol BA Updated | ฿   14.00 |  -2.78% | RSI: 34.84
+2026-03-11 17:25:19 [INFO] Trinity.Sync | ✅ Symbol BAM Updated | ฿    7.15 |  +0.70% | RSI: 39.89
+2026-03-11 17:25:19 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22last_price%22%2C%22percent_change%22%2C%22high_price%22%2C%22open_price%22%2C%22low_price%22%2C%22volume%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22symbol%22%2C%22market_status%22%2C%22updated_at%22 "HTTP/2 200 OK"
+2026-03-11 17:25:19 [INFO] Trinity.Sync | 💾 Batch 1 upsert: 10 rows saved
+2026-03-11 17:25:20 [INFO] Trinity.Sync | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-11 17:25:20 [INFO] Trinity.Sync | ✅ Symbol BANPU Updated | ฿    5.70 |  -3.39% | RSI: 49.24
+2026-03-11 17:25:20 [INFO] Trinity.Sync | ✅ Symbol BBL Updated | ฿  167.00 |  +0.30% | RSI: 48.86
+2026-03-11 17:25:20 [INFO] Trinity.Sync | ✅ Symbol BCH Updated | ฿    9.75 |  -1.02% | RSI: 38.87
+2026-03-11 17:25:20 [INFO] Trinity.Sync | ✅ Symbol BCP Updated | ฿   36.25 |  +5.07% | RSI: 59.53
+2026-03-11 17:25:20 [INFO] Trinity.Sync | ✅ Symbol BCPG Updated | ฿    6.35 |  -5.22% | RSI: 41.02
+2026-03-11 17:25:20 [INFO] Trinity.Sync | ✅ Symbol BDMS Updated | ฿   18.70 |  +0.00% | RSI: 35.91
+2026-03-11 17:25:20 [INFO] Trinity.Sync | ✅ Symbol BEM Updated | ฿    5.30 |  -1.85% | RSI: 44.31
+2026-03-11 17:25:20 [INFO] Trinity.Sync | ✅ Symbol BGRIM Updated | ฿   11.60 |  -2.52% | RSI: 33.41
+2026-03-11 17:25:20 [INFO] Trinity.Sync | ✅ Symbol BH Updated | ฿  179.00 |  +0.56% | RSI: 49.31
+2026-03-11 17:25:20 [INFO] Trinity.Sync | ✅ Symbol BJC Updated | ฿   13.60 |  -0.73% | RSI: 33.78
+2026-03-11 17:25:20 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22last_price%22%2C%22percent_change%22%2C%22high_price%22%2C%22open_price%22%2C%22low_price%22%2C%22volume%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22symbol%22%2C%22market_status%22%2C%22updated_at%22 "HTTP/2 200 OK"
+2026-03-11 17:25:20 [INFO] Trinity.Sync | 💾 Batch 2 upsert: 10 rows saved
+2026-03-11 17:25:21 [INFO] Trinity.Sync | 📦 Batch 3/10: BLA, BTG, BTS, CBG, CCET, CENTEL, CHG, CK, COM7, CPALL
+2026-03-11 17:25:22 [INFO] Trinity.Sync | ✅ Symbol BLA Updated | ฿   19.60 |  +1.03% | RSI: 37.09
+2026-03-11 17:25:22 [INFO] Trinity.Sync | ✅ Symbol BTG Updated | ฿   20.00 |  -4.76% | RSI: 63.52
+2026-03-11 17:25:22 [INFO] Trinity.Sync | ✅ Symbol BTS Updated | ฿    2.06 |  +0.00% | RSI: 36.41
+2026-03-11 17:25:22 [INFO] Trinity.Sync | ✅ Symbol CBG Updated | ฿   35.50 |  +0.71% | RSI: 25.86
+2026-03-11 17:25:22 [INFO] Trinity.Sync | ✅ Symbol CCET Updated | ฿    4.78 |  -0.42% | RSI: 46.59
+2026-03-11 17:25:22 [INFO] Trinity.Sync | ✅ Symbol CENTEL Updated | ฿   33.25 |  +0.76% | RSI: 41.50
+2026-03-11 17:25:22 [INFO] Trinity.Sync | ✅ Symbol CHG Updated | ฿    1.48 |  +0.68% | RSI: 36.62
+2026-03-11 17:25:22 [INFO] Trinity.Sync | ✅ Symbol CK Updated | ฿   15.40 |  -0.32% | RSI: 53.25
+2026-03-11 17:25:22 [INFO] Trinity.Sync | ✅ Symbol COM7 Updated | ฿   23.50 |  +6.33% | RSI: 59.48
+2026-03-11 17:25:22 [INFO] Trinity.Sync | ✅ Symbol CPALL Updated | ฿   46.75 |  -1.06% | RSI: 43.46
+2026-03-11 17:25:22 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22last_price%22%2C%22percent_change%22%2C%22high_price%22%2C%22open_price%22%2C%22low_price%22%2C%22volume%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22symbol%22%2C%22market_status%22%2C%22updated_at%22 "HTTP/2 200 OK"
+2026-03-11 17:25:22 [INFO] Trinity.Sync | 💾 Batch 3 upsert: 10 rows saved
+2026-03-11 17:25:22 [INFO] Trinity.Sync | 📦 Batch 4/10: CPF, CPN, CRC, DELTA, DOHOME, EA, EGCO, ERW, GFPT, GLOBAL
+2026-03-11 17:25:23 [INFO] Trinity.Sync | ✅ Symbol CPF Updated | ฿   18.80 |  -2.08% | RSI: 30.40
+2026-03-11 17:25:23 [INFO] Trinity.Sync | ✅ Symbol CPN Updated | ฿   64.00 |  +1.59% | RSI: 59.70
+2026-03-11 17:25:23 [INFO] Trinity.Sync | ✅ Symbol CRC Updated | ฿   18.00 |  -1.10% | RSI: 31.80
+2026-03-11 17:25:23 [INFO] Trinity.Sync | ✅ Symbol DELTA Updated | ฿  258.00 |  +0.78% | RSI: 59.82
+2026-03-11 17:25:23 [INFO] Trinity.Sync | ✅ Symbol DOHOME Updated | ฿    3.28 |  +0.61% | RSI: 39.56
+2026-03-11 17:25:23 [INFO] Trinity.Sync | ✅ Symbol EA Updated | ฿    2.68 |  -1.47% | RSI: 43.32
+2026-03-11 17:25:23 [INFO] Trinity.Sync | ✅ Symbol EGCO Updated | ฿  113.00 |  +0.00% | RSI: 39.99
+2026-03-11 17:25:23 [INFO] Trinity.Sync | ✅ Symbol ERW Updated | ฿    2.62 |  +0.00% | RSI: 42.93
+2026-03-11 17:25:23 [INFO] Trinity.Sync | ✅ Symbol GFPT Updated | ฿    9.05 |  +0.56% | RSI: 38.53
+2026-03-11 17:25:23 [INFO] Trinity.Sync | ✅ Symbol GLOBAL Updated | ฿    6.65 |  +2.31% | RSI: 43.66
+2026-03-11 17:25:23 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22last_price%22%2C%22percent_change%22%2C%22high_price%22%2C%22open_price%22%2C%22low_price%22%2C%22volume%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22symbol%22%2C%22market_status%22%2C%22updated_at%22 "HTTP/2 200 OK"
+2026-03-11 17:25:23 [INFO] Trinity.Sync | 💾 Batch 4 upsert: 10 rows saved
+2026-03-11 17:25:24 [INFO] Trinity.Sync | 📦 Batch 5/10: GPSC, GULF, GUNKUL, HANA, HMPRO, ICHI, IRPC, IVL, JAS, JMART
+2026-03-11 17:25:24 [INFO] Trinity.Sync | ✅ Symbol GPSC Updated | ฿   33.50 |  -2.90% | RSI: 36.03
+2026-03-11 17:25:24 [INFO] Trinity.Sync | ✅ Symbol GULF Updated | ฿   54.50 |  -2.68% | RSI: 52.99
+2026-03-11 17:25:24 [INFO] Trinity.Sync | ✅ Symbol GUNKUL Updated | ฿    2.22 |  +0.00% | RSI: 52.79
+2026-03-11 17:25:24 [INFO] Trinity.Sync | ✅ Symbol HANA Updated | ฿   24.00 |  +1.69% | RSI: 75.42
+2026-03-11 17:25:24 [INFO] Trinity.Sync | ✅ Symbol HMPRO Updated | ฿    6.35 |  +0.00% | RSI: 35.29
+2026-03-11 17:25:24 [INFO] Trinity.Sync | ✅ Symbol ICHI Updated | ฿   14.30 |  +0.70% | RSI: 52.37
+2026-03-11 17:25:24 [INFO] Trinity.Sync | ✅ Symbol IRPC Updated | ฿    1.14 |  -2.56% | RSI: 39.29
+2026-03-11 17:25:24 [INFO] Trinity.Sync | ✅ Symbol IVL Updated | ฿   18.90 |  -1.56% | RSI: 36.98
+2026-03-11 17:25:24 [INFO] Trinity.Sync | ✅ Symbol JAS Updated | ฿    1.25 | +10.62% | RSI: 47.78
+2026-03-11 17:25:24 [INFO] Trinity.Sync | ✅ Symbol JMART Updated | ฿    7.15 |  -3.38% | RSI: 47.84
+2026-03-11 17:25:24 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22last_price%22%2C%22percent_change%22%2C%22high_price%22%2C%22open_price%22%2C%22low_price%22%2C%22volume%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22symbol%22%2C%22market_status%22%2C%22updated_at%22 "HTTP/2 200 OK"
+2026-03-11 17:25:24 [INFO] Trinity.Sync | 💾 Batch 5 upsert: 10 rows saved
+2026-03-11 17:25:25 [INFO] Trinity.Sync | 📦 Batch 6/10: JMT, JTS, KBANK, KCE, KKP, KTB, KTC, LH, M, MEGA
+2026-03-11 17:25:25 [INFO] Trinity.Sync | ✅ Symbol JMT Updated | ฿    8.80 |  -3.30% | RSI: 42.19
+2026-03-11 17:25:25 [INFO] Trinity.Sync | ✅ Symbol JTS Updated | ฿   58.25 |  +3.10% | RSI: 48.35
+2026-03-11 17:25:25 [INFO] Trinity.Sync | ✅ Symbol KBANK Updated | ฿  189.50 |  +0.80% | RSI: 43.14
+2026-03-11 17:25:25 [INFO] Trinity.Sync | ✅ Symbol KCE Updated | ฿   19.60 |  +0.51% | RSI: 54.75
+2026-03-11 17:25:25 [INFO] Trinity.Sync | ✅ Symbol KKP Updated | ฿   72.00 |  +0.00% | RSI: 47.08
+2026-03-11 17:25:25 [INFO] Trinity.Sync | ✅ Symbol KTB Updated | ฿   34.25 |  +0.00% | RSI: 64.69
+2026-03-11 17:25:25 [INFO] Trinity.Sync | ✅ Symbol KTC Updated | ฿   28.75 |  -0.86% | RSI: 37.47
+2026-03-11 17:25:25 [INFO] Trinity.Sync | ✅ Symbol LH Updated | ฿    3.76 |  +0.00% | RSI: 36.20
+2026-03-11 17:25:25 [INFO] Trinity.Sync | ✅ Symbol M Updated | ฿   20.00 |  +4.17% | RSI: 45.82
+2026-03-11 17:25:25 [INFO] Trinity.Sync | ✅ Symbol MEGA Updated | ฿   35.25 |  +3.68% | RSI: 47.47
+2026-03-11 17:25:25 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22last_price%22%2C%22percent_change%22%2C%22high_price%22%2C%22open_price%22%2C%22low_price%22%2C%22volume%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22symbol%22%2C%22market_status%22%2C%22updated_at%22 "HTTP/2 200 OK"
+2026-03-11 17:25:25 [INFO] Trinity.Sync | 💾 Batch 6 upsert: 10 rows saved
+2026-03-11 17:25:26 [INFO] Trinity.Sync | 📦 Batch 7/10: MINT, MOSHI, MTC, OR, OSP, PLANB, PR9, PRM, PTG, PTT
+2026-03-11 17:25:26 [INFO] Trinity.Sync | ✅ Symbol MINT Updated | ฿   23.00 |  +4.07% | RSI: 43.56
+2026-03-11 17:25:26 [INFO] Trinity.Sync | ✅ Symbol MOSHI Updated | ฿   33.00 |  +0.00% | RSI: 31.12
+2026-03-11 17:25:26 [INFO] Trinity.Sync | ✅ Symbol MTC Updated | ฿   31.25 |  +0.81% | RSI: 35.80
+2026-03-11 17:25:26 [INFO] Trinity.Sync | ✅ Symbol OR Updated | ฿   11.10 |  -0.89% | RSI: 22.55
+2026-03-11 17:25:26 [INFO] Trinity.Sync | ✅ Symbol OSP Updated | ฿   14.30 |  -2.72% | RSI: 20.23
+2026-03-11 17:25:26 [INFO] Trinity.Sync | ✅ Symbol PLANB Updated | ฿    4.20 |  -0.94% | RSI: 46.01
+2026-03-11 17:25:26 [INFO] Trinity.Sync | ✅ Symbol PR9 Updated | ฿   17.00 |  +0.00% | RSI: 31.94
+2026-03-11 17:25:26 [INFO] Trinity.Sync | ✅ Symbol PRM Updated | ฿    7.50 |  +1.35% | RSI: 49.56
+2026-03-11 17:25:26 [INFO] Trinity.Sync | ✅ Symbol PTG Updated | ฿    8.00 |  -1.23% | RSI: 42.72
+2026-03-11 17:25:26 [INFO] Trinity.Sync | ✅ Symbol PTT Updated | ฿   33.50 |  +0.00% | RSI: 45.05
+2026-03-11 17:25:26 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22last_price%22%2C%22percent_change%22%2C%22high_price%22%2C%22open_price%22%2C%22low_price%22%2C%22volume%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22symbol%22%2C%22market_status%22%2C%22updated_at%22 "HTTP/2 200 OK"
+2026-03-11 17:25:26 [INFO] Trinity.Sync | 💾 Batch 7 upsert: 10 rows saved
+2026-03-11 17:25:27 [INFO] Trinity.Sync | 📦 Batch 8/10: PTTEP, PTTGC, QH, RATCH, RCL, SAWAD, SCB, SCC, SCGP, SIRI
+2026-03-11 17:25:27 [INFO] Trinity.Sync | ✅ Symbol PTTEP Updated | ฿  143.50 |  +2.50% | RSI: 67.32
+2026-03-11 17:25:27 [INFO] Trinity.Sync | ✅ Symbol PTTGC Updated | ฿   26.75 |  -0.93% | RSI: 55.83
+2026-03-11 17:25:27 [INFO] Trinity.Sync | ✅ Symbol QH Updated | ฿    1.36 |  +0.00% | RSI: 46.38
+2026-03-11 17:25:27 [INFO] Trinity.Sync | ✅ Symbol RATCH Updated | ฿   29.00 |  +0.00% | RSI: 38.86
+2026-03-11 17:25:27 [INFO] Trinity.Sync | ✅ Symbol RCL Updated | ฿   29.50 |  +0.00% | RSI: 59.32
+2026-03-11 17:25:27 [INFO] Trinity.Sync | ✅ Symbol SAWAD Updated | ฿   24.60 |  +0.00% | RSI: 38.09
+2026-03-11 17:25:27 [INFO] Trinity.Sync | ✅ Symbol SCB Updated | ฿  144.00 |  +0.00% | RSI: 52.09
+2026-03-11 17:25:27 [INFO] Trinity.Sync | ✅ Symbol SCC Updated | ฿  175.00 |  +2.64% | RSI: 28.49
+2026-03-11 17:25:27 [INFO] Trinity.Sync | ✅ Symbol SCGP Updated | ฿   17.50 |  -1.13% | RSI: 35.42
+2026-03-11 17:25:27 [INFO] Trinity.Sync | ✅ Symbol SIRI Updated | ฿    1.49 |  +0.00% | RSI: 52.43
+2026-03-11 17:25:28 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22last_price%22%2C%22percent_change%22%2C%22high_price%22%2C%22open_price%22%2C%22low_price%22%2C%22volume%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22symbol%22%2C%22market_status%22%2C%22updated_at%22 "HTTP/2 200 OK"
+2026-03-11 17:25:28 [INFO] Trinity.Sync | 💾 Batch 8 upsert: 10 rows saved
+2026-03-11 17:25:28 [INFO] Trinity.Sync | 📦 Batch 9/10: SISB, SJWD, SPALI, SPRC, STA, STECON, STGT, TASCO, TCAP, TFG
+2026-03-11 17:25:29 [INFO] Trinity.Sync | ✅ Symbol SISB Updated | ฿   10.80 |  -1.82% | RSI: 46.04
+2026-03-11 17:25:29 [INFO] Trinity.Sync | ✅ Symbol SJWD Updated | ฿    7.50 |  +0.00% | RSI: 40.32
+2026-03-11 17:25:29 [INFO] Trinity.Sync | ✅ Symbol SPALI Updated | ฿   17.40 |  +2.35% | RSI: 44.73
+2026-03-11 17:25:29 [INFO] Trinity.Sync | ✅ Symbol SPRC Updated | ฿    7.50 |  -1.96% | RSI: 60.26
+2026-03-11 17:25:29 [INFO] Trinity.Sync | ✅ Symbol STA Updated | ฿   15.50 |  +0.00% | RSI: 61.39
+2026-03-11 17:25:29 [INFO] Trinity.Sync | ✅ Symbol STECON Updated | ฿   11.90 |  -5.56% | RSI: 62.59
+2026-03-11 17:25:29 [INFO] Trinity.Sync | ✅ Symbol STGT Updated | ฿    9.65 |  +2.66% | RSI: 57.05
+2026-03-11 17:25:29 [INFO] Trinity.Sync | ✅ Symbol TASCO Updated | ฿   12.90 |  +0.00% | RSI: 37.70
+2026-03-11 17:25:29 [INFO] Trinity.Sync | ✅ Symbol TCAP Updated | ฿   56.50 |  +0.00% | RSI: 40.94
+2026-03-11 17:25:29 [INFO] Trinity.Sync | ✅ Symbol TFG Updated | ฿    7.20 |  +4.35% | RSI: 86.22
+2026-03-11 17:25:29 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22last_price%22%2C%22percent_change%22%2C%22high_price%22%2C%22open_price%22%2C%22low_price%22%2C%22volume%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22symbol%22%2C%22market_status%22%2C%22updated_at%22 "HTTP/2 200 OK"
+2026-03-11 17:25:29 [INFO] Trinity.Sync | 💾 Batch 9 upsert: 10 rows saved
+2026-03-11 17:25:29 [INFO] Trinity.Sync | 📦 Batch 10/10: TIDLOR, TISCO, TLI, TOA, TOP, TRUE, TTB, TU, VGI, WHA
+2026-03-11 17:25:30 [INFO] Trinity.Sync | ✅ Symbol TIDLOR Updated | ฿   17.00 |  -2.86% | RSI: 38.63
+2026-03-11 17:25:30 [INFO] Trinity.Sync | ✅ Symbol TISCO Updated | ฿  112.50 |  +0.90% | RSI: 49.65
+2026-03-11 17:25:30 [INFO] Trinity.Sync | ✅ Symbol TLI Updated | ฿   10.10 |  +0.00% | RSI: 27.29
+2026-03-11 17:25:30 [INFO] Trinity.Sync | ✅ Symbol TOA Updated | ฿   13.00 |  -2.99% | RSI: 30.98
+2026-03-11 17:25:30 [INFO] Trinity.Sync | ✅ Symbol TOP Updated | ฿   47.25 |  -1.56% | RSI: 46.88
+2026-03-11 17:25:30 [INFO] Trinity.Sync | ✅ Symbol TRUE Updated | ฿   13.10 |  -0.76% | RSI: 48.19
+2026-03-11 17:25:30 [INFO] Trinity.Sync | ✅ Symbol TTB Updated | ฿    2.20 |  +0.00% | RSI: 54.58
+2026-03-11 17:25:30 [INFO] Trinity.Sync | ✅ Symbol TU Updated | ฿   11.00 |  -1.79% | RSI: 38.63
+2026-03-11 17:25:30 [INFO] Trinity.Sync | ✅ Symbol VGI Updated | ฿    0.93 |  -5.10% | RSI: 39.32
+2026-03-11 17:25:30 [INFO] Trinity.Sync | ✅ Symbol WHA Updated | ฿    4.08 |  +2.51% | RSI: 54.86
+2026-03-11 17:25:30 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22last_price%22%2C%22percent_change%22%2C%22high_price%22%2C%22open_price%22%2C%22low_price%22%2C%22volume%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22symbol%22%2C%22market_status%22%2C%22updated_at%22 "HTTP/2 200 OK"
+2026-03-11 17:25:30 [INFO] Trinity.Sync | 💾 Batch 10 upsert: 10 rows saved
+2026-03-11 17:25:30 [INFO] Trinity.Sync | ============================================================
+2026-03-11 17:25:30 [INFO] Trinity.Sync | 🏁 Batch Process Completed in 11.6s | ✅ 100 | ❌ 0
+2026-03-11 17:25:30 [INFO] Trinity.Sync | ============================================================
+2026-03-12 09:27:39 [INFO] Trinity.Sync | ============================================================
+2026-03-12 09:27:39 [INFO] Trinity.Sync | 🚀 Trinity Realtime Sync | 09:27:39 | Status: CLOSED
+2026-03-12 09:27:39 [INFO] Trinity.Sync | 🔖 Batch Process Started | symbols=100
+2026-03-12 09:27:39 [INFO] Trinity.Sync | ============================================================
+2026-03-12 09:27:39 [INFO] Trinity.Sync | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-12 09:27:40 [INFO] Trinity.Sync | ✅ Symbol AAV Updated | ฿    1.10 |  -0.90% | RSI: 40.80
+2026-03-12 09:27:40 [INFO] Trinity.Sync | ✅ Symbol ADVANC Updated | ฿  360.00 |  -1.37% | RSI: 54.20
+2026-03-12 09:27:40 [INFO] Trinity.Sync | ✅ Symbol AEONTS Updated | ฿   91.75 |  -0.54% | RSI: 40.48
+2026-03-12 09:27:40 [INFO] Trinity.Sync | ✅ Symbol AMATA Updated | ฿   18.50 |  +2.78% | RSI: 56.63
+2026-03-12 09:27:40 [INFO] Trinity.Sync | ✅ Symbol AOT Updated | ฿   51.00 |  +2.51% | RSI: 46.71
+2026-03-12 09:27:40 [INFO] Trinity.Sync | ✅ Symbol AP Updated | ฿    8.80 |  +0.00% | RSI: 47.76
+2026-03-12 09:27:40 [INFO] Trinity.Sync | ✅ Symbol AURA Updated | ฿   13.30 |  +3.91% | RSI: 45.29
+2026-03-12 09:27:40 [INFO] Trinity.Sync | ✅ Symbol AWC Updated | ฿    2.06 |  +0.00% | RSI: 35.19
+2026-03-12 09:27:40 [INFO] Trinity.Sync | ✅ Symbol BA Updated | ฿   14.00 |  -2.78% | RSI: 34.84
+2026-03-12 09:27:40 [INFO] Trinity.Sync | ✅ Symbol BAM Updated | ฿    7.15 |  +0.70% | RSI: 39.89
+2026-03-12 09:27:40 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22open_price%22%2C%22percent_change%22%2C%22symbol%22%2C%22macd_val%22%2C%22last_price%22%2C%22updated_at%22%2C%22high_price%22%2C%22market_status%22%2C%22macd_signal%22%2C%22volume%22 "HTTP/2 200 OK"
+2026-03-12 09:27:40 [INFO] Trinity.Sync | 💾 Batch 1 upsert: 10 rows saved
+2026-03-12 09:27:41 [INFO] Trinity.Sync | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-12 09:27:41 [INFO] Trinity.Sync | ✅ Symbol BANPU Updated | ฿    5.70 |  -3.39% | RSI: 49.24
+2026-03-12 09:27:41 [INFO] Trinity.Sync | ✅ Symbol BBL Updated | ฿  167.00 |  +0.30% | RSI: 48.86
+2026-03-12 09:27:41 [INFO] Trinity.Sync | ✅ Symbol BCH Updated | ฿    9.75 |  -1.02% | RSI: 38.87
+2026-03-12 09:27:41 [INFO] Trinity.Sync | ✅ Symbol BCP Updated | ฿   36.25 |  +5.07% | RSI: 59.53
+2026-03-12 09:27:41 [INFO] Trinity.Sync | ✅ Symbol BCPG Updated | ฿    6.35 |  -5.22% | RSI: 41.02
+2026-03-12 09:27:41 [INFO] Trinity.Sync | ✅ Symbol BDMS Updated | ฿   18.70 |  +0.00% | RSI: 35.91
+2026-03-12 09:27:41 [INFO] Trinity.Sync | ✅ Symbol BEM Updated | ฿    5.30 |  -1.85% | RSI: 44.31
+2026-03-12 09:27:41 [INFO] Trinity.Sync | ✅ Symbol BGRIM Updated | ฿   11.60 |  -2.52% | RSI: 33.41
+2026-03-12 09:27:41 [INFO] Trinity.Sync | ✅ Symbol BH Updated | ฿  179.00 |  +0.56% | RSI: 49.31
+2026-03-12 09:27:41 [INFO] Trinity.Sync | ✅ Symbol BJC Updated | ฿   13.60 |  -0.73% | RSI: 33.78
+2026-03-12 09:27:41 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22open_price%22%2C%22percent_change%22%2C%22symbol%22%2C%22macd_val%22%2C%22last_price%22%2C%22updated_at%22%2C%22high_price%22%2C%22market_status%22%2C%22macd_signal%22%2C%22volume%22 "HTTP/2 200 OK"
+2026-03-12 09:27:41 [INFO] Trinity.Sync | 💾 Batch 2 upsert: 10 rows saved
+2026-03-12 09:27:42 [INFO] Trinity.Sync | 📦 Batch 3/10: BLA, BTG, BTS, CBG, CCET, CENTEL, CHG, CK, COM7, CPALL
+2026-03-12 09:27:42 [INFO] Trinity.Sync | ✅ Symbol BLA Updated | ฿   19.60 |  +1.03% | RSI: 37.09
+2026-03-12 09:27:42 [INFO] Trinity.Sync | ✅ Symbol BTG Updated | ฿   20.00 |  -4.76% | RSI: 63.52
+2026-03-12 09:27:42 [INFO] Trinity.Sync | ✅ Symbol BTS Updated | ฿    2.06 |  +0.00% | RSI: 36.41
+2026-03-12 09:27:42 [INFO] Trinity.Sync | ✅ Symbol CBG Updated | ฿   35.50 |  +0.71% | RSI: 25.86
+2026-03-12 09:27:42 [INFO] Trinity.Sync | ✅ Symbol CCET Updated | ฿    4.78 |  -0.42% | RSI: 46.59
+2026-03-12 09:27:42 [INFO] Trinity.Sync | ✅ Symbol CENTEL Updated | ฿   33.25 |  +0.76% | RSI: 41.50
+2026-03-12 09:27:42 [INFO] Trinity.Sync | ✅ Symbol CHG Updated | ฿    1.48 |  +0.68% | RSI: 36.62
+2026-03-12 09:27:42 [INFO] Trinity.Sync | ✅ Symbol CK Updated | ฿   15.40 |  -0.32% | RSI: 53.25
+2026-03-12 09:27:42 [INFO] Trinity.Sync | ✅ Symbol COM7 Updated | ฿   23.50 |  +6.33% | RSI: 59.48
+2026-03-12 09:27:42 [INFO] Trinity.Sync | ✅ Symbol CPALL Updated | ฿   46.75 |  -1.06% | RSI: 43.46
+2026-03-12 09:27:42 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22open_price%22%2C%22percent_change%22%2C%22symbol%22%2C%22macd_val%22%2C%22last_price%22%2C%22updated_at%22%2C%22high_price%22%2C%22market_status%22%2C%22macd_signal%22%2C%22volume%22 "HTTP/2 200 OK"
+2026-03-12 09:27:42 [INFO] Trinity.Sync | 💾 Batch 3 upsert: 10 rows saved
+2026-03-12 09:27:43 [INFO] Trinity.Sync | 📦 Batch 4/10: CPF, CPN, CRC, DELTA, DOHOME, EA, EGCO, ERW, GFPT, GLOBAL
+2026-03-12 09:27:43 [INFO] Trinity.Sync | ✅ Symbol CPF Updated | ฿   18.80 |  -2.08% | RSI: 30.40
+2026-03-12 09:27:43 [INFO] Trinity.Sync | ✅ Symbol CPN Updated | ฿   64.00 |  +1.59% | RSI: 59.70
+2026-03-12 09:27:43 [INFO] Trinity.Sync | ✅ Symbol CRC Updated | ฿   18.00 |  -1.10% | RSI: 31.80
+2026-03-12 09:27:43 [INFO] Trinity.Sync | ✅ Symbol DELTA Updated | ฿  258.00 |  +0.78% | RSI: 59.82
+2026-03-12 09:27:43 [INFO] Trinity.Sync | ✅ Symbol DOHOME Updated | ฿    3.28 |  +0.61% | RSI: 39.56
+2026-03-12 09:27:43 [INFO] Trinity.Sync | ✅ Symbol EA Updated | ฿    2.68 |  -1.47% | RSI: 43.32
+2026-03-12 09:27:43 [INFO] Trinity.Sync | ✅ Symbol EGCO Updated | ฿  113.00 |  +0.00% | RSI: 39.99
+2026-03-12 09:27:43 [INFO] Trinity.Sync | ✅ Symbol ERW Updated | ฿    2.62 |  +0.00% | RSI: 42.93
+2026-03-12 09:27:43 [INFO] Trinity.Sync | ✅ Symbol GFPT Updated | ฿    9.05 |  +0.56% | RSI: 38.53
+2026-03-12 09:27:43 [INFO] Trinity.Sync | ✅ Symbol GLOBAL Updated | ฿    6.65 |  +2.31% | RSI: 43.66
+2026-03-12 09:27:43 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22open_price%22%2C%22percent_change%22%2C%22symbol%22%2C%22macd_val%22%2C%22last_price%22%2C%22updated_at%22%2C%22high_price%22%2C%22market_status%22%2C%22macd_signal%22%2C%22volume%22 "HTTP/2 200 OK"
+2026-03-12 09:27:43 [INFO] Trinity.Sync | 💾 Batch 4 upsert: 10 rows saved
+2026-03-12 09:27:44 [INFO] Trinity.Sync | 📦 Batch 5/10: GPSC, GULF, GUNKUL, HANA, HMPRO, ICHI, IRPC, IVL, JAS, JMART
+2026-03-12 09:27:44 [INFO] Trinity.Sync | ✅ Symbol GPSC Updated | ฿   33.50 |  -2.90% | RSI: 36.03
+2026-03-12 09:27:44 [INFO] Trinity.Sync | ✅ Symbol GULF Updated | ฿   54.50 |  -2.68% | RSI: 52.99
+2026-03-12 09:27:44 [INFO] Trinity.Sync | ✅ Symbol GUNKUL Updated | ฿    2.22 |  +0.00% | RSI: 52.79
+2026-03-12 09:27:44 [INFO] Trinity.Sync | ✅ Symbol HANA Updated | ฿   24.00 |  +1.69% | RSI: 75.42
+2026-03-12 09:27:44 [INFO] Trinity.Sync | ✅ Symbol HMPRO Updated | ฿    6.35 |  +0.00% | RSI: 35.29
+2026-03-12 09:27:44 [INFO] Trinity.Sync | ✅ Symbol ICHI Updated | ฿   14.30 |  +0.70% | RSI: 52.37
+2026-03-12 09:27:44 [INFO] Trinity.Sync | ✅ Symbol IRPC Updated | ฿    1.14 |  -2.56% | RSI: 39.29
+2026-03-12 09:27:44 [INFO] Trinity.Sync | ✅ Symbol IVL Updated | ฿   18.90 |  -1.56% | RSI: 36.98
+2026-03-12 09:27:44 [INFO] Trinity.Sync | ✅ Symbol JAS Updated | ฿    1.25 | +10.62% | RSI: 47.78
+2026-03-12 09:27:44 [INFO] Trinity.Sync | ✅ Symbol JMART Updated | ฿    7.15 |  -3.38% | RSI: 47.84
+2026-03-12 09:27:44 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22open_price%22%2C%22percent_change%22%2C%22symbol%22%2C%22macd_val%22%2C%22last_price%22%2C%22updated_at%22%2C%22high_price%22%2C%22market_status%22%2C%22macd_signal%22%2C%22volume%22 "HTTP/2 200 OK"
+2026-03-12 09:27:44 [INFO] Trinity.Sync | 💾 Batch 5 upsert: 10 rows saved
+2026-03-12 09:27:45 [INFO] Trinity.Sync | 📦 Batch 6/10: JMT, JTS, KBANK, KCE, KKP, KTB, KTC, LH, M, MEGA
+2026-03-12 09:27:45 [INFO] Trinity.Sync | ✅ Symbol JMT Updated | ฿    8.80 |  -3.30% | RSI: 42.19
+2026-03-12 09:27:45 [INFO] Trinity.Sync | ✅ Symbol JTS Updated | ฿   58.25 |  +3.10% | RSI: 48.35
+2026-03-12 09:27:45 [INFO] Trinity.Sync | ✅ Symbol KBANK Updated | ฿  189.50 |  +0.80% | RSI: 43.14
+2026-03-12 09:27:45 [INFO] Trinity.Sync | ✅ Symbol KCE Updated | ฿   19.60 |  +0.51% | RSI: 54.75
+2026-03-12 09:27:45 [INFO] Trinity.Sync | ✅ Symbol KKP Updated | ฿   72.00 |  +0.00% | RSI: 47.08
+2026-03-12 09:27:45 [INFO] Trinity.Sync | ✅ Symbol KTB Updated | ฿   34.25 |  +0.00% | RSI: 64.69
+2026-03-12 09:27:45 [INFO] Trinity.Sync | ✅ Symbol KTC Updated | ฿   28.75 |  -0.86% | RSI: 37.47
+2026-03-12 09:27:45 [INFO] Trinity.Sync | ✅ Symbol LH Updated | ฿    3.76 |  +0.00% | RSI: 36.20
+2026-03-12 09:27:45 [INFO] Trinity.Sync | ✅ Symbol M Updated | ฿   20.00 |  +4.17% | RSI: 45.82
+2026-03-12 09:27:45 [INFO] Trinity.Sync | ✅ Symbol MEGA Updated | ฿   35.25 |  +3.68% | RSI: 47.47
+2026-03-12 09:27:45 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22open_price%22%2C%22percent_change%22%2C%22symbol%22%2C%22macd_val%22%2C%22last_price%22%2C%22updated_at%22%2C%22high_price%22%2C%22market_status%22%2C%22macd_signal%22%2C%22volume%22 "HTTP/2 200 OK"
+2026-03-12 09:27:45 [INFO] Trinity.Sync | 💾 Batch 6 upsert: 10 rows saved
+2026-03-12 09:27:46 [INFO] Trinity.Sync | 📦 Batch 7/10: MINT, MOSHI, MTC, OR, OSP, PLANB, PR9, PRM, PTG, PTT
+2026-03-12 09:27:47 [INFO] Trinity.Sync | ✅ Symbol MINT Updated | ฿   23.00 |  +4.07% | RSI: 43.56
+2026-03-12 09:27:47 [INFO] Trinity.Sync | ✅ Symbol MOSHI Updated | ฿   33.00 |  +0.00% | RSI: 31.12
+2026-03-12 09:27:47 [INFO] Trinity.Sync | ✅ Symbol MTC Updated | ฿   31.25 |  +0.81% | RSI: 35.80
+2026-03-12 09:27:47 [INFO] Trinity.Sync | ✅ Symbol OR Updated | ฿   11.10 |  -0.89% | RSI: 22.55
+2026-03-12 09:27:47 [INFO] Trinity.Sync | ✅ Symbol OSP Updated | ฿   14.30 |  -2.72% | RSI: 20.23
+2026-03-12 09:27:47 [INFO] Trinity.Sync | ✅ Symbol PLANB Updated | ฿    4.20 |  -0.94% | RSI: 46.01
+2026-03-12 09:27:47 [INFO] Trinity.Sync | ✅ Symbol PR9 Updated | ฿   17.00 |  +0.00% | RSI: 31.94
+2026-03-12 09:27:47 [INFO] Trinity.Sync | ✅ Symbol PRM Updated | ฿    7.50 |  +1.35% | RSI: 49.56
+2026-03-12 09:27:47 [INFO] Trinity.Sync | ✅ Symbol PTG Updated | ฿    8.00 |  -1.23% | RSI: 42.72
+2026-03-12 09:27:47 [INFO] Trinity.Sync | ✅ Symbol PTT Updated | ฿   33.50 |  +0.00% | RSI: 45.05
+2026-03-12 09:27:47 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22open_price%22%2C%22percent_change%22%2C%22symbol%22%2C%22macd_val%22%2C%22last_price%22%2C%22updated_at%22%2C%22high_price%22%2C%22market_status%22%2C%22macd_signal%22%2C%22volume%22 "HTTP/2 200 OK"
+2026-03-12 09:27:47 [INFO] Trinity.Sync | 💾 Batch 7 upsert: 10 rows saved
+2026-03-12 09:27:47 [INFO] Trinity.Sync | 📦 Batch 8/10: PTTEP, PTTGC, QH, RATCH, RCL, SAWAD, SCB, SCC, SCGP, SIRI
+2026-03-12 09:27:48 [INFO] Trinity.Sync | ✅ Symbol PTTEP Updated | ฿  143.50 |  +2.50% | RSI: 67.32
+2026-03-12 09:27:48 [INFO] Trinity.Sync | ✅ Symbol PTTGC Updated | ฿   26.75 |  -0.93% | RSI: 55.83
+2026-03-12 09:27:48 [INFO] Trinity.Sync | ✅ Symbol QH Updated | ฿    1.36 |  +0.00% | RSI: 46.38
+2026-03-12 09:27:48 [INFO] Trinity.Sync | ✅ Symbol RATCH Updated | ฿   28.20 |  +0.00% | RSI: 38.86
+2026-03-12 09:27:48 [INFO] Trinity.Sync | ✅ Symbol RCL Updated | ฿   29.50 |  +0.00% | RSI: 59.32
+2026-03-12 09:27:48 [INFO] Trinity.Sync | ✅ Symbol SAWAD Updated | ฿   24.60 |  +0.00% | RSI: 38.09
+2026-03-12 09:27:48 [INFO] Trinity.Sync | ✅ Symbol SCB Updated | ฿  144.00 |  +0.00% | RSI: 52.09
+2026-03-12 09:27:48 [INFO] Trinity.Sync | ✅ Symbol SCC Updated | ฿  175.00 |  +2.64% | RSI: 28.49
+2026-03-12 09:27:48 [INFO] Trinity.Sync | ✅ Symbol SCGP Updated | ฿   17.50 |  -1.13% | RSI: 35.42
+2026-03-12 09:27:48 [INFO] Trinity.Sync | ✅ Symbol SIRI Updated | ฿    1.49 |  +0.00% | RSI: 52.43
+2026-03-12 09:27:48 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22open_price%22%2C%22percent_change%22%2C%22symbol%22%2C%22macd_val%22%2C%22last_price%22%2C%22updated_at%22%2C%22high_price%22%2C%22market_status%22%2C%22macd_signal%22%2C%22volume%22 "HTTP/2 200 OK"
+2026-03-12 09:27:48 [INFO] Trinity.Sync | 💾 Batch 8 upsert: 10 rows saved
+2026-03-12 09:27:48 [INFO] Trinity.Sync | 📦 Batch 9/10: SISB, SJWD, SPALI, SPRC, STA, STECON, STGT, TASCO, TCAP, TFG
+2026-03-12 09:27:49 [INFO] Trinity.Sync | ✅ Symbol SISB Updated | ฿   10.80 |  -1.82% | RSI: 46.04
+2026-03-12 09:27:49 [INFO] Trinity.Sync | ✅ Symbol SJWD Updated | ฿    7.50 |  +0.00% | RSI: 40.32
+2026-03-12 09:27:49 [INFO] Trinity.Sync | ✅ Symbol SPALI Updated | ฿   17.40 |  +2.35% | RSI: 44.73
+2026-03-12 09:27:49 [INFO] Trinity.Sync | ✅ Symbol SPRC Updated | ฿    7.50 |  -1.96% | RSI: 60.26
+2026-03-12 09:27:49 [INFO] Trinity.Sync | ✅ Symbol STA Updated | ฿   15.50 |  +0.00% | RSI: 61.39
+2026-03-12 09:27:49 [INFO] Trinity.Sync | ✅ Symbol STECON Updated | ฿   11.90 |  -5.56% | RSI: 62.59
+2026-03-12 09:27:49 [INFO] Trinity.Sync | ✅ Symbol STGT Updated | ฿    9.65 |  +2.66% | RSI: 57.05
+2026-03-12 09:27:49 [INFO] Trinity.Sync | ✅ Symbol TASCO Updated | ฿   12.90 |  +0.00% | RSI: 37.70
+2026-03-12 09:27:49 [INFO] Trinity.Sync | ✅ Symbol TCAP Updated | ฿   56.50 |  +0.00% | RSI: 40.94
+2026-03-12 09:27:49 [INFO] Trinity.Sync | ✅ Symbol TFG Updated | ฿    7.20 |  +4.35% | RSI: 86.22
+2026-03-12 09:27:49 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22open_price%22%2C%22percent_change%22%2C%22symbol%22%2C%22macd_val%22%2C%22last_price%22%2C%22updated_at%22%2C%22high_price%22%2C%22market_status%22%2C%22macd_signal%22%2C%22volume%22 "HTTP/2 200 OK"
+2026-03-12 09:27:49 [INFO] Trinity.Sync | 💾 Batch 9 upsert: 10 rows saved
+2026-03-12 09:27:50 [INFO] Trinity.Sync | 📦 Batch 10/10: TIDLOR, TISCO, TLI, TOA, TOP, TRUE, TTB, TU, VGI, WHA
+2026-03-12 09:27:50 [INFO] Trinity.Sync | ✅ Symbol TIDLOR Updated | ฿   17.00 |  -2.86% | RSI: 38.63
+2026-03-12 09:27:50 [INFO] Trinity.Sync | ✅ Symbol TISCO Updated | ฿  112.50 |  +0.90% | RSI: 49.65
+2026-03-12 09:27:50 [INFO] Trinity.Sync | ✅ Symbol TLI Updated | ฿   10.10 |  +0.00% | RSI: 27.29
+2026-03-12 09:27:50 [INFO] Trinity.Sync | ✅ Symbol TOA Updated | ฿   13.00 |  -2.99% | RSI: 30.98
+2026-03-12 09:27:50 [INFO] Trinity.Sync | ✅ Symbol TOP Updated | ฿   47.25 |  -1.56% | RSI: 46.88
+2026-03-12 09:27:50 [INFO] Trinity.Sync | ✅ Symbol TRUE Updated | ฿   13.10 |  -0.76% | RSI: 48.19
+2026-03-12 09:27:50 [INFO] Trinity.Sync | ✅ Symbol TTB Updated | ฿    2.20 |  +0.00% | RSI: 54.58
+2026-03-12 09:27:50 [INFO] Trinity.Sync | ✅ Symbol TU Updated | ฿   11.00 |  -1.79% | RSI: 38.63
+2026-03-12 09:27:50 [INFO] Trinity.Sync | ✅ Symbol VGI Updated | ฿    0.93 |  -5.10% | RSI: 39.32
+2026-03-12 09:27:50 [INFO] Trinity.Sync | ✅ Symbol WHA Updated | ฿    4.08 |  +2.51% | RSI: 54.86
+2026-03-12 09:27:50 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22open_price%22%2C%22percent_change%22%2C%22symbol%22%2C%22macd_val%22%2C%22last_price%22%2C%22updated_at%22%2C%22high_price%22%2C%22market_status%22%2C%22macd_signal%22%2C%22volume%22 "HTTP/2 200 OK"
+2026-03-12 09:27:50 [INFO] Trinity.Sync | 💾 Batch 10 upsert: 10 rows saved
+2026-03-12 09:27:50 [INFO] Trinity.Sync | ============================================================
+2026-03-12 09:27:50 [INFO] Trinity.Sync | 🏁 Batch Process Completed in 10.8s | ✅ 100 | ❌ 0
+2026-03-12 09:27:50 [INFO] Trinity.Sync | ============================================================
+2026-03-13 09:43:39 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 24
+2026-03-13 09:43:39 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 25
+2026-03-13 09:43:39 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 32
+2026-03-13 09:43:39 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 33
+2026-03-13 09:43:39 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 34
+2026-03-13 09:43:39 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 35
+2026-03-13 09:43:39 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 36
+2026-03-13 09:43:39 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 37
+2026-03-13 09:43:39 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 38
+2026-03-13 09:43:39 [INFO] Trinity.Sync | ============================================================
+2026-03-13 09:43:39 [INFO] Trinity.Sync | 🚀 Trinity Realtime Sync | 09:43:39 | Status: PRE_OPEN
+2026-03-13 09:43:39 [INFO] Trinity.Sync | 🔖 Batch Process Started | symbols=100
+2026-03-13 09:43:39 [INFO] Trinity.Sync | ============================================================
+2026-03-13 09:43:39 [INFO] Trinity.Sync | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-13 09:43:40 [INFO] Trinity.Sync | ✅ Symbol AAV Updated | ฿    1.10 |  +0.00% | RSI: 39.90
+2026-03-13 09:43:40 [INFO] Trinity.Sync | ✅ Symbol ADVANC Updated | ฿  368.00 |  +2.22% | RSI: 58.93
+2026-03-13 09:43:40 [INFO] Trinity.Sync | ✅ Symbol AEONTS Updated | ฿   91.25 |  -0.55% | RSI: 39.38
+2026-03-13 09:43:40 [INFO] Trinity.Sync | ✅ Symbol AMATA Updated | ฿   18.70 |  +1.08% | RSI: 58.94
+2026-03-13 09:43:40 [INFO] Trinity.Sync | ✅ Symbol AOT Updated | ฿   50.50 |  -0.98% | RSI: 43.73
+2026-03-13 09:43:40 [INFO] Trinity.Sync | ✅ Symbol AP Updated | ฿    8.75 |  -0.57% | RSI: 45.29
+2026-03-13 09:43:40 [INFO] Trinity.Sync | ✅ Symbol AURA Updated | ฿   13.40 |  +0.75% | RSI: 46.53
+2026-03-13 09:43:40 [INFO] Trinity.Sync | ✅ Symbol AWC Updated | ฿    2.08 |  +0.97% | RSI: 35.23
+2026-03-13 09:43:40 [INFO] Trinity.Sync | ✅ Symbol BA Updated | ฿   14.10 |  +0.71% | RSI: 34.97
+2026-03-13 09:43:40 [INFO] Trinity.Sync | ✅ Symbol BAM Updated | ฿    7.20 |  +0.70% | RSI: 43.18
+2026-03-13 09:43:41 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22updated_at%22%2C%22market_status%22%2C%22symbol%22%2C%22last_price%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22volume%22%2C%22high_price%22%2C%22low_price%22%2C%22percent_change%22%2C%22open_price%22 "HTTP/2 200 OK"
+2026-03-13 09:43:41 [INFO] Trinity.Sync | 💾 Batch 1 upsert: 10 rows saved
+2026-03-13 09:43:42 [INFO] Trinity.Sync | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-13 09:43:42 [INFO] Trinity.Sync | ✅ Symbol BANPU Updated | ฿    6.00 |  +5.26% | RSI: 56.31
+2026-03-13 09:43:42 [INFO] Trinity.Sync | ✅ Symbol BBL Updated | ฿  168.50 |  +0.90% | RSI: 51.82
+2026-03-13 09:43:42 [INFO] Trinity.Sync | ✅ Symbol BCH Updated | ฿    9.90 |  +1.54% | RSI: 41.57
+2026-03-13 09:43:42 [INFO] Trinity.Sync | ✅ Symbol BCP Updated | ฿   37.75 |  +4.14% | RSI: 63.43
+2026-03-13 09:43:42 [INFO] Trinity.Sync | ✅ Symbol BCPG Updated | ฿    6.45 |  +1.57% | RSI: 41.47
+2026-03-13 09:43:42 [INFO] Trinity.Sync | ✅ Symbol BDMS Updated | ฿   18.70 |  +0.00% | RSI: 35.23
+2026-03-13 09:43:42 [INFO] Trinity.Sync | ✅ Symbol BEM Updated | ฿    5.45 |  +2.83% | RSI: 48.61
+2026-03-13 09:43:42 [INFO] Trinity.Sync | ✅ Symbol BGRIM Updated | ฿   11.80 |  +1.72% | RSI: 36.38
+2026-03-13 09:43:42 [INFO] Trinity.Sync | ✅ Symbol BH Updated | ฿  176.50 |  -1.40% | RSI: 46.94
+2026-03-13 09:43:42 [INFO] Trinity.Sync | ✅ Symbol BJC Updated | ฿   14.10 |  +3.68% | RSI: 40.19
+2026-03-13 09:43:42 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22updated_at%22%2C%22market_status%22%2C%22symbol%22%2C%22last_price%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22volume%22%2C%22high_price%22%2C%22low_price%22%2C%22percent_change%22%2C%22open_price%22 "HTTP/2 200 OK"
+2026-03-13 09:43:42 [INFO] Trinity.Sync | 💾 Batch 2 upsert: 10 rows saved
+2026-03-13 09:43:43 [INFO] Trinity.Sync | 📦 Batch 3/10: BLA, BTG, BTS, CBG, CCET, CENTEL, CHG, CK, COM7, CPALL
+2026-03-13 09:43:43 [INFO] Trinity.Sync | ✅ Symbol BLA Updated | ฿   19.80 |  +1.02% | RSI: 39.63
+2026-03-13 09:43:43 [INFO] Trinity.Sync | ✅ Symbol BTG Updated | ฿   20.80 |  +4.00% | RSI: 68.01
+2026-03-13 09:43:43 [INFO] Trinity.Sync | ✅ Symbol BTS Updated | ฿    2.10 |  +1.94% | RSI: 38.25
+2026-03-13 09:43:43 [INFO] Trinity.Sync | ✅ Symbol CBG Updated | ฿   35.75 |  +0.70% | RSI: 25.69
+2026-03-13 09:43:43 [INFO] Trinity.Sync | ✅ Symbol CCET Updated | ฿    4.86 |  +1.67% | RSI: 47.95
+2026-03-13 09:43:43 [INFO] Trinity.Sync | ✅ Symbol CENTEL Updated | ฿   34.00 |  +2.26% | RSI: 45.19
+2026-03-13 09:43:43 [INFO] Trinity.Sync | ✅ Symbol CHG Updated | ฿    1.49 |  +0.68% | RSI: 38.01
+2026-03-13 09:43:43 [INFO] Trinity.Sync | ✅ Symbol CK Updated | ฿   15.80 |  +2.60% | RSI: 56.76
+2026-03-13 09:43:43 [INFO] Trinity.Sync | ✅ Symbol COM7 Updated | ฿   23.90 |  +1.70% | RSI: 61.31
+2026-03-13 09:43:43 [INFO] Trinity.Sync | ✅ Symbol CPALL Updated | ฿   47.25 |  +1.07% | RSI: 44.62
+2026-03-13 09:43:44 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22updated_at%22%2C%22market_status%22%2C%22symbol%22%2C%22last_price%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22volume%22%2C%22high_price%22%2C%22low_price%22%2C%22percent_change%22%2C%22open_price%22 "HTTP/2 200 OK"
+2026-03-13 09:43:44 [INFO] Trinity.Sync | 💾 Batch 3 upsert: 10 rows saved
+2026-03-13 09:43:44 [INFO] Trinity.Sync | 📦 Batch 4/10: CPF, CPN, CRC, DELTA, DOHOME, EA, EGCO, ERW, GFPT, GLOBAL
+2026-03-13 09:43:45 [INFO] Trinity.Sync | ✅ Symbol CPF Updated | ฿   19.10 |  +1.60% | RSI: 35.71
+2026-03-13 09:43:45 [INFO] Trinity.Sync | ✅ Symbol CPN Updated | ฿   66.50 |  +3.91% | RSI: 66.14
+2026-03-13 09:43:45 [INFO] Trinity.Sync | ✅ Symbol CRC Updated | ฿   18.90 |  +5.00% | RSI: 42.04
+2026-03-13 09:43:45 [INFO] Trinity.Sync | ✅ Symbol DELTA Updated | ฿  262.00 |  +1.55% | RSI: 60.05
+2026-03-13 09:43:45 [INFO] Trinity.Sync | ✅ Symbol DOHOME Updated | ฿    3.34 |  +1.83% | RSI: 42.71
+2026-03-13 09:43:45 [INFO] Trinity.Sync | ✅ Symbol EA Updated | ฿    2.70 |  +0.75% | RSI: 42.54
+2026-03-13 09:43:45 [INFO] Trinity.Sync | ✅ Symbol EGCO Updated | ฿  111.25 |  +1.33% | RSI: 42.20
+2026-03-13 09:43:45 [INFO] Trinity.Sync | ✅ Symbol ERW Updated | ฿    2.60 |  -0.76% | RSI: 41.63
+2026-03-13 09:43:45 [INFO] Trinity.Sync | ✅ Symbol GFPT Updated | ฿    9.05 |  +0.00% | RSI: 39.24
+2026-03-13 09:43:45 [INFO] Trinity.Sync | ✅ Symbol GLOBAL Updated | ฿    6.80 |  +2.26% | RSI: 47.00
+2026-03-13 09:43:45 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22updated_at%22%2C%22market_status%22%2C%22symbol%22%2C%22last_price%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22volume%22%2C%22high_price%22%2C%22low_price%22%2C%22percent_change%22%2C%22open_price%22 "HTTP/2 200 OK"
+2026-03-13 09:43:45 [INFO] Trinity.Sync | 💾 Batch 4 upsert: 10 rows saved
+2026-03-13 09:43:45 [INFO] Trinity.Sync | 📦 Batch 5/10: GPSC, GULF, GUNKUL, HANA, HMPRO, ICHI, IRPC, IVL, JAS, JMART
+2026-03-13 09:43:46 [INFO] Trinity.Sync | ✅ Symbol GPSC Updated | ฿   34.00 |  +1.49% | RSI: 37.75
+2026-03-13 09:43:46 [INFO] Trinity.Sync | ✅ Symbol GULF Updated | ฿   56.25 |  +3.21% | RSI: 57.15
+2026-03-13 09:43:46 [INFO] Trinity.Sync | ✅ Symbol GUNKUL Updated | ฿    2.24 |  +0.90% | RSI: 53.66
+2026-03-13 09:43:46 [INFO] Trinity.Sync | ✅ Symbol HANA Updated | ฿   24.90 |  +3.75% | RSI: 77.00
+2026-03-13 09:43:46 [INFO] Trinity.Sync | ✅ Symbol HMPRO Updated | ฿    6.45 |  +1.57% | RSI: 38.54
+2026-03-13 09:43:46 [INFO] Trinity.Sync | ✅ Symbol ICHI Updated | ฿   13.85 |  +0.70% | RSI: 53.68
+2026-03-13 09:43:46 [INFO] Trinity.Sync | ✅ Symbol IRPC Updated | ฿    1.25 |  +9.65% | RSI: 51.10
+2026-03-13 09:43:46 [INFO] Trinity.Sync | ✅ Symbol IVL Updated | ฿   20.30 |  +7.41% | RSI: 47.54
+2026-03-13 09:43:46 [INFO] Trinity.Sync | ✅ Symbol JAS Updated | ฿    1.27 |  +1.60% | RSI: 49.32
+2026-03-13 09:43:46 [INFO] Trinity.Sync | ✅ Symbol JMART Updated | ฿    7.25 |  +1.40% | RSI: 48.76
+2026-03-13 09:43:46 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22updated_at%22%2C%22market_status%22%2C%22symbol%22%2C%22last_price%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22volume%22%2C%22high_price%22%2C%22low_price%22%2C%22percent_change%22%2C%22open_price%22 "HTTP/2 200 OK"
+2026-03-13 09:43:46 [INFO] Trinity.Sync | 💾 Batch 5 upsert: 10 rows saved
+2026-03-13 09:43:47 [INFO] Trinity.Sync | 📦 Batch 6/10: JMT, JTS, KBANK, KCE, KKP, KTB, KTC, LH, M, MEGA
+2026-03-13 09:43:47 [INFO] Trinity.Sync | ✅ Symbol JMT Updated | ฿    9.10 |  +3.41% | RSI: 46.12
+2026-03-13 09:43:47 [INFO] Trinity.Sync | ✅ Symbol JTS Updated | ฿   60.00 |  +3.00% | RSI: 50.79
+2026-03-13 09:43:47 [INFO] Trinity.Sync | ✅ Symbol KBANK Updated | ฿  189.00 |  -0.26% | RSI: 42.61
+2026-03-13 09:43:47 [INFO] Trinity.Sync | ✅ Symbol KCE Updated | ฿   20.30 |  +3.57% | RSI: 57.82
+2026-03-13 09:43:47 [INFO] Trinity.Sync | ✅ Symbol KKP Updated | ฿   72.75 |  +1.04% | RSI: 49.91
+2026-03-13 09:43:47 [INFO] Trinity.Sync | ✅ Symbol KTB Updated | ฿   35.00 |  +2.19% | RSI: 67.88
+2026-03-13 09:43:47 [INFO] Trinity.Sync | ✅ Symbol KTC Updated | ฿   29.75 |  +3.48% | RSI: 45.07
+2026-03-13 09:43:47 [INFO] Trinity.Sync | ✅ Symbol LH Updated | ฿    3.80 |  +1.06% | RSI: 38.81
+2026-03-13 09:43:47 [INFO] Trinity.Sync | ✅ Symbol M Updated | ฿   19.90 |  -0.50% | RSI: 44.84
+2026-03-13 09:43:47 [INFO] Trinity.Sync | ✅ Symbol MEGA Updated | ฿   34.50 |  -2.13% | RSI: 45.07
+2026-03-13 09:43:47 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22updated_at%22%2C%22market_status%22%2C%22symbol%22%2C%22last_price%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22volume%22%2C%22high_price%22%2C%22low_price%22%2C%22percent_change%22%2C%22open_price%22 "HTTP/2 200 OK"
+2026-03-13 09:43:47 [INFO] Trinity.Sync | 💾 Batch 6 upsert: 10 rows saved
+2026-03-13 09:43:48 [INFO] Trinity.Sync | 📦 Batch 7/10: MINT, MOSHI, MTC, OR, OSP, PLANB, PR9, PRM, PTG, PTT
+2026-03-13 09:43:48 [INFO] Trinity.Sync | ✅ Symbol MINT Updated | ฿   22.70 |  -1.30% | RSI: 41.93
+2026-03-13 09:43:48 [INFO] Trinity.Sync | ✅ Symbol MOSHI Updated | ฿   33.00 |  +0.00% | RSI: 30.24
+2026-03-13 09:43:48 [INFO] Trinity.Sync | ✅ Symbol MTC Updated | ฿   32.00 |  +2.40% | RSI: 39.35
+2026-03-13 09:43:48 [INFO] Trinity.Sync | ✅ Symbol OR Updated | ฿   11.30 |  +1.80% | RSI: 27.33
+2026-03-13 09:43:48 [INFO] Trinity.Sync | ✅ Symbol OSP Updated | ฿   14.60 |  +2.10% | RSI: 24.81
+2026-03-13 09:43:48 [INFO] Trinity.Sync | ✅ Symbol PLANB Updated | ฿    4.34 |  +3.33% | RSI: 50.11
+2026-03-13 09:43:48 [INFO] Trinity.Sync | ✅ Symbol PR9 Updated | ฿   17.00 |  +0.00% | RSI: 31.42
+2026-03-13 09:43:48 [INFO] Trinity.Sync | ✅ Symbol PRM Updated | ฿    7.45 |  -0.67% | RSI: 47.00
+2026-03-13 09:43:48 [INFO] Trinity.Sync | ✅ Symbol PTG Updated | ฿    8.15 |  +1.88% | RSI: 45.73
+2026-03-13 09:43:48 [INFO] Trinity.Sync | ✅ Symbol PTT Updated | ฿   35.00 |  +4.48% | RSI: 57.58
+2026-03-13 09:43:48 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22updated_at%22%2C%22market_status%22%2C%22symbol%22%2C%22last_price%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22volume%22%2C%22high_price%22%2C%22low_price%22%2C%22percent_change%22%2C%22open_price%22 "HTTP/2 200 OK"
+2026-03-13 09:43:48 [INFO] Trinity.Sync | 💾 Batch 7 upsert: 10 rows saved
+2026-03-13 09:43:49 [INFO] Trinity.Sync | 📦 Batch 8/10: PTTEP, PTTGC, QH, RATCH, RCL, SAWAD, SCB, SCC, SCGP, SIRI
+2026-03-13 09:43:49 [INFO] Trinity.Sync | ✅ Symbol PTTEP Updated | ฿  144.50 |  +0.70% | RSI: 67.88
+2026-03-13 09:43:49 [INFO] Trinity.Sync | ✅ Symbol PTTGC Updated | ฿   28.25 |  +5.61% | RSI: 61.42
+2026-03-13 09:43:49 [INFO] Trinity.Sync | ✅ Symbol QH Updated | ฿    1.39 |  +2.21% | RSI: 49.76
+2026-03-13 09:43:49 [INFO] Trinity.Sync | ✅ Symbol RATCH Updated | ฿   29.00 |  +2.84% | RSI: 46.16
+2026-03-13 09:43:49 [INFO] Trinity.Sync | ✅ Symbol RCL Updated | ฿   29.75 |  +0.85% | RSI: 59.62
+2026-03-13 09:43:49 [INFO] Trinity.Sync | ✅ Symbol SAWAD Updated | ฿   25.50 |  +3.66% | RSI: 43.94
+2026-03-13 09:43:49 [INFO] Trinity.Sync | ✅ Symbol SCB Updated | ฿  143.50 |  -0.35% | RSI: 51.04
+2026-03-13 09:43:49 [INFO] Trinity.Sync | ✅ Symbol SCC Updated | ฿  181.00 |  +3.43% | RSI: 34.46
+2026-03-13 09:43:49 [INFO] Trinity.Sync | ✅ Symbol SCGP Updated | ฿   17.90 |  +2.29% | RSI: 38.69
+2026-03-13 09:43:49 [INFO] Trinity.Sync | ✅ Symbol SIRI Updated | ฿    1.51 |  +1.34% | RSI: 55.69
+2026-03-13 09:43:49 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22updated_at%22%2C%22market_status%22%2C%22symbol%22%2C%22last_price%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22volume%22%2C%22high_price%22%2C%22low_price%22%2C%22percent_change%22%2C%22open_price%22 "HTTP/2 200 OK"
+2026-03-13 09:43:49 [INFO] Trinity.Sync | 💾 Batch 8 upsert: 10 rows saved
+2026-03-13 09:43:50 [INFO] Trinity.Sync | 📦 Batch 9/10: SISB, SJWD, SPALI, SPRC, STA, STECON, STGT, TASCO, TCAP, TFG
+2026-03-13 09:43:50 [INFO] Trinity.Sync | ✅ Symbol SISB Updated | ฿   11.10 |  +2.78% | RSI: 48.66
+2026-03-13 09:43:50 [INFO] Trinity.Sync | ✅ Symbol SJWD Updated | ฿    7.60 |  +1.33% | RSI: 42.54
+2026-03-13 09:43:50 [INFO] Trinity.Sync | ✅ Symbol SPALI Updated | ฿   17.50 |  +0.57% | RSI: 45.99
+2026-03-13 09:43:50 [INFO] Trinity.Sync | ✅ Symbol SPRC Updated | ฿    8.15 |  +8.67% | RSI: 68.89
+2026-03-13 09:43:50 [INFO] Trinity.Sync | ✅ Symbol STA Updated | ฿   15.70 |  +1.29% | RSI: 63.06
+2026-03-13 09:43:50 [INFO] Trinity.Sync | ✅ Symbol STECON Updated | ฿   12.50 |  +5.04% | RSI: 66.41
+2026-03-13 09:43:50 [INFO] Trinity.Sync | ✅ Symbol STGT Updated | ฿    9.50 |  -1.55% | RSI: 54.81
+2026-03-13 09:43:50 [INFO] Trinity.Sync | ✅ Symbol TASCO Updated | ฿   13.00 |  +0.78% | RSI: 39.46
+2026-03-13 09:43:50 [INFO] Trinity.Sync | ✅ Symbol TCAP Updated | ฿   56.50 |  +0.00% | RSI: 41.39
+2026-03-13 09:43:50 [INFO] Trinity.Sync | ✅ Symbol TFG Updated | ฿    7.10 |  -1.39% | RSI: 82.32
+2026-03-13 09:43:50 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22updated_at%22%2C%22market_status%22%2C%22symbol%22%2C%22last_price%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22volume%22%2C%22high_price%22%2C%22low_price%22%2C%22percent_change%22%2C%22open_price%22 "HTTP/2 200 OK"
+2026-03-13 09:43:50 [INFO] Trinity.Sync | 💾 Batch 9 upsert: 10 rows saved
+2026-03-13 09:43:51 [INFO] Trinity.Sync | 📦 Batch 10/10: TIDLOR, TISCO, TLI, TOA, TOP, TRUE, TTB, TU, VGI, WHA
+2026-03-13 09:43:51 [INFO] Trinity.Sync | ✅ Symbol TIDLOR Updated | ฿   17.20 |  +1.18% | RSI: 40.66
+2026-03-13 09:43:51 [INFO] Trinity.Sync | ✅ Symbol TISCO Updated | ฿  113.00 |  +0.44% | RSI: 52.53
+2026-03-13 09:43:51 [INFO] Trinity.Sync | ✅ Symbol TLI Updated | ฿   10.30 |  +1.98% | RSI: 34.63
+2026-03-13 09:43:51 [INFO] Trinity.Sync | ✅ Symbol TOA Updated | ฿   13.30 |  +2.31% | RSI: 34.21
+2026-03-13 09:43:51 [INFO] Trinity.Sync | ✅ Symbol TOP Updated | ฿   49.50 |  +4.76% | RSI: 52.74
+2026-03-13 09:43:51 [INFO] Trinity.Sync | ✅ Symbol TRUE Updated | ฿   13.50 |  +3.05% | RSI: 53.24
+2026-03-13 09:43:51 [INFO] Trinity.Sync | ✅ Symbol TTB Updated | ฿    2.22 |  +0.91% | RSI: 56.69
+2026-03-13 09:43:51 [INFO] Trinity.Sync | ✅ Symbol TU Updated | ฿   10.90 |  -0.91% | RSI: 36.61
+2026-03-13 09:43:51 [INFO] Trinity.Sync | ✅ Symbol VGI Updated | ฿    0.94 |  +1.08% | RSI: 39.40
+2026-03-13 09:43:51 [INFO] Trinity.Sync | ✅ Symbol WHA Updated | ฿    4.16 |  +1.96% | RSI: 57.80
+2026-03-13 09:43:51 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22updated_at%22%2C%22market_status%22%2C%22symbol%22%2C%22last_price%22%2C%22macd_val%22%2C%22macd_signal%22%2C%22rsi_14%22%2C%22volume%22%2C%22high_price%22%2C%22low_price%22%2C%22percent_change%22%2C%22open_price%22 "HTTP/2 200 OK"
+2026-03-13 09:43:51 [INFO] Trinity.Sync | 💾 Batch 10 upsert: 10 rows saved
+2026-03-13 09:43:51 [INFO] Trinity.Sync | ============================================================
+2026-03-13 09:43:51 [INFO] Trinity.Sync | 🏁 Batch Process Completed in 12.5s | ✅ 100 | ❌ 0
+2026-03-13 09:43:51 [INFO] Trinity.Sync | ============================================================
+2026-03-13 10:36:10 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 24
+2026-03-13 10:36:10 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 25
+2026-03-13 10:36:10 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 32
+2026-03-13 10:36:10 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 33
+2026-03-13 10:36:10 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 34
+2026-03-13 10:36:10 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 35
+2026-03-13 10:36:10 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 36
+2026-03-13 10:36:10 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 37
+2026-03-13 10:36:10 [WARNING] dotenv.main | Python-dotenv could not parse statement starting at line 38
+2026-03-13 10:36:10 [INFO] Trinity.Sync | ============================================================
+2026-03-13 10:36:10 [INFO] Trinity.Sync | 🚀 Trinity Realtime Sync | 10:36:10 | Status: OPEN
+2026-03-13 10:36:10 [INFO] Trinity.Sync | 🔖 Batch Process Started | symbols=100
+2026-03-13 10:36:10 [INFO] Trinity.Sync | ============================================================
+2026-03-13 10:36:10 [INFO] Trinity.Sync | 📦 Batch 1/10: AAV, ADVANC, AEONTS, AMATA, AOT, AP, AURA, AWC, BA, BAM
+2026-03-13 10:36:11 [INFO] Trinity.Sync | ✅ Symbol AAV Updated | ฿    1.09 |  -0.91% | RSI: 38.52
+2026-03-13 10:36:11 [INFO] Trinity.Sync | ✅ Symbol ADVANC Updated | ฿  366.00 |  -0.54% | RSI: 57.16
+2026-03-13 10:36:11 [INFO] Trinity.Sync | ✅ Symbol AEONTS Updated | ฿   90.50 |  -0.82% | RSI: 38.92
+2026-03-13 10:36:11 [INFO] Trinity.Sync | ✅ Symbol AMATA Updated | ฿   18.40 |  -1.60% | RSI: 55.02
+2026-03-13 10:36:11 [INFO] Trinity.Sync | ✅ Symbol AOT Updated | ฿   49.50 |  -1.98% | RSI: 39.90
+2026-03-13 10:36:11 [INFO] Trinity.Sync | ✅ Symbol AP Updated | ฿    8.60 |  -1.71% | RSI: 42.58
+2026-03-13 10:36:11 [INFO] Trinity.Sync | ✅ Symbol AURA Updated | ฿   13.20 |  -1.49% | RSI: 44.81
+2026-03-13 10:36:11 [INFO] Trinity.Sync | ✅ Symbol AWC Updated | ฿    2.06 |  -0.96% | RSI: 34.71
+2026-03-13 10:36:11 [INFO] Trinity.Sync | ✅ Symbol BA Updated | ฿   13.90 |  -1.42% | RSI: 33.79
+2026-03-13 10:36:11 [INFO] Trinity.Sync | ✅ Symbol BAM Updated | ฿    7.15 |  -0.69% | RSI: 40.69
+2026-03-13 10:36:12 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22high_price%22%2C%22percent_change%22%2C%22macd_val%22%2C%22open_price%22%2C%22macd_signal%22%2C%22volume%22%2C%22updated_at%22%2C%22last_price%22%2C%22market_status%22 "HTTP/2 200 OK"
+2026-03-13 10:36:12 [INFO] Trinity.Sync | 💾 Batch 1 upsert: 10 rows saved
+2026-03-13 10:36:13 [INFO] Trinity.Sync | 📦 Batch 2/10: BANPU, BBL, BCH, BCP, BCPG, BDMS, BEM, BGRIM, BH, BJC
+2026-03-13 10:36:13 [INFO] Trinity.Sync | ✅ Symbol BANPU Updated | ฿    6.15 |  +2.50% | RSI: 59.54
+2026-03-13 10:36:13 [INFO] Trinity.Sync | ✅ Symbol BBL Updated | ฿  168.00 |  -0.30% | RSI: 50.05
+2026-03-13 10:36:13 [INFO] Trinity.Sync | ✅ Symbol BCH Updated | ฿   10.00 |  +1.01% | RSI: 44.58
+2026-03-13 10:36:13 [INFO] Trinity.Sync | ✅ Symbol BCP Updated | ฿   37.25 |  -1.32% | RSI: 61.40
+2026-03-13 10:36:13 [INFO] Trinity.Sync | ✅ Symbol BCPG Updated | ฿    6.40 |  -0.78% | RSI: 41.09
+2026-03-13 10:36:13 [INFO] Trinity.Sync | ✅ Symbol BDMS Updated | ฿   19.00 |  +1.60% | RSI: 41.66
+2026-03-13 10:36:13 [INFO] Trinity.Sync | ✅ Symbol BEM Updated | ฿    5.30 |  -2.75% | RSI: 45.24
+2026-03-13 10:36:13 [INFO] Trinity.Sync | ✅ Symbol BGRIM Updated | ฿   11.60 |  -1.69% | RSI: 34.73
+2026-03-13 10:36:13 [INFO] Trinity.Sync | ✅ Symbol BH Updated | ฿  177.00 |  +0.28% | RSI: 47.55
+2026-03-13 10:36:13 [INFO] Trinity.Sync | ✅ Symbol BJC Updated | ฿   13.90 |  -1.42% | RSI: 36.99
+2026-03-13 10:36:13 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22high_price%22%2C%22percent_change%22%2C%22macd_val%22%2C%22open_price%22%2C%22macd_signal%22%2C%22volume%22%2C%22updated_at%22%2C%22last_price%22%2C%22market_status%22 "HTTP/2 200 OK"
+2026-03-13 10:36:13 [INFO] Trinity.Sync | 💾 Batch 2 upsert: 10 rows saved
+2026-03-13 10:36:14 [INFO] Trinity.Sync | 📦 Batch 3/10: BLA, BTG, BTS, CBG, CCET, CENTEL, CHG, CK, COM7, CPALL
+2026-03-13 10:36:14 [INFO] Trinity.Sync | ✅ Symbol BLA Updated | ฿   19.70 |  -0.51% | RSI: 39.16
+2026-03-13 10:36:14 [INFO] Trinity.Sync | ✅ Symbol BTG Updated | ฿   20.70 |  -0.48% | RSI: 67.06
+2026-03-13 10:36:14 [INFO] Trinity.Sync | ✅ Symbol BTS Updated | ฿    2.08 |  -0.95% | RSI: 37.78
+2026-03-13 10:36:14 [INFO] Trinity.Sync | ✅ Symbol CBG Updated | ฿   35.00 |  -2.10% | RSI: 24.25
+2026-03-13 10:36:14 [INFO] Trinity.Sync | ✅ Symbol CCET Updated | ฿    4.82 |  -0.82% | RSI: 47.37
+2026-03-13 10:36:14 [INFO] Trinity.Sync | ✅ Symbol CENTEL Updated | ฿   33.00 |  -2.94% | RSI: 40.73
+2026-03-13 10:36:14 [INFO] Trinity.Sync | ✅ Symbol CHG Updated | ฿    1.48 |  -0.67% | RSI: 37.83
+2026-03-13 10:36:14 [INFO] Trinity.Sync | ✅ Symbol CK Updated | ฿   15.50 |  -1.90% | RSI: 53.42
+2026-03-13 10:36:14 [INFO] Trinity.Sync | ✅ Symbol COM7 Updated | ฿   23.70 |  -0.84% | RSI: 59.92
+2026-03-13 10:36:14 [INFO] Trinity.Sync | ✅ Symbol CPALL Updated | ฿   46.50 |  -1.59% | RSI: 42.64
+2026-03-13 10:36:14 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22high_price%22%2C%22percent_change%22%2C%22macd_val%22%2C%22open_price%22%2C%22macd_signal%22%2C%22volume%22%2C%22updated_at%22%2C%22last_price%22%2C%22market_status%22 "HTTP/2 200 OK"
+2026-03-13 10:36:14 [INFO] Trinity.Sync | 💾 Batch 3 upsert: 10 rows saved
+2026-03-13 10:36:15 [INFO] Trinity.Sync | 📦 Batch 4/10: CPF, CPN, CRC, DELTA, DOHOME, EA, EGCO, ERW, GFPT, GLOBAL
+2026-03-13 10:36:15 [INFO] Trinity.Sync | ✅ Symbol CPF Updated | ฿   19.00 |  -0.52% | RSI: 35.40
+2026-03-13 10:36:15 [INFO] Trinity.Sync | ✅ Symbol CPN Updated | ฿   65.00 |  -2.26% | RSI: 59.15
+2026-03-13 10:36:15 [INFO] Trinity.Sync | ✅ Symbol CRC Updated | ฿   18.90 |  +0.00% | RSI: 42.48
+2026-03-13 10:36:15 [INFO] Trinity.Sync | ✅ Symbol DELTA Updated | ฿  259.00 |  -1.15% | RSI: 59.07
+2026-03-13 10:36:15 [INFO] Trinity.Sync | ✅ Symbol DOHOME Updated | ฿    3.28 |  -1.80% | RSI: 39.49
+2026-03-13 10:36:15 [INFO] Trinity.Sync | ✅ Symbol EA Updated | ฿    2.68 |  -0.74% | RSI: 41.84
+2026-03-13 10:36:15 [INFO] Trinity.Sync | ✅ Symbol EGCO Updated | ฿  111.00 |  -0.22% | RSI: 42.04
+2026-03-13 10:36:15 [INFO] Trinity.Sync | ✅ Symbol ERW Updated | ฿    2.50 |  -3.85% | RSI: 37.86
+2026-03-13 10:36:15 [INFO] Trinity.Sync | ✅ Symbol GFPT Updated | ฿    8.95 |  -1.10% | RSI: 36.60
+2026-03-13 10:36:15 [INFO] Trinity.Sync | ✅ Symbol GLOBAL Updated | ฿    6.75 |  -0.74% | RSI: 45.77
+2026-03-13 10:36:16 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22high_price%22%2C%22percent_change%22%2C%22macd_val%22%2C%22open_price%22%2C%22macd_signal%22%2C%22volume%22%2C%22updated_at%22%2C%22last_price%22%2C%22market_status%22 "HTTP/2 200 OK"
+2026-03-13 10:36:16 [INFO] Trinity.Sync | 💾 Batch 4 upsert: 10 rows saved
+2026-03-13 10:36:16 [INFO] Trinity.Sync | 📦 Batch 5/10: GPSC, GULF, GUNKUL, HANA, HMPRO, ICHI, IRPC, IVL, JAS, JMART
+2026-03-13 10:36:17 [INFO] Trinity.Sync | ✅ Symbol GPSC Updated | ฿   33.25 |  -2.21% | RSI: 35.87
+2026-03-13 10:36:17 [INFO] Trinity.Sync | ✅ Symbol GULF Updated | ฿   56.00 |  -0.44% | RSI: 56.52
+2026-03-13 10:36:17 [INFO] Trinity.Sync | ✅ Symbol GUNKUL Updated | ฿    2.22 |  -0.89% | RSI: 52.19
+2026-03-13 10:36:17 [INFO] Trinity.Sync | ✅ Symbol HANA Updated | ฿   25.00 |  +0.40% | RSI: 77.38
+2026-03-13 10:36:17 [INFO] Trinity.Sync | ✅ Symbol HMPRO Updated | ฿    6.35 |  -1.55% | RSI: 36.08
+2026-03-13 10:36:17 [INFO] Trinity.Sync | ✅ Symbol ICHI Updated | ฿   13.70 |  -1.08% | RSI: 50.10
+2026-03-13 10:36:17 [INFO] Trinity.Sync | ✅ Symbol IRPC Updated | ฿    1.27 |  +1.60% | RSI: 53.67
+2026-03-13 10:36:17 [INFO] Trinity.Sync | ✅ Symbol IVL Updated | ฿   19.90 |  -1.97% | RSI: 45.30
+2026-03-13 10:36:17 [INFO] Trinity.Sync | ✅ Symbol JAS Updated | ฿    1.26 |  -0.79% | RSI: 48.05
+2026-03-13 10:36:17 [INFO] Trinity.Sync | ✅ Symbol JMART Updated | ฿    7.10 |  -2.07% | RSI: 46.49
+2026-03-13 10:36:17 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22high_price%22%2C%22percent_change%22%2C%22macd_val%22%2C%22open_price%22%2C%22macd_signal%22%2C%22volume%22%2C%22updated_at%22%2C%22last_price%22%2C%22market_status%22 "HTTP/2 200 OK"
+2026-03-13 10:36:17 [INFO] Trinity.Sync | 💾 Batch 5 upsert: 10 rows saved
+2026-03-13 10:36:18 [INFO] Trinity.Sync | 📦 Batch 6/10: JMT, JTS, KBANK, KCE, KKP, KTB, KTC, LH, M, MEGA
+2026-03-13 10:36:18 [INFO] Trinity.Sync | ✅ Symbol JMT Updated | ฿    8.90 |  -2.20% | RSI: 43.58
+2026-03-13 10:36:18 [INFO] Trinity.Sync | ✅ Symbol JTS Updated | ฿   59.25 |  -1.25% | RSI: 47.78
+2026-03-13 10:36:18 [INFO] Trinity.Sync | ✅ Symbol KBANK Updated | ฿  189.50 |  +0.26% | RSI: 43.64
+2026-03-13 10:36:18 [INFO] Trinity.Sync | ✅ Symbol KCE Updated | ฿   20.40 |  +0.49% | RSI: 59.33
+2026-03-13 10:36:18 [INFO] Trinity.Sync | ✅ Symbol KKP Updated | ฿   73.00 |  +0.34% | RSI: 50.91
+2026-03-13 10:36:18 [INFO] Trinity.Sync | ✅ Symbol KTB Updated | ฿   34.75 |  -0.71% | RSI: 66.12
+2026-03-13 10:36:18 [INFO] Trinity.Sync | ✅ Symbol KTC Updated | ฿   29.50 |  -0.84% | RSI: 43.02
+2026-03-13 10:36:18 [INFO] Trinity.Sync | ✅ Symbol LH Updated | ฿    3.78 |  -0.53% | RSI: 36.35
+2026-03-13 10:36:18 [INFO] Trinity.Sync | ✅ Symbol M Updated | ฿   19.70 |  -1.00% | RSI: 43.79
+2026-03-13 10:36:18 [INFO] Trinity.Sync | ✅ Symbol MEGA Updated | ฿   34.25 |  -0.72% | RSI: 44.10
+2026-03-13 10:36:18 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22high_price%22%2C%22percent_change%22%2C%22macd_val%22%2C%22open_price%22%2C%22macd_signal%22%2C%22volume%22%2C%22updated_at%22%2C%22last_price%22%2C%22market_status%22 "HTTP/2 200 OK"
+2026-03-13 10:36:18 [INFO] Trinity.Sync | 💾 Batch 6 upsert: 10 rows saved
+2026-03-13 10:36:19 [INFO] Trinity.Sync | 📦 Batch 7/10: MINT, MOSHI, MTC, OR, OSP, PLANB, PR9, PRM, PTG, PTT
+2026-03-13 10:36:19 [INFO] Trinity.Sync | ✅ Symbol MINT Updated | ฿   22.20 |  -2.20% | RSI: 39.65
+2026-03-13 10:36:19 [INFO] Trinity.Sync | ✅ Symbol MOSHI Updated | ฿   32.75 |  -0.76% | RSI: 31.33
+2026-03-13 10:36:19 [INFO] Trinity.Sync | ✅ Symbol MTC Updated | ฿   32.25 |  +0.78% | RSI: 40.90
+2026-03-13 10:36:19 [INFO] Trinity.Sync | ✅ Symbol OR Updated | ฿   11.10 |  -1.77% | RSI: 26.19
+2026-03-13 10:36:19 [INFO] Trinity.Sync | ✅ Symbol OSP Updated | ฿   14.40 |  -1.37% | RSI: 23.61
+2026-03-13 10:36:19 [INFO] Trinity.Sync | ✅ Symbol PLANB Updated | ฿    4.22 |  -2.77% | RSI: 46.91
+2026-03-13 10:36:19 [INFO] Trinity.Sync | ✅ Symbol PR9 Updated | ฿   17.10 |  +0.59% | RSI: 33.30
+2026-03-13 10:36:19 [INFO] Trinity.Sync | ✅ Symbol PRM Updated | ฿    7.45 |  +0.00% | RSI: 46.66
+2026-03-13 10:36:19 [INFO] Trinity.Sync | ✅ Symbol PTG Updated | ฿    8.05 |  -1.23% | RSI: 44.14
+2026-03-13 10:36:19 [INFO] Trinity.Sync | ✅ Symbol PTT Updated | ฿   34.75 |  -0.71% | RSI: 55.48
+2026-03-13 10:36:19 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22high_price%22%2C%22percent_change%22%2C%22macd_val%22%2C%22open_price%22%2C%22macd_signal%22%2C%22volume%22%2C%22updated_at%22%2C%22last_price%22%2C%22market_status%22 "HTTP/2 200 OK"
+2026-03-13 10:36:19 [INFO] Trinity.Sync | 💾 Batch 7 upsert: 10 rows saved
+2026-03-13 10:36:20 [INFO] Trinity.Sync | 📦 Batch 8/10: PTTEP, PTTGC, QH, RATCH, RCL, SAWAD, SCB, SCC, SCGP, SIRI
+2026-03-13 10:36:20 [INFO] Trinity.Sync | ✅ Symbol PTTEP Updated | ฿  146.00 |  +1.04% | RSI: 69.85
+2026-03-13 10:36:20 [INFO] Trinity.Sync | ✅ Symbol PTTGC Updated | ฿   28.50 |  +0.89% | RSI: 63.49
+2026-03-13 10:36:20 [INFO] Trinity.Sync | ✅ Symbol QH Updated | ฿    1.38 |  -0.72% | RSI: 48.35
+2026-03-13 10:36:20 [INFO] Trinity.Sync | ✅ Symbol RATCH Updated | ฿   28.25 |  -2.59% | RSI: 41.09
+2026-03-13 10:36:20 [INFO] Trinity.Sync | ✅ Symbol RCL Updated | ฿   29.50 |  -0.84% | RSI: 58.14
+2026-03-13 10:36:20 [INFO] Trinity.Sync | ✅ Symbol SAWAD Updated | ฿   25.00 |  -1.96% | RSI: 41.59
+2026-03-13 10:36:20 [INFO] Trinity.Sync | ✅ Symbol SCB Updated | ฿  144.50 |  +0.70% | RSI: 52.92
+2026-03-13 10:36:20 [INFO] Trinity.Sync | ✅ Symbol SCC Updated | ฿  178.50 |  -1.38% | RSI: 33.63
+2026-03-13 10:36:20 [INFO] Trinity.Sync | ✅ Symbol SCGP Updated | ฿   17.60 |  -1.68% | RSI: 36.81
+2026-03-13 10:36:20 [INFO] Trinity.Sync | ✅ Symbol SIRI Updated | ฿    1.51 |  +0.00% | RSI: 55.20
+2026-03-13 10:36:21 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22high_price%22%2C%22percent_change%22%2C%22macd_val%22%2C%22open_price%22%2C%22macd_signal%22%2C%22volume%22%2C%22updated_at%22%2C%22last_price%22%2C%22market_status%22 "HTTP/2 200 OK"
+2026-03-13 10:36:21 [INFO] Trinity.Sync | 💾 Batch 8 upsert: 10 rows saved
+2026-03-13 10:36:21 [INFO] Trinity.Sync | 📦 Batch 9/10: SISB, SJWD, SPALI, SPRC, STA, STECON, STGT, TASCO, TCAP, TFG
+2026-03-13 10:36:22 [INFO] Trinity.Sync | ✅ Symbol SISB Updated | ฿   11.00 |  -0.90% | RSI: 47.79
+2026-03-13 10:36:22 [INFO] Trinity.Sync | ✅ Symbol SJWD Updated | ฿    7.50 |  -1.32% | RSI: 41.23
+2026-03-13 10:36:22 [INFO] Trinity.Sync | ✅ Symbol SPALI Updated | ฿   17.30 |  -1.14% | RSI: 43.96
+2026-03-13 10:36:22 [INFO] Trinity.Sync | ✅ Symbol SPRC Updated | ฿    8.05 |  -1.23% | RSI: 65.88
+2026-03-13 10:36:22 [INFO] Trinity.Sync | ✅ Symbol STA Updated | ฿   15.70 |  +0.00% | RSI: 62.61
+2026-03-13 10:36:22 [INFO] Trinity.Sync | ✅ Symbol STECON Updated | ฿   12.40 |  -0.80% | RSI: 64.88
+2026-03-13 10:36:22 [INFO] Trinity.Sync | ✅ Symbol STGT Updated | ฿    9.50 |  +0.00% | RSI: 54.41
+2026-03-13 10:36:22 [INFO] Trinity.Sync | ✅ Symbol TASCO Updated | ฿   13.00 |  +0.00% | RSI: 39.75
+2026-03-13 10:36:22 [INFO] Trinity.Sync | ✅ Symbol TCAP Updated | ฿   56.50 |  +0.00% | RSI: 41.68
+2026-03-13 10:36:22 [INFO] Trinity.Sync | ✅ Symbol TFG Updated | ฿    6.90 |  -2.82% | RSI: 74.81
+2026-03-13 10:36:22 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22high_price%22%2C%22percent_change%22%2C%22macd_val%22%2C%22open_price%22%2C%22macd_signal%22%2C%22volume%22%2C%22updated_at%22%2C%22last_price%22%2C%22market_status%22 "HTTP/2 200 OK"
+2026-03-13 10:36:22 [INFO] Trinity.Sync | 💾 Batch 9 upsert: 10 rows saved
+2026-03-13 10:36:22 [INFO] Trinity.Sync | 📦 Batch 10/10: TIDLOR, TISCO, TLI, TOA, TOP, TRUE, TTB, TU, VGI, WHA
+2026-03-13 10:36:23 [INFO] Trinity.Sync | ✅ Symbol TIDLOR Updated | ฿   17.00 |  -1.16% | RSI: 38.91
+2026-03-13 10:36:23 [INFO] Trinity.Sync | ✅ Symbol TISCO Updated | ฿  113.00 |  +0.00% | RSI: 51.64
+2026-03-13 10:36:23 [INFO] Trinity.Sync | ✅ Symbol TLI Updated | ฿   10.10 |  -1.94% | RSI: 31.07
+2026-03-13 10:36:23 [INFO] Trinity.Sync | ✅ Symbol TOA Updated | ฿   13.00 |  -2.26% | RSI: 32.91
+2026-03-13 10:36:23 [INFO] Trinity.Sync | ✅ Symbol TOP Updated | ฿   48.75 |  -1.52% | RSI: 50.71
+2026-03-13 10:36:23 [INFO] Trinity.Sync | ✅ Symbol TRUE Updated | ฿   13.30 |  -1.48% | RSI: 50.83
+2026-03-13 10:36:23 [INFO] Trinity.Sync | ✅ Symbol TTB Updated | ฿    2.28 |  +2.70% | RSI: 63.20
+2026-03-13 10:36:23 [INFO] Trinity.Sync | ✅ Symbol TU Updated | ฿   10.80 |  -0.92% | RSI: 34.08
+2026-03-13 10:36:23 [INFO] Trinity.Sync | ✅ Symbol VGI Updated | ฿    0.94 |  +0.00% | RSI: 40.28
+2026-03-13 10:36:23 [INFO] Trinity.Sync | ✅ Symbol WHA Updated | ฿    4.08 |  -1.92% | RSI: 53.48
+2026-03-13 10:36:23 [INFO] httpx | HTTP Request: POST https://cgsdnylfbdvpvshmyggj.supabase.co/rest/v1/stock_realtime?on_conflict=symbol&columns=%22rsi_14%22%2C%22low_price%22%2C%22symbol%22%2C%22high_price%22%2C%22percent_change%22%2C%22macd_val%22%2C%22open_price%22%2C%22macd_signal%22%2C%22volume%22%2C%22updated_at%22%2C%22last_price%22%2C%22market_status%22 "HTTP/2 200 OK"
+2026-03-13 10:36:23 [INFO] Trinity.Sync | 💾 Batch 10 upsert: 10 rows saved
+2026-03-13 10:36:23 [INFO] Trinity.Sync | ============================================================
+2026-03-13 10:36:23 [INFO] Trinity.Sync | 🏁 Batch Process Completed in 12.5s | ✅ 100 | ❌ 0
+2026-03-13 10:36:23 [INFO] Trinity.Sync | ============================================================
