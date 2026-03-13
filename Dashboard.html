@@ -1,0 +1,2436 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Stock Analysis Platform - SET100</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+    <!-- Lightweight Charts v4 — by TradingView, renders from our own Supabase data -->
+    <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .gauge-arc { transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-spin { animation: spin 1s linear infinite; }
+        .animate-in { animation: fadeIn 0.7s ease-out; }
+        .page-content { display: none; }
+        .page-content.active { display: block; }
+        .line-clamp-2 { 
+            display: -webkit-box; 
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical; 
+            overflow: hidden; 
+        }
+
+        /* ════════════════════════════════════════════════
+           UNIFIED AUTOCOMPLETE SYSTEM — ใช้กับทุกหน้า
+           ════════════════════════════════════════════════ */
+
+        /* Predict page search wrapper (ยังคงใช้) */
+        .predict-search-wrap { position:relative; min-width:220px; }
+        .predict-search-input {
+            width:100%; padding:10px 16px 10px 42px;
+            border:2px solid #e2e8f0; border-radius:12px;
+            font-size:12px; font-weight:900; letter-spacing:.08em; text-transform:uppercase;
+            outline:none; background:#f8fafc; color:#0f172a;
+            transition:border-color .15s, background .15s; cursor:pointer;
+        }
+        .predict-search-input:focus { border-color:#dc2626; background:#fff; }
+        .predict-search-input::placeholder { color:#94a3b8; font-weight:700; }
+        .predict-search-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); pointer-events:none; color:#94a3b8; }
+
+        /* ── Unified Dropdown Shell ── */
+        .ac-drop {
+            position:absolute; top:calc(100% + 8px); left:0; right:0;
+            background:#ffffff;
+            border:1.5px solid #e2e8f0;
+            border-radius:16px;
+            box-shadow:0 24px 64px rgba(0,0,0,.13), 0 4px 16px rgba(0,0,0,.06);
+            z-index:9999; max-height:340px; overflow-y:auto;
+            display:none; animation:fadeIn .15s ease-out;
+            min-width:260px;
+        }
+        .ac-drop.open { display:block; }
+
+        /* Header label inside dropdown (optional) */
+        .ac-drop-header {
+            padding:8px 16px 6px; font-size:9px; font-weight:900;
+            color:#94a3b8; letter-spacing:.18em; text-transform:uppercase;
+            border-bottom:1px solid #f1f5f9;
+        }
+
+        /* Each stock row */
+        .ac-item {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:9px 16px; cursor:pointer;
+            border-bottom:1px solid #f8fafc;
+            transition:background .08s;
+            gap:10px;
+        }
+        .ac-item:last-child { border-bottom:none; }
+
+        /* Highlighted (keyboard nav) */
+        .ac-item.ac-active,
+        .ac-item:hover {
+            background:#fef2f2;
+        }
+        .ac-item.ac-active .ac-sym,
+        .ac-item:hover    .ac-sym { color:#dc2626; }
+
+        /* Left block */
+        .ac-left  { display:flex; align-items:baseline; gap:8px; flex:1; min-width:0; }
+        .ac-sym   { font-size:12px; font-weight:900; color:#0f172a; letter-spacing:.07em; min-width:52px; flex-shrink:0; }
+        .ac-name  { font-size:10px; font-weight:600; color:#94a3b8; text-transform:uppercase;
+                    letter-spacing:.05em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+        /* Right block: price + change */
+        .ac-right { display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0; }
+        .ac-price { font-size:11px; font-weight:900; color:#0f172a; }
+        .ac-chg   { font-size:10px; font-weight:800; }
+
+        /* Highlight matching letters */
+        .ac-sym mark { background:transparent; color:#dc2626; font-weight:900; }
+
+        /* Empty state */
+        .ac-empty {
+            padding:22px 16px; text-align:center;
+            font-size:11px; font-weight:700; color:#94a3b8;
+            text-transform:uppercase; letter-spacing:.12em;
+        }
+
+        /* ── Horizon pills ── */
+        .horizon-pill { padding:8px 18px; border-radius:999px; font-size:10px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; cursor:pointer; border:2px solid #e2e8f0; color:#64748b; background:#f8fafc; transition:all .15s; white-space:nowrap; }
+        .horizon-pill.active { background:#dc2626; color:#fff; border-color:#dc2626; box-shadow:0 4px 14px rgba(220,38,38,.3); }
+        .horizon-pill:not(.active):hover { border-color:#dc2626; color:#dc2626; background:#fff; }
+
+        /* ── Insight card ── */
+        .insight-bullet { display:flex; gap:10px; align-items:flex-start; padding:12px 14px; border-radius:10px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07); }
+        .insight-bullet-icon { width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px; }
+    </style>
+</head>
+<body class="bg-[#F8FAFC] overflow-hidden">
+
+    <div id="loadingOverlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-[9999]">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl flex flex-col items-center gap-4 max-w-lg">
+            <div class="w-16 h-16 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+            <p class="text-sm font-black text-slate-900 uppercase tracking-widest">Loading Platform...</p>
+            <p class="text-xs text-slate-500" id="loadingStatus">Initializing...</p>
+            <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                <div id="progressBar" class="bg-red-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mainContainer" style="display: none;" class="flex h-screen overflow-hidden">
+        
+        <aside class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0">
+            <div class="p-5 flex items-center gap-2.5 border-b border-slate-100">
+                <div class="w-9 h-9 bg-red-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-red-600/25">
+                    <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-sm font-black text-slate-900 tracking-tight uppercase leading-none">Dashboard Finance</h1>
+                    <span class="text-[9px] text-red-600 font-black tracking-widest uppercase" id="stockCount">SET 100</span>
+                </div>
+            </div>
+
+            <div class="px-3 py-4 space-y-1">
+                <button onclick="switchPage('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black uppercase tracking-wide transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    Dashboard
+                </button>
+                <button onclick="switchPage('news')" id="nav-news" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black uppercase tracking-wide transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                    </svg>
+                    News
+                </button>
+                <button onclick="switchPage('predict')" id="nav-predict" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black uppercase tracking-wide transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                    </svg>
+                    Predict
+                </button>
+            </div>
+            
+
+            <div class="px-4 py-3 bg-slate-50/50 border-y border-slate-100">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-[10px] font-black uppercase tracking-[0.15em] flex items-center gap-1.5">
+                        <span class="text-[13px] leading-none">🌟</span>
+                        <span id="listTitle" class="text-[11px] font-black uppercase tracking-[0.15em]" style="color:#f59e0b">Top 10</span>
+                    </h2>
+                    <span id="listSubtitle" class="text-[8px] font-black text-slate-300 uppercase tracking-widest">Most Active</span>
+                </div>
+            </div>
+
+            <nav id="stockList" class="flex-1 overflow-y-auto px-3 py-2 space-y-1 custom-scrollbar"></nav>
+            
+            <div class="px-3 py-3 border-t border-slate-200 bg-slate-50/30 shrink-0">
+                <h2 class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5 px-1">
+                    <svg class="w-3 h-3 text-blue-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    Sector Avg
+                </h2>
+                <div id="sectorContainer" class="grid grid-cols-2 gap-2 overflow-y-auto custom-scrollbar px-1 max-h-[160px] pb-1">
+                    </div>
+            </div>
+
+            <!-- User Info & Logout -->
+            <div id="userInfoPanel" class="px-3 py-3 border-t border-slate-200 bg-white shrink-0">
+                <!-- จะถูก render โดย renderUserInfo() -->
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <div class="flex-1 overflow-y-auto custom-scrollbar">
+
+                <div id="page-dashboard" class="page-content p-8 space-y-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between gap-4">
+                            <div class="flex items-center gap-3">
+                                <div class="p-3 bg-red-600 rounded-2xl text-white shadow-lg shadow-red-600/20">
+                                    <svg class="w-[22px] h-[22px]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <rect x="3" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="14" width="7" height="7"></rect>
+                                        <rect x="3" y="14" width="7" height="7"></rect>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-black text-slate-900 uppercase tracking-tight">Market Explorer</h3>
+                                </div>
+                            </div>
+                            <div class="relative w-96">
+                                <div class="absolute left-5 top-1/2 -translate-y-1/2 text-red-600 z-10">
+                                    <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <path d="m21 21-4.35-4.35"></path>
+                                    </svg>
+                                </div>
+                                <input 
+                                    id="searchInput"
+                                    type="text" 
+                                    placeholder="SEARCH STOCK..." 
+                                    autocomplete="off"
+                                    class="w-full bg-white border-2 border-red-600 rounded-full pl-14 pr-6 py-3 text-[13px] font-black focus:ring-4 focus:ring-red-600/10 outline-none transition-all tracking-[0.2em] uppercase placeholder:text-slate-300"
+                                />
+                                <div id="searchDropdown" class="ac-drop custom-scrollbar"></div>
+                            </div> 
+                        </div>
+                    </div>
+
+                    <div id="kpiContainer" class="grid grid-cols-4 gap-6"></div>
+                    
+                    <div id="mainChart" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-8"></div>
+
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div class="px-8 py-5 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-1 h-6 bg-red-600 rounded-full"></div>
+                                <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">All Active Assets</h3>
+                            </div>
+                        </div>
+                     <div class="overflow-x-auto">
+                        <table class="w-full table-fixed"> <thead class="bg-slate-50/50 border-b border-slate-100">
+                                <tr class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    <th class="w-[15%] px-6 py-4 text-left">Stock</th>
+                                    <th class="w-[45%] px-6 py-4 text-center">Company Name</th>
+                                    <th class="w-[20%] px-6 py-4 text-center">Change %</th> 
+                                    <th class="w-[20%] px-6 py-4 text-right">Last Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stockTable" class="divide-y divide-slate-50"></tbody>
+                        </table>
+                    </div>
+                    </div>
+                </div>
+
+                <div id="page-news" class="page-content p-8 space-y-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="relative">
+                            <div class="absolute left-5 top-1/2 -translate-y-1/2 text-red-600 z-10">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path>
+                                </svg>
+                            </div>
+                            <input 
+                                id="newsSearchInput"
+                                type="text" 
+                                placeholder="SEARCH STOCK…  (e.g. PTT, KBANK, DELTA)"
+                                autocomplete="off"
+                                class="w-full bg-slate-50 border-2 border-transparent focus:border-red-600 focus:bg-white rounded-full pl-14 pr-6 py-3 text-sm font-black focus:ring-4 focus:ring-red-600/5 outline-none uppercase tracking-widest"
+                            />
+                            <div id="newsDropdown" class="ac-drop custom-scrollbar"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-6">
+                        <div class="col-span-5 space-y-4">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-lg font-black text-slate-900 uppercase">News</h3>
+                                <!-- <span id="newsCount" class="px-3 py-1 bg-red-50 text-red-600 text-xs font-black rounded-lg">0</span> -->
+                            </div>
+                            <div id="newsContainer" class="space-y-4 max-h-[800px] overflow-y-auto custom-scrollbar"></div>
+                        </div>
+
+                        <div class="col-span-7">
+                            <h3 class="text-lg font-black text-slate-900 uppercase mb-4">AI Analysis</h3>
+                            <div id="analysisContainer">
+                                <div class="bg-white p-20 rounded-2xl border border-slate-200 flex flex-col items-center text-center">
+                                    <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center text-slate-200 mb-4">
+                                        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path>
+                                        </svg>
+                                    </div>
+                                    <h4 class="text-xl font-black text-slate-900 uppercase">Analysis Ready</h4>
+                                    <p class="text-xs text-slate-400 mt-2">คลิกข่าวเพื่อดูการวิเคราะห์พร้อมลิงก์ที่มา</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <div id="page-predict" class="page-content p-8 space-y-6">
+
+                    <!-- ══════════════════════════════════════════════════════
+                         HERO CARD — matches "Market Explorer" style
+                    ══════════════════════════════════════════════════════ -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm animate-in">
+                        <!-- Row 1: Title (left) + Controls (right) -->
+                        <div class="flex items-center justify-between gap-4 flex-wrap">
+                            <!-- Left: icon + title -->
+                            <div class="flex items-center gap-3">
+                                <div class="p-3 bg-red-600 rounded-2xl text-white shadow-lg shadow-red-600/20">
+                                    <svg class="w-[22px] h-[22px]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-black text-slate-900 uppercase tracking-tight leading-none">Prediction Engine</h3>
+                                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-[.2em] mt-0.5">Chronos AI · SET100 Forecast</p>
+                                </div>
+                            </div>
+
+                            <!-- Right: Searchable dropdown + horizon pills -->
+                            <div class="flex items-center gap-3 flex-wrap">
+                                <!-- Searchable Stock Dropdown -->
+                                <div class="predict-search-wrap" id="predictSearchWrap">
+                                    <svg class="predict-search-icon w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                                    </svg>
+                                    <input
+                                        id="predictSearchInput"
+                                        class="predict-search-input"
+                                        type="text"
+                                        placeholder="Search SET100…"
+                                        autocomplete="off"
+                                    />
+                                    <div id="predictStockDropdown" class="ac-drop custom-scrollbar"></div>
+                                </div>
+                                <!-- Horizon Pills -->
+                                <div class="flex gap-2">
+                                    <button onclick="setHorizon('7D')"  id="pill-7D"  class="horizon-pill active">7D</button>
+                                    <button onclick="setHorizon('15D')" id="pill-15D" class="horizon-pill">15D</button>
+                                    <button onclick="setHorizon('30D')" id="pill-30D" class="horizon-pill">30D</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 2: Key Metrics strip (shows after stock selected) -->
+                        <div id="predictMetricsStrip" class="mt-5 pt-5 border-t border-slate-100 grid grid-cols-4 gap-4 hidden">
+                            <!-- Stock + Badge -->
+                            <div class="flex items-center gap-2.5">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-0.5">
+                                        <span id="predictHeroSymbol" class="text-xl font-black text-slate-900 uppercase tracking-tight leading-none">—</span>
+                                        <span id="predictHeroSignalBadge" class="px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest bg-slate-100 text-slate-400">—</span>
+                                    </div>
+                                    <p id="predictHeroName" class="text-[9px] font-bold text-slate-400 uppercase tracking-[.12em] truncate max-w-[160px]">—</p>
+                                </div>
+                            </div>
+                            <!-- Current Price -->
+                            <div class="border-l border-slate-100 pl-4">
+                                <div class="text-[8px] font-black text-slate-400 uppercase tracking-[.15em] mb-1">Current Price</div>
+                                <div id="predictHeroPrice" class="text-xl font-black text-slate-900 leading-none">฿—</div>
+                                <div id="predictHeroReturn" class="text-[10px] font-black text-slate-400 mt-0.5">—</div>
+                            </div>
+                            <!-- AI Target -->
+                            <div class="border-l border-slate-100 pl-4">
+                                <div class="text-[8px] font-black text-slate-400 uppercase tracking-[.15em] mb-1">AI Target Price</div>
+                                <div id="predictHeroTarget" class="text-xl font-black text-blue-600 leading-none">฿—</div>
+                                <div id="predictHeroTargetReturn" class="text-[10px] font-black text-slate-400 mt-0.5">— vs current</div>
+                            </div>
+                            <!-- 80% CI -->
+                            <div class="border-l border-slate-100 pl-4">
+                                <div class="text-[8px] font-black text-slate-400 uppercase tracking-[.15em] mb-1">80% Confidence Band</div>
+                                <div id="predictHeroBandLow"  class="text-[10px] font-black text-slate-500 leading-snug">Low: ฿—</div>
+                                <div id="predictHeroBandHigh" class="text-[10px] font-black text-slate-500 leading-snug">High: ฿—</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ══════════════════════════════════════════════════════
+                         CHART — Full width
+                    ══════════════════════════════════════════════════════ -->
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm">
+                            <div class="px-7 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
+                                <div>
+                                    <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">Price Projection Chart</h3>
+                                    <p id="predictChartSubtitle" class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">Actual Candlestick · AI Forecast · 80% Confidence Band</p>
+                                </div>
+                                <div class="flex flex-wrap gap-4 text-[9px] font-black uppercase tracking-wider text-slate-500">
+                                    <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded-sm" style="background:#26a69a"></span>Bullish</span>
+                                    <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded-sm" style="background:#ef5350"></span>Bearish</span>
+                                    <span class="flex items-center gap-1.5"><span class="inline-block w-6 h-0.5" style="background:#3b82f6"></span>SMA 20</span>
+                                    <span class="flex items-center gap-1.5"><span class="inline-block w-6 h-px border-t-2 border-dashed" style="border-color:#6366f1"></span>AI Forecast</span>
+                                    <span class="flex items-center gap-1.5"><span class="inline-block w-6 h-px border-t border-dashed" style="border-color:rgba(99,102,241,.4)"></span>80% CI</span>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <div id="predictCanvas" class="relative rounded-xl overflow-hidden border border-slate-100" style="height:380px"></div>
+                            </div>
+                    </div>
+
+                    <!-- ══════════════════════════════════════════════════════
+                         BOTTOM ROW — AI Insights (full width)
+                    ══════════════════════════════════════════════════════ -->
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:shadow-md">
+    
+                        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.25 15L18 16.125 16.875 15 18 13.875 18.25 15zM18.25 6L18 7.125 16.875 6 18 4.875 18.25 6z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="text-[11px] font-black text-slate-900 uppercase tracking-[.15em]">AI Strategic Insights</div>
+                                    <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">CHRONOS · QUANTITATIVE ANALYSIS</div>
+                                </div>
+                            </div>
+                            <span id="insightStatusBadge" class="text-[9px] font-black text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-slate-200">
+                                Awaiting Data
+                            </span>
+                        </div>
+
+                        <div id="predictInsightsBody" class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-4 bg-white">
+                            <div class="lg:col-span-2 text-center py-10">
+                                <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-50 mb-3">
+                                    <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </div>
+                                <p class="text-slate-700 text-[12px] font-semibold uppercase tracking-widest">
+                                    Select a security symbol to initialize AI analysis
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="px-6 py-3 border-t border-slate-100 bg-slate-50/30">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wide">
+                                    Disclaimer: Statistical analysis for institutional information purposes only.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+    <script>
+        // ============================================
+        // AUTH GUARD — ต้องตรวจสอบก่อนโหลดข้อมูลใดๆ
+        // ============================================
+        const AUTH_API_BASE = '/api';
+        const TOKEN_KEY = 'trinity_token';
+
+        /**
+         * checkAuth() — ตรวจสอบว่ามี Token อยู่ใน localStorage หรือไม่
+         * ถ้าไม่มี → redirect ไปหน้า login ทันที
+         * ถ้ามี → ตรวจสอบกับ server ว่ายัง valid อยู่หรือไม่
+         */
+        async function checkAuth() {
+            const token = localStorage.getItem(TOKEN_KEY);
+
+            // ไม่มี Token → ดีดกลับ Login
+            if (!token) {
+                window.location.href = 'login.html';
+                return false;
+            }
+
+            try {
+                const res = await fetch(`${AUTH_API_BASE}/verify-token`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!res.ok) {
+                    // Token หมดอายุหรือไม่ถูกต้อง
+                    handleSessionExpired();
+                    return false;
+                }
+
+                // Token valid → เก็บ user info สำหรับแสดงใน UI
+                const data = await res.json();
+                if (data.user) {
+                    localStorage.setItem('user_name', data.user.name);
+                    localStorage.setItem('user_email', data.user.email);
+                }
+                return true;
+            } catch (err) {
+                // Server ไม่ตอบ → ให้ผ่านไปก่อน (offline mode) แต่แจ้งเตือน
+                console.warn('⚠️ Cannot verify token — server unreachable:', err.message);
+                return true;
+            }
+        }
+
+        /**
+         * handleSessionExpired() — จัดการเมื่อ Token หมดอายุระหว่างใช้งาน
+         */
+        function handleSessionExpired() {
+            localStorage.removeItem(TOKEN_KEY);
+            localStorage.removeItem('user_name');
+            localStorage.removeItem('user_email');
+            alert('เซสชันหมดอายุ กรุณาเข้าสู่ระบบอีกครั้ง');
+            window.location.href = 'login.html';
+        }
+
+        /**
+         * handleLogout() — ลบ Token และ redirect ไป Login
+         */
+        async function handleLogout() {
+            const token = localStorage.getItem(TOKEN_KEY);
+            
+            // แจ้ง server (best-effort, ไม่ block ถ้า server ไม่ตอบ)
+            if (token) {
+                try {
+                    await fetch(`${AUTH_API_BASE}/logout`, {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                } catch { /* ignore — จะลบ token ฝั่ง client อยู่ดี */ }
+            }
+
+            localStorage.removeItem(TOKEN_KEY);
+            localStorage.removeItem('user_name');
+            localStorage.removeItem('user_email');
+            window.location.href = 'login.html';
+        }
+
+        /**
+         * authFetch() — Wrapper สำหรับ fetch ที่แนบ Bearer Token อัตโนมัติ
+         * ถ้าได้ 401 → จัดการ session expired
+         */
+        async function authFetch(url, options = {}) {
+            const token = localStorage.getItem(TOKEN_KEY);
+            if (!token) {
+                handleSessionExpired();
+                throw new Error('No auth token');
+            }
+
+            const headers = {
+                ...(options.headers || {}),
+                'Authorization': `Bearer ${token}`
+            };
+
+            const res = await fetch(url, { ...options, headers });
+
+            if (res.status === 401) {
+                handleSessionExpired();
+                throw new Error('Token expired or invalid');
+            }
+
+            return res;
+        }
+
+        /**
+         * renderUserInfo() — แสดงชื่อผู้ใช้และปุ่ม Logout ใน Sidebar
+         */
+        function renderUserInfo() {
+            const name = localStorage.getItem('user_name') || 'User';
+            const email = localStorage.getItem('user_email') || '';
+            const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+
+            const container = document.getElementById('userInfoPanel');
+            if (container) {
+                container.innerHTML = `
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-9 h-9 bg-red-600 rounded-xl flex items-center justify-center text-white text-xs font-black shadow-lg shadow-red-600/20">
+                            ${initials}
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <p class="text-xs font-black text-slate-900 truncate">${name}</p>
+                            <p class="text-[10px] text-slate-400 truncate">${email}</p>
+                        </div>
+                    </div>
+                    <button onclick="handleLogout()"
+                        class="w-full flex items-center justify-center gap-2 px-3 py-2 bg-slate-100 hover:bg-red-50 hover:text-red-600 text-slate-500 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        Sign Out
+                    </button>
+                `;
+            }
+        }
+
+        // ============================================
+        // CONFIGURATION & DATA
+        // ============================================
+        const CONFIG = {
+            supabase: {
+                url: "https://cgsdnylfbdvpvshmyggj.supabase.co",
+                key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnc2RueWxmYmR2cHZzaG15Z2dqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2OTc2ODksImV4cCI6MjA4NjI3MzY4OX0.EsNt9lRFctLYnKGaWIr0qxLVt_9P5QwUveVdX5wHct4"
+            },
+            stockLimit: 100
+        };
+
+
+        const SECTORS = {
+          'Resources': {
+            'Energy & Utilities': ['AAV', 'BANPU', 'BCP', 'BCPG', 'BGRIM', 'EGCO', 'GPSC', 'GULF', 'IRPC', 'OR', 'PTT', 'PTTEP', 'PTTGC', 'RATCH', 'SPRC', 'TOP'],
+            'Materials': ['AWC', 'IVL', 'SCC', 'SCGP', 'STA', 'TOA']
+          },
+          'Industrials': {
+            'Transportation': ['AOT', 'BEM', 'BTS', 'RCL'],
+            'Construction & Industrials': ['AMATA', 'AP', 'BA', 'CK', 'DELTA', 'ERW', 'GLOBAL', 'HMPRO', 'LH', 'PLANB', 'PRM', 'QH', 'SIRI', 'SPALI', 'TASCO', 'TFG', 'WHA']
+          },
+          'Property & Construction': ['AEONTS', 'AMATA', 'AP', 'CPN', 'DOHOME', 'LH', 'PRM', 'QH', 'SPALI', 'SIRI', 'WHA'],
+          'Consumer': { 
+            'Consumer Staples': ['BJC', 'COM7', 'CPALL', 'CPF', 'CPN', 'DOHOME', 'GFPT', 'GLOBAL', 'HMPRO', 'MOSHI', 'PTG', 'TU']
+          },
+          'Financials': {
+            'Banking': ['BBL', 'KBANK', 'KTB', 'SCB', 'TTB'],
+            'Finance & Insurance': ['BH', 'JMT', 'KTC', 'MTC', 'SAWAD', 'TISCO', 'VGI','TIDLOR']
+          },
+          'Healthcare': ['BCH', 'BDMS', 'CHG'],
+          'Technology': ['CENTEL', 'COM7', 'ICHI', 'JAS', 'KCE', 'STGT'],
+          'Communication Services': ['ADVANC', 'TRUE']
+        };
+
+        // ============================================
+        // STATE
+        // ============================================
+       const APP = {
+        supabaseClient: null,
+        currentPage: 'dashboard',
+        stocks: [],
+        currentStock: null,
+        filteredStocks: [],
+        allNews: [],
+        filteredNews: [],
+        lwcChart:        null,   // Lightweight Charts instance (Dashboard)
+        predictLwcChart: null,   // Lightweight Charts instance (Predict page)
+        chartType: 'candlestick',
+        predictData: [],
+        predictSymbol: null,
+        predictHorizon: '7D',
+        sparklines: {}     // { symbol: float[] } — last 14-day close prices cache
+        };
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function updateStatus(msg) {
+            const el = document.getElementById('loadingStatus');
+            if (el) el.textContent = msg;
+        }
+
+        function calculateMarketCap(pe, eps, lastPrice) {
+            if (!pe || !eps || pe <= 0 || eps <= 0) {
+                if (lastPrice > 100) return `${(lastPrice * 100).toFixed(0)}B`;
+                if (lastPrice > 10) return `${(lastPrice * 50).toFixed(0)}B`;
+                return `${(lastPrice * 20).toFixed(0)}B`;
+            }
+            const marketCap = pe * eps * 1000000;
+            if (marketCap >= 1000000000) return `${(marketCap / 1000000000).toFixed(0)}B`;
+            if (marketCap >= 1000000) return `${(marketCap / 1000000).toFixed(0)}M`;
+            return `${marketCap.toFixed(0)}`;
+        }
+
+        function shortenName(symbol) {
+            const names = {
+                'AAV': 'ASIA AVIATION', 'ADVANC': 'ADVANCED INFO SERVICE', 'AOT': 'AIRPORTS OF THAILAND',
+                'KBANK': 'KASIKORNBANK', 'PTT': 'PTT PUBLIC COMPANY', 'SCB': 'SCB X PUBLIC COMPANY'
+            };
+            return names[symbol] || symbol;
+        }
+
+        function getFullCompanyName(symbol) {
+            const names = {
+                'AAV': 'ASIA AVIATION PUBLIC COMPANY LIMITED',
+                'ADVANC': 'ADVANCED INFO SERVICE PUBLIC COMPANY LIMITED',
+                'AEONTS': 'AEON THANA SINSAP (THAILAND) PUBLIC COMPANY LIMITED',
+                'AMATA': 'AMATA CORPORATION PUBLIC COMPANY LIMITED',
+                'AOT': 'AIRPORTS OF THAILAND PUBLIC COMPANY LIMITED',
+                'AP': 'AP (THAILAND) PUBLIC COMPANY LIMITED',
+                'AURA': 'AURORA DESIGN PUBLIC COMPANY LIMITED',
+                'AWC': 'ASSET WORLD CORP PUBLIC COMPANY LIMITED',
+                'BA': 'BANGKOK AIRWAYS PUBLIC COMPANY LIMITED',
+                'BAM': 'BANGKOK COMMERCIAL ASSET MANAGEMENT PUBLIC COMPANY LIMITED',
+                'BANPU': 'BANPU PUBLIC COMPANY LIMITED',
+                'BBL': 'BANGKOK BANK PUBLIC COMPANY LIMITED',
+                'BCH': 'BANGKOK CHAIN HOSPITAL PUBLIC COMPANY LIMITED',
+                'BCP': 'BANGCHAK CORPORATION PUBLIC COMPANY LIMITED',
+                'BCPG': 'BCPG PUBLIC COMPANY LIMITED',
+                'BDMS': 'BANGKOK DUSIT MEDICAL SERVICES PUBLIC COMPANY LIMITED',
+                'BEM': 'BANGKOK EXPRESSWAY AND METRO PUBLIC COMPANY LIMITED',
+                'BGRIM': 'B.GRIMM POWER PUBLIC COMPANY LIMITED',
+                'BH': 'BUMRUNGRAD HOSPITAL PUBLIC COMPANY LIMITED',
+                'BJC': 'BERLI JUCKER PUBLIC COMPANY LIMITED',
+                'BLA': 'BANGKOK LIFE ASSURANCE PUBLIC COMPANY LIMITED',
+                'BTG': 'BETAGRO PUBLIC COMPANY LIMITED',
+                'BTS': 'BTS GROUP HOLDINGS PUBLIC COMPANY LIMITED',
+                'CBG': 'CARABAO GROUP PUBLIC COMPANY LIMITED',
+                'CCET': 'CAL-COMP ELECTRONICS (THAILAND) PUBLIC COMPANY LIMITED',
+                'CENTEL': 'CENTRAL PLAZA HOTEL PUBLIC COMPANY LIMITED',
+                'CHG': 'CHULARAT HOSPITAL PUBLIC COMPANY LIMITED',
+                'CK': 'CH. KARNCHANG PUBLIC COMPANY LIMITED',
+                'COM7': 'COM7 PUBLIC COMPANY LIMITED',
+                'CPALL': 'CP ALL PUBLIC COMPANY LIMITED',
+                'CPF': 'CHAROEN POKPHAND FOODS PUBLIC COMPANY LIMITED',
+                'CPN': 'CENTRAL PATTANA PUBLIC COMPANY LIMITED',
+                'CRC': 'CENTRAL RETAIL CORPORATION PUBLIC COMPANY LIMITED',
+                'DELTA': 'DELTA ELECTRONICS (THAILAND) PUBLIC COMPANY LIMITED',
+                'DOHOME': 'DOHOME PUBLIC COMPANY LIMITED',
+                'EA': 'ENERGY ABSOLUTE PUBLIC COMPANY LIMITED',
+                'EGCO': 'ELECTRICITY GENERATING PUBLIC COMPANY LIMITED',
+                'ERW': 'THE ERAWAN GROUP PUBLIC COMPANY LIMITED',
+                'GFPT': 'GFPT PUBLIC COMPANY LIMITED',
+                'GLOBAL': 'SIAM GLOBAL HOUSE PUBLIC COMPANY LIMITED',
+                'GPSC': 'GLOBAL POWER SYNERGY PUBLIC COMPANY LIMITED',
+                'GULF': 'GULF ENERGY DEVELOPMENT PUBLIC COMPANY LIMITED',
+                'GUNKUL': 'GUNKUL ENGINEERING PUBLIC COMPANY LIMITED',
+                'HANA': 'HANA MICROELECTRONICS PUBLIC COMPANY LIMITED',
+                'HMPRO': 'HOME PRODUCT CENTER PUBLIC COMPANY LIMITED',
+                'ICHI': 'ICHITAN GROUP PUBLIC COMPANY LIMITED',
+                'IRPC': 'IRPC PUBLIC COMPANY LIMITED',
+                'IVL': 'INDORAMA VENTURES PUBLIC COMPANY LIMITED',
+                'JAS': 'JASMINE INTERNATIONAL PUBLIC COMPANY LIMITED',
+                'JMART': 'JAYMART GROUP HOLDINGS PUBLIC COMPANY LIMITED',
+                'JMT': 'JMT NETWORK SERVICES PUBLIC COMPANY LIMITED',
+                'JTS': 'JASMINE TECHNOLOGY SOLUTION PUBLIC COMPANY LIMITED',
+                'KBANK': 'KASIKORNBANK PUBLIC COMPANY LIMITED',
+                'KCE': 'KCE ELECTRONICS PUBLIC COMPANY LIMITED',
+                'KKP': 'KIATNAKIN PHATRA BANK PUBLIC COMPANY LIMITED',
+                'KTB': 'KRUNG THAI BANK PUBLIC COMPANY LIMITED',
+                'KTC': 'KRUNGTHAI CARD PUBLIC COMPANY LIMITED',
+                'LH': 'LAND AND HOUSES PUBLIC COMPANY LIMITED',
+                'M': 'MK RESTAURANT GROUP PUBLIC COMPANY LIMITED',
+                'MEGA': 'MEGA LIFESCIENCES PUBLIC COMPANY LIMITED',
+                'MINT': 'MINOR INTERNATIONAL PUBLIC COMPANY LIMITED',
+                'MOSHI': 'MOSHI MOSHI RETAIL CORPORATION PUBLIC COMPANY LIMITED',
+                'MTC': 'MUANGTHAI CAPITAL PUBLIC COMPANY LIMITED',
+                'OR': 'PTT OIL AND RETAIL BUSINESS PUBLIC COMPANY LIMITED',
+                'OSP': 'OSOTSPA PUBLIC COMPANY LIMITED',
+                'PLANB': 'PLAN B MEDIA PUBLIC COMPANY LIMITED',
+                'PR9': 'PRARAM 9 HOSPITAL PUBLIC COMPANY LIMITED',
+                'PRM': 'PRIMA MARINE PUBLIC COMPANY LIMITED',
+                'PTG': 'PTG ENERGY PUBLIC COMPANY LIMITED',
+                'PTT': 'PTT PUBLIC COMPANY LIMITED',
+                'PTTEP': 'PTT EXPLORATION AND PRODUCTION PUBLIC COMPANY LIMITED',
+                'PTTGC': 'PTT GLOBAL CHEMICAL PUBLIC COMPANY LIMITED',
+                'QH': 'QUALITY HOUSES PUBLIC COMPANY LIMITED',
+                'RATCH': 'RATCH GROUP PUBLIC COMPANY LIMITED',
+                'RCL': 'REGIONAL CONTAINER LINES PUBLIC COMPANY LIMITED',
+                'SAWAD': 'SRISAWAD CORPORATION PUBLIC COMPANY LIMITED',
+                'SCB': 'SCB X PUBLIC COMPANY LIMITED',
+                'SCC': 'THE SIAM CEMENT PUBLIC COMPANY LIMITED',
+                'SCGP': 'SCG PACKAGING PUBLIC COMPANY LIMITED',
+                'SIRI': 'SANSIRI PUBLIC COMPANY LIMITED',
+                'SISB': 'SISB PUBLIC COMPANY LIMITED',
+                'SJWD': 'SCGJWD LOGISTICS PUBLIC COMPANY LIMITED',
+                'SPALI': 'SUPALAI PUBLIC COMPANY LIMITED',
+                'SPRC': 'STAR PETROLEUM REFINING PUBLIC COMPANY LIMITED',
+                'STA': 'SRI TRANG AGRO-INDUSTRY PUBLIC COMPANY LIMITED',
+                'STECON': 'SINO-THAI ENGINEERING AND CONSTRUCTION PUBLIC COMPANY LIMITED',
+                'STGT': 'SRI TRANG GLOVES (THAILAND) PUBLIC COMPANY LIMITED',
+                'TASCO': 'TIPCO ASPHALT PUBLIC COMPANY LIMITED',
+                'TCAP': 'THANACHART CAPITAL PUBLIC COMPANY LIMITED',
+                'TFG': 'THAI FOODS GROUP PUBLIC COMPANY LIMITED',
+                'TIDLOR': 'NGERN TID LOR PUBLIC COMPANY LIMITED',
+                'TISCO': 'TISCO FINANCIAL GROUP PUBLIC COMPANY LIMITED',
+                'TLI': 'THAI LIFE INSURANCE PUBLIC COMPANY LIMITED',
+                'TOA': 'TOA PAINT (THAILAND) PUBLIC COMPANY LIMITED',
+                'TOP': 'THAI OIL PUBLIC COMPANY LIMITED',
+                'TRUE': 'TRUE CORPORATION PUBLIC COMPANY LIMITED',
+                'TTB': 'TMBTHANACHART BANK PUBLIC COMPANY LIMITED',
+                'TU': 'THAI UNION GROUP PUBLIC COMPANY LIMITED',
+                'VGI': 'VGI PUBLIC COMPANY LIMITED',
+                'WHA': 'WHA CORPORATION PUBLIC COMPANY LIMITED'
+            };
+            const cleanSymbol = symbol ? symbol.trim().toUpperCase() : '';
+            return names[cleanSymbol] || cleanSymbol; 
+        }
+
+        
+        function getSectorForSymbol(symbol) {
+            const cleanSymbol = symbol.trim().toUpperCase();
+            for (const [mainSector, subSectors] of Object.entries(SECTORS)) {
+                if (Array.isArray(subSectors)) {
+                    if (subSectors.includes(cleanSymbol)) return mainSector;
+                } else {
+                    for (const [sub, symbolsArray] of Object.entries(subSectors)) {
+                        if (symbolsArray.includes(cleanSymbol)) return mainSector;
+                    }
+                }
+            }
+            return 'General';
+        }
+
+        function calculateSectorPerformance() {
+            const performance = [];
+            for (const [mainSector, subSectors] of Object.entries(SECTORS)) {
+                let symbols = [];
+                if (Array.isArray(subSectors)) {
+                    symbols = subSectors;
+                } else {
+                    for (const sub of Object.values(subSectors)) {
+                        symbols = symbols.concat(sub);
+                    }
+                }
+
+                
+                symbols = [...new Set(symbols)];
+
+                
+                const sectorStocks = APP.stocks.filter(s => symbols.includes(s.symbol));
+
+                if (sectorStocks.length > 0) {
+                    const avgChange = sectorStocks.reduce((sum, s) => sum + s.changePercent, 0) / sectorStocks.length;
+                    performance.push({ name: mainSector, avgChange: avgChange });
+                }
+            }
+            
+            return performance.sort((a, b) => b.avgChange - a.avgChange);
+        }
+
+        function initSupabase() {
+            try {
+                APP.supabaseClient = window.supabase.createClient(CONFIG.supabase.url, CONFIG.supabase.key);
+                console.log('✅ Supabase initialized');
+                return true;
+            } catch (error) {
+                console.error('❌ Supabase error:', error);
+                return false;
+            }
+        }
+
+
+        async function loadDashboardData() {
+            try {
+                updateStatus('Syncing Real-time Market Data...');
+                
+                const { data, error } = await APP.supabaseClient
+                    .from('stock_realtime') 
+                    .select('*')
+                    .order('symbol', { ascending: true }); 
+
+                if (error) throw error;
+
+                APP.stocks = data.map(stock => ({
+                    symbol: stock.symbol,
+                    fullName: (getFullCompanyName(stock.symbol.trim()) || stock.name_en || stock.symbol).replace(' PUBLIC COMPANY LIMITED', ''), 
+                    price: parseFloat(stock.last_price) || 0,
+                    changePercent: parseFloat(stock.percent_change) || 0,
+                    volume: parseInt(stock.volume) || 0,
+                    rsi: parseFloat(stock.rsi_14) || 0,
+                    pe: parseFloat(stock.pe) || 0,
+                    eps: parseFloat(stock.eps) || 0,
+                    prevClose: parseFloat(stock.prior_price) || 0,
+                    high: parseFloat(stock.high_price) || 0,
+                    low: parseFloat(stock.low_price) || 0,
+                    lastUpdate: stock.updated_at 
+                }));
+
+                APP.filteredStocks = [...APP.stocks];
+                
+                if (!APP.currentStock) {
+                    APP.currentStock = APP.stocks[0];
+                } else {
+                    APP.currentStock = APP.stocks.find(s => s.symbol === APP.currentStock.symbol) || APP.currentStock;
+                }
+
+                renderDashboard();
+                // Pre-warm sparklines for the top 10 by turnover
+                const top10 = [...APP.stocks]
+                    .sort((a,b) => ((b.price||0)*(b.volume||0)) - ((a.price||0)*(a.volume||0)))
+                    .slice(0,10).map(s => s.symbol)
+                    .filter(sym => !APP.sparklines[sym]);
+                if (top10.length) loadSparklines(top10);
+            } catch (error) {
+                console.error('❌ Realtime Sync Error:', error);
+            }
+        }
+
+        async function loadNews() {
+            try {
+                updateStatus('Loading and Grouping news...');
+                const { data: newsData, error: newsError } = await APP.supabaseClient
+                    .from('stock_news') 
+                    .select('*')
+                    .order('published_at', { ascending: false });
+
+                if (newsError) throw newsError;
+
+                const symbols = [...new Set((newsData || []).map(n => n.symbol).filter(Boolean))];
+                let summaryMap = {};
+                
+                if (symbols.length > 0) {
+                    const { data: sumData, error: sumError } = await APP.supabaseClient
+                        .from('stock_summary')
+                        .select('*')
+                        .in('symbol', symbols);
+
+                    if (!sumError && sumData) {
+                        sumData.forEach(item => { summaryMap[item.symbol] = item; });
+                    }
+                }
+
+                const groupedNews = {};
+                (newsData || []).forEach(news => {
+                    const sym = news.symbol || 'SET';
+                    if (!groupedNews[sym]) {
+                        groupedNews[sym] = {
+                            symbol: sym,
+                            latest_title: news.title,
+                            latest_published_at: news.published_at,
+                            stock_summary: summaryMap[sym] || null,
+                            related_articles: [] 
+                        };
+                    }
+                    groupedNews[sym].related_articles.push(news);
+                });
+
+                APP.allNews = Object.values(groupedNews).sort((a, b) => new Date(b.latest_published_at) - new Date(a.latest_published_at));
+                APP.filteredNews = [...APP.allNews];
+
+                renderNews();
+            } catch (error) {
+                console.error('❌ News error:', error);
+            }
+        }
+
+        function formatTimeAgo(dateString) {
+            if (!dateString) return '';
+            const newsDate = new Date(dateString); 
+            const now = new Date();
+            const diffMs = now - newsDate;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHrs = Math.floor(diffMins / 60);
+            
+            if (diffMins < 60) {
+                return diffMins <= 0 ? 'เพิ่งเกิดขึ้น' : `${diffMins} นาทีที่แล้ว`;
+            } else if (diffHrs < 24) {
+                return `${diffHrs} ชั่วโมงที่แล้ว`;
+            } else {
+                return newsDate.toLocaleDateString('th-TH', {
+                    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+                }) + ' น.';
+            }
+        }
+
+        function renderNews() {
+            const container = document.getElementById('newsContainer');
+            const newsCount = document.getElementById('newsCount');
+            // newsCount.textContent = `${APP.filteredNews.length} Symbols`;
+
+            container.innerHTML = APP.filteredNews.length === 0 
+                ? '<div class="bg-slate-50 p-10 rounded-2xl text-center"><p class="text-sm text-slate-400 font-bold uppercase tracking-widest">No news available</p></div>' 
+                : APP.filteredNews.map((group, index) => { 
+                    const analysis = group.stock_summary;
+                    const sentimentStr = analysis?.sentiment_label || analysis?.sentiment || 'Neutral';
+                    const color = sentimentStr.toLowerCase() === 'positive' || sentimentStr.toLowerCase() === 'bullish' ? 'emerald' : 
+                                  sentimentStr.toLowerCase() === 'negative' || sentimentStr.toLowerCase() === 'bearish' ? 'red' : 'slate';
+
+                    const timeDisplay = formatTimeAgo(group.latest_published_at);
+                    const articleCount = group.related_articles.length;
+
+                    return `
+                        <div class="bg-white rounded-2xl p-5 border border-slate-100 hover:border-red-500 hover:shadow-md transition-all cursor-pointer mb-4 flex flex-col" onclick="analyzeNews(${index})">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-3 py-1.5 bg-slate-900 text-white text-[10px] font-black rounded-lg uppercase tracking-wider">${group.symbol}</span>
+                                ${analysis ? `<span class="px-3 py-1.5 bg-${color}-50 text-${color}-600 text-[10px] font-bold rounded-lg uppercase tracking-wider">${sentimentStr}</span>` : ''}
+                            </div>
+                            
+                            <h4 class="text-sm font-bold text-slate-800 leading-relaxed line-clamp-2 mb-3">${group.latest_title}</h4>
+
+                            <div class="flex items-center justify-between pt-3 border-t border-slate-50 mt-auto">
+                                <div class="flex items-center gap-1.5 text-slate-400 font-medium">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"></circle><path d="M12 6v6l4 2" stroke-width="2" stroke-linecap="round"></path></svg>
+                                    <span class="text-[11px] tracking-wide">ล่าสุด ${timeDisplay}</span>
+                                </div>
+                                <span class="text-[10px] font-black text-blue-500 bg-blue-50 px-2 py-1 rounded-md uppercase">${articleCount} ข่าว</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+        }
+
+        function analyzeNews(index) {
+            const container = document.getElementById('analysisContainer');
+            const group = APP.filteredNews[index]; 
+            if (!group) return;
+            
+            const analysis = group.stock_summary;
+            const sentimentLabel = analysis?.sentiment_label || analysis?.sentiment || 'Neutral';
+            const rating = analysis?.investment_rating || '-';
+            const reasoning = analysis?.reasoning || 'อยู่ระหว่างรอ AI ประมวลผลบทวิเคราะห์...';
+            
+            const color = sentimentLabel.toLowerCase() === 'positive' || sentimentLabel.toLowerCase() === 'bullish' ? 'emerald' : 
+                          sentimentLabel.toLowerCase() === 'negative' || sentimentLabel.toLowerCase() === 'bearish' ? 'red' : 'slate';
+
+            const articleLinksHTML = group.related_articles.map(article => `
+                <a href="${article.url}" target="_blank" class="block bg-white p-4 rounded-xl border border-slate-100 hover:border-blue-300 hover:shadow-sm transition-all mb-2 group">
+                    <div class="flex justify-between items-start gap-4">
+                        <div class="flex-1">
+                            <h5 class="text-[13px] font-bold text-slate-800 group-hover:text-blue-600 transition-colors line-clamp-1">${article.title}</h5>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="text-[9px] font-black bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase">${article.source || 'News'}</span>
+                                <span class="text-[10px] text-slate-400 font-medium">${formatTimeAgo(article.published_at)}</span>
+                            </div>
+                        </div>
+                        <div class="w-6 h-6 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-blue-50 text-slate-400 group-hover:text-blue-600 shrink-0">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+
+            container.innerHTML = `
+                <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6 animate-in">
+                    <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
+                        <span class="text-3xl font-black text-slate-900 uppercase">${group.symbol}</span>
+                        <span class="px-3 py-1 bg-slate-100 text-slate-500 text-[10px] font-black rounded-lg uppercase tracking-wider">${group.symbol === 'SET' ? 'Market Overview' : 'Stock Analysis'}</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="bg-${color}-50 p-6 rounded-2xl text-center border border-${color}-100 flex flex-col justify-center transition-all">
+                            <div class="text-3xl font-black text-${color}-600 capitalize">${sentimentLabel}</div>
+                            <div class="text-[10px] text-${color}-500 uppercase font-black mt-2 tracking-widest">${group.symbol === 'SET' ? 'Market Tone' : 'AI Sentiment'}</div>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-6 rounded-2xl text-center border border-blue-100 flex flex-col justify-center transition-all">
+                            <div class="text-3xl font-black text-blue-700">${rating}</div>
+                            <div class="text-[10px] text-blue-600 uppercase font-black mt-2 tracking-widest">Rating (1-10)</div>
+                        </div>
+                    </div>
+
+                    <div class="relative bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-inner mt-4">
+                        <div class="absolute -top-3 left-6 bg-slate-50 px-2 text-[10px] font-black tracking-widest text-blue-600 uppercase flex items-center gap-1.5">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                            AI Strategy & Reasoning
+                        </div>
+                        <p class="text-[13px] text-slate-700 leading-loose font-medium mt-1">
+                            ${reasoning}
+                        </p>
+                    </div>
+
+                    <div class="pt-6">
+                        <h5 class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-4">📰 Related News Articles (${group.related_articles.length})</h5>
+                        <div class="max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
+                            ${articleLinksHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDashboard() {
+            renderSectors();
+            renderStockList();
+            renderKPI();
+            renderChart();
+            renderTable();
+        }
+        
+        function renderSectors() {
+            const container = document.getElementById('sectorContainer');
+            if (!container) return;
+
+            const perf = calculateSectorPerformance();
+            container.innerHTML = perf.map(s => {
+                const isPositive = s.avgChange >= 0;
+                const colorClass = isPositive ? 'text-emerald-500 bg-emerald-50 border-emerald-100' : 'text-red-500 bg-red-50 border-red-100';
+                const sign = isPositive ? '+' : '';
+                return `
+                    <div class="flex flex-col items-center justify-center px-2 py-2 rounded-lg border ${colorClass} w-full">
+                        <span class="text-[9px] font-black uppercase tracking-wider text-slate-500 truncate w-full text-center mb-0.5" title="${s.name}">${s.name}</span>
+                        <span class="text-xs font-black">${sign}${s.avgChange.toFixed(2)}%</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ══════════════════════════════════════════════════════════════
+        // SPARKLINE ENGINE
+        // Batch-fetch last 14 trading days for given symbols in 1 query,
+        // build smooth SVG bezier paths, paint into placeholder <svg> tags.
+        // ══════════════════════════════════════════════════════════════
+
+        /** Convert an array of close prices → smooth SVG cubic-bezier path string */
+        function buildSparkPath(closes, W = 52, H = 20) {
+            if (!closes || closes.length < 2) return null;
+            const mn  = Math.min(...closes);
+            const mx  = Math.max(...closes);
+            const rng = mx - mn || mn * 0.02 || 1;   // avoid flat line when all prices equal
+            const pad = 2;
+            const xs  = closes.map((_, i) => pad + (i / (closes.length - 1)) * (W - pad * 2));
+            const ys  = closes.map(v  => H - pad - ((v - mn) / rng) * (H - pad * 2));
+            let d = `M ${xs[0].toFixed(1)} ${ys[0].toFixed(1)}`;
+            for (let i = 1; i < xs.length; i++) {
+                const cpx = ((xs[i - 1] + xs[i]) / 2).toFixed(1);
+                d += ` C ${cpx} ${ys[i-1].toFixed(1)}, ${cpx} ${ys[i].toFixed(1)}, ${xs[i].toFixed(1)} ${ys[i].toFixed(1)}`;
+            }
+            return d;
+        }
+
+        /** Batch-fetch close prices for up to 10 symbols, then paint sparklines */
+        async function loadSparklines(symbols) {
+            if (!symbols || !symbols.length) return;
+            try {
+                const from = luxon.DateTime.now().minus({ days: 21 }).toISODate();
+                const { data, error } = await APP.supabaseClient
+                    .from('stock_historical')
+                    .select('symbol, date, close_price')
+                    .in('symbol', symbols)
+                    .gte('date', from)
+                    .order('date', { ascending: true });
+
+                if (error) throw error;
+
+                // Group by symbol → keep last 14 rows
+                const bySymbol = {};
+                (data || []).forEach(row => {
+                    if (!bySymbol[row.symbol]) bySymbol[row.symbol] = [];
+                    bySymbol[row.symbol].push(parseFloat(row.close_price));
+                });
+
+                // Merge today's realtime close into each symbol's array
+                symbols.forEach(sym => {
+                    const rtStock = APP.stocks.find(s => s.symbol === sym);
+                    if (rtStock && rtStock.price) {
+                        if (!bySymbol[sym]) bySymbol[sym] = [];
+                        bySymbol[sym].push(rtStock.price);
+                    }
+                });
+
+                // Cache + paint
+                symbols.forEach(sym => {
+                    const prices = (bySymbol[sym] || []).slice(-14);
+                    APP.sparklines[sym] = prices;
+                    paintSparkline(sym);
+                });
+
+            } catch (err) {
+                console.warn('⚠️ loadSparklines:', err.message);
+            }
+        }
+
+        /** Paint one sparkline into its placeholder SVG (if it exists in the DOM) */
+        function paintSparkline(sym) {
+            const svg = document.getElementById(`spark-${sym}`);
+            if (!svg) return;
+            const prices = APP.sparklines[sym];
+            if (!prices || prices.length < 2) return;
+
+            const stock    = APP.stocks.find(s => s.symbol === sym);
+            const isActive = APP.currentStock && APP.currentStock.symbol === sym;
+            const isUp     = (stock?.changePercent ?? 0) >= 0;
+            const stroke   = isActive ? 'rgba(255,255,255,0.85)'
+                           : isUp     ? '#10b981'   // emerald-500
+                                      : '#f43f5e';  // rose-500
+
+            const path = buildSparkPath(prices, 52, 20);
+            if (!path) return;
+
+            svg.innerHTML = `<path d="${path}" fill="none" stroke="${stroke}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`;
+        }
+
+        function renderStockList() {
+            const listEl = document.getElementById('stockList');
+            const isSearching = APP._sidebarSearching;
+
+            // Sort by turnover (price × volume) desc → top 10
+            let displayStocks;
+            if (isSearching) {
+                displayStocks = APP.filteredStocks.slice(0, 10);
+            } else {
+                displayStocks = [...APP.stocks]
+                    .sort((a, b) => ((b.price||0)*(b.volume||0)) - ((a.price||0)*(a.volume||0)))
+                    .slice(0, 10);
+            }
+
+            listEl.innerHTML = displayStocks.map((stock, rank) => {
+                const isActive   = APP.currentStock && APP.currentStock.symbol === stock.symbol;
+                const isPositive = stock.changePercent >= 0;
+
+                // Sparkline: use cached bezier path or dashed-line placeholder
+                const sparkStroke = isActive ? 'rgba(255,255,255,0.85)'
+                                 : isPositive ? '#10b981'    // emerald-500
+                                              : '#f43f5e';   // rose-500
+                const cachedPath = APP.sparklines[stock.symbol]
+                    ? buildSparkPath(APP.sparklines[stock.symbol], 52, 20)
+                    : null;
+                const sparkInner = cachedPath
+                    ? `<path d="${cachedPath}" fill="none" stroke="${sparkStroke}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`
+                    : `<line x1="2" y1="10" x2="50" y2="10" stroke="${isActive ? 'rgba(255,255,255,0.2)' : '#e2e8f0'}" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 2"/>`;
+
+                return `
+                    <button
+                        onclick="selectStockSidebar('${stock.symbol}')"
+                        class="flex items-center justify-between w-full px-3 py-2.5 rounded-xl transition-all ${
+                            isActive
+                                ? 'bg-red-600 text-white shadow-lg shadow-red-600/20'
+                                : 'hover:bg-slate-50 text-slate-700'
+                        }"
+                    >
+                        <!-- Rank + Symbol + Name -->
+                        <div class="flex items-center gap-1.5 min-w-0 flex-1">
+                            <span class="text-[8px] font-black w-3.5 text-center shrink-0 ${isActive ? 'text-red-200' : 'text-slate-300'}">${rank+1}</span>
+                            <div class="min-w-0">
+                                <div class="text-[13px] font-black leading-none ${isActive ? 'text-white' : 'text-slate-900'}">${stock.symbol}</div>
+                                <div class="text-[8px] font-bold truncate mt-0.5 ${isActive ? 'text-red-200' : 'text-slate-400'}" style="max-width:68px">${stock.fullName.substring(0,11)}</div>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Sparkline SVG -->
+                        <svg id="spark-${stock.symbol}" class="shrink-0 mx-1.5" width="52" height="20" viewBox="0 0 52 20">
+                            ${sparkInner}
+                        </svg>
+
+                        <!-- Price + Change -->
+                        <div class="text-right shrink-0">
+                            <div class="text-[12px] font-black leading-none ${isActive ? 'text-white' : 'text-slate-900'}">฿${stock.price.toFixed(2)}</div>
+                            <div class="text-[9px] font-black mt-0.5 ${isPositive ? (isActive ? 'text-white' : 'text-emerald-500') : (isActive ? 'text-white' : 'text-rose-500')}">${isPositive ? '+' : ''}${stock.changePercent.toFixed(2)}%</div>
+                        </div>
+                    </button>
+                `;
+            }).join('');
+
+            // Fetch sparklines for uncached symbols (async — paints when ready)
+            const symbols  = displayStocks.map(s => s.symbol);
+            const uncached = symbols.filter(sym => !APP.sparklines[sym]);
+            if (uncached.length) loadSparklines(uncached);
+            // Repaint already-cached (active-state colour may have changed)
+            symbols.filter(sym => APP.sparklines[sym]).forEach(paintSparkline);
+        }
+
+        function renderKPI() {
+            const container = document.getElementById('kpiContainer');
+            if (!APP.currentStock) return;
+            
+            const stock = APP.currentStock;
+            const change = stock.changePercent || 0;
+            const changeColor = change >= 0 ? 'emerald' : 'red';
+            const changeSign = change >= 0 ? '+' : '';
+            const volume = stock.volume || 0;
+            const formatVolume = (v) => {
+                if (v >= 1e9) return (v / 1e9).toFixed(2) + 'B';
+                if (v >= 1e6) return (v / 1e6).toFixed(2) + 'M';
+                if (v >= 1e3) return (v / 1e3).toFixed(2) + 'K';
+                return v.toLocaleString();
+            };
+
+            const rsi = stock.rsi || stock.rsi_14 || 0; 
+            const rsiColor = rsi > 70 ? 'red' : rsi < 30 ? 'emerald' : 'purple';
+            
+            const pe = stock.pe || 0;
+            const eps = stock.eps || 0;
+            const marketCap = calculateMarketCap(pe, eps, stock.price);
+
+            container.innerHTML = `
+                <div class="bg-${changeColor}-50 p-6 rounded-2xl border border-${changeColor}-100 shadow-sm text-center flex flex-col justify-center transition-all">
+                    <div class="text-3xl font-black text-${changeColor}-600">${changeSign}${change.toFixed(2)}%</div>
+                    <div class="text-[10px] font-black text-${changeColor}-700 uppercase mt-2 tracking-widest">% Change</div>
+                </div>
+
+                <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100 text-center flex flex-col justify-center transition-all">
+                    <div class="text-3xl font-black text-blue-700">${formatVolume(volume)}</div>
+                    <div class="text-[10px] font-black text-blue-600 uppercase mt-2 tracking-widest">Volume</div>
+                </div>
+
+                <div class="bg-${rsiColor === 'purple' ? 'purple-50' : rsiColor + '-50'} p-6 rounded-2xl border border-${rsiColor === 'purple' ? 'purple-100' : rsiColor + '-100'} text-center flex flex-col justify-center transition-all">
+                    <div class="text-3xl font-black text-${rsiColor === 'purple' ? 'purple-700' : rsiColor + '-600'}">${rsi.toFixed(2)}</div>
+                    <div class="text-[10px] font-black text-${rsiColor === 'purple' ? 'purple-600' : rsiColor + '-700'} uppercase mt-2 tracking-widest">RSI (14)</div>
+                </div>
+
+                <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 text-center flex flex-col justify-center transition-all shadow-sm">
+                    <div class="text-3xl font-black text-indigo-700">฿${marketCap}</div>
+                    <div class="text-[10px] font-black text-indigo-600 uppercase mt-2 tracking-widest">Market Cap</div>
+                    <div class="text-xs text-indigo-400 font-bold uppercase tracking-widest mt-1">Valuation</div>
+                </div>
+            `;
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // LIGHTWEIGHT CHARTS ENGINE
+        // ═══════════════════════════════════════════════════════════════
+
+        const LW = LightweightCharts;
+
+        // ── Palette ──────────────────────────────────────────────────
+        const C = {
+            up:       '#26a69a',           // teal-green (bullish)
+            down:     '#ef5350',           // soft-red   (bearish)
+            upVol:    'rgba(38,166,154,0.45)',
+            downVol:  'rgba(239,83,80,0.45)',
+            sma20:    '#3b82f6',           // blue
+            sma50:    '#f59e0b',           // amber
+            predict:  '#6366f1',           // indigo
+            ci:       'rgba(99,102,241,0.38)',
+            grid:     '#f1f5f9',
+            border:   '#e2e8f0',
+            text:     '#64748b',
+            bg:       '#ffffff',
+            cross:    '#94a3b8',
+        };
+
+        // ── SMA helper ───────────────────────────────────────────────
+        function calcSMA(candles, period) {
+            const out = [];
+            for (let i = period - 1; i < candles.length; i++) {
+                const avg = candles.slice(i - period + 1, i + 1)
+                    .reduce((s, c) => s + c.close, 0) / period;
+                out.push({ time: candles[i].time, value: parseFloat(avg.toFixed(4)) });
+            }
+            return out;
+        }
+
+        // ── Volume formatter ─────────────────────────────────────────
+        function fmtVol(v) {
+            if (v >= 1e9) return (v / 1e9).toFixed(2) + 'B';
+            if (v >= 1e6) return (v / 1e6).toFixed(2) + 'M';
+            if (v >= 1e3) return (v / 1e3).toFixed(2) + 'K';
+            return String(v);
+        }
+
+        // ── Base chart options ────────────────────────────────────────
+        function lwOpts(height) {
+            return {
+                height,
+                autoSize: true,
+                layout: {
+                    background:  { color: C.bg },
+                    textColor:   C.text,
+                    fontFamily:  "'Inter', -apple-system, sans-serif",
+                    fontSize:    11,
+                },
+                grid: {
+                    vertLines: { color: C.grid },
+                    horzLines: { color: C.grid },
+                },
+                crosshair: {
+                    mode: LW.CrosshairMode.Normal,
+                    vertLine: { color: C.cross, labelBackgroundColor: '#1e293b' },
+                    horzLine: { color: C.cross, labelBackgroundColor: '#1e293b' },
+                },
+                rightPriceScale: {
+                    borderColor:  C.border,
+                    scaleMargins: { top: 0.06, bottom: 0.22 },
+                },
+                timeScale: {
+                    borderColor:    C.border,
+                    timeVisible:    false,
+                    secondsVisible: false,
+                    tickMarkFormatter: (t, tickType) => {
+                        const dt = luxon.DateTime.fromISO(t);
+                        // TickMarkType: 0=Year, 1=Month, 2=DayOfMonth, 3=Time, 4=TimeWithSeconds
+                        if (tickType === 0) return dt.toFormat('yyyy');        // year boundary
+                        if (tickType === 1) return dt.toFormat('MMM yyyy');    // month boundary
+                        return dt.toFormat('d MMM');                           // day ticks → "12 Mar"
+                    },
+                },
+                handleScroll: { mouseWheel: true, pressedMouseMove: true },
+                handleScale:  { axisPressedMouseMove: true, mouseWheel: true, pinch: true },
+            };
+        }
+
+        // ── Custom tooltip factory ────────────────────────────────────
+        function makeTooltip(container) {
+            container.style.position = 'relative';
+            const d = document.createElement('div');
+            d.style.cssText = [
+                'position:absolute','top:12px','left:12px','z-index:100',
+                'pointer-events:none','display:none',
+                'background:rgba(15,23,42,0.92)',
+                'backdrop-filter:blur(10px)',
+                '-webkit-backdrop-filter:blur(10px)',
+                'border:1px solid rgba(255,255,255,0.09)',
+                'border-radius:10px','padding:10px 14px',
+                'box-shadow:0 8px 32px rgba(0,0,0,0.3)',
+                "font-family:'Inter',sans-serif",'font-size:11px',
+                'min-width:190px','line-height:1.5',
+            ].join(';');
+            container.appendChild(d);
+            return d;
+        }
+
+        // ── Tooltip row helper ────────────────────────────────────────
+        function tipRow(label, val, color = '#e2e8f0') {
+            return `<span style="color:#64748b;font-weight:600">${label}</span>`
+                 + `<span style="color:${color};font-weight:700">${val}</span>`;
+        }
+
+        // ── Fetch OHLCV (Dashboard + Predict share this) ─────────────
+        async function fetchOHLCV(symbol, months = 12) {
+            try {
+                const from = luxon.DateTime.now().minus({ months }).toISODate();
+                const sym  = symbol.trim().toUpperCase();
+
+                const { data: hist, error: hErr } = await APP.supabaseClient
+                    .from('stock_historical')
+                    .select('date, open_price, high_price, low_price, close_price, volume')
+                    .eq('symbol', sym)
+                    .gte('date', from)
+                    .order('date', { ascending: true });
+                if (hErr) throw hErr;
+
+                const candles = (hist || []).map(d => ({
+                    time:   d.date,
+                    open:   parseFloat(d.open_price),
+                    high:   parseFloat(d.high_price),
+                    low:    parseFloat(d.low_price),
+                    close:  parseFloat(d.close_price),
+                    volume: parseInt(d.volume) || 0,
+                }));
+
+                // Hybrid: merge real-time bar
+                const { data: rt, error: rtErr } = await APP.supabaseClient
+                    .from('stock_realtime')
+                    .select('open_price,high_price,low_price,last_price,volume,updated_at')
+                    .eq('symbol', sym)
+                    .single();
+
+                if (!rtErr && rt) {
+                    const today = luxon.DateTime.fromISO(rt.updated_at).toISODate();
+                    const bar   = {
+                        time:   today,
+                        open:   parseFloat(rt.open_price),
+                        high:   parseFloat(rt.high_price),
+                        low:    parseFloat(rt.low_price),
+                        close:  parseFloat(rt.last_price),
+                        volume: parseInt(rt.volume) || 0,
+                    };
+                    const last = candles[candles.length - 1];
+                    if (last && last.time === today) { Object.assign(last, bar); }
+                    else if (!last || today > last.time) { candles.push(bar); }
+                }
+                return candles;
+            } catch (err) {
+                console.error('❌ fetchOHLCV:', err);
+                return [];
+            }
+        }
+
+        // ════════════════════════════════════════════════════════════
+        // renderChart — Dashboard page (Candlestick + Volume + SMA)
+        // ════════════════════════════════════════════════════════════
+        async function renderChart() {
+            const chartEl = document.getElementById('mainChart');
+            if (!APP.currentStock || !chartEl) return;
+
+            if (APP.lwcChart) { APP.lwcChart.remove(); APP.lwcChart = null; }
+
+            const symbol      = APP.currentStock.symbol.trim().toUpperCase();
+            const displayName = getFullCompanyName(symbol).replace(' PUBLIC COMPANY LIMITED', '');
+            const isPositive  = APP.currentStock.changePercent >= 0;
+
+            chartEl.innerHTML = `
+                <div class="flex justify-between items-start mb-4 animate-in">
+                    <div>
+                        <h2 class="text-4xl font-black text-slate-900 uppercase">${symbol}</h2>
+                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">
+                            ${displayName} &nbsp;·&nbsp; 1-YEAR · SET100
+                        </p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-5xl font-black text-slate-900">฿${APP.currentStock.price.toFixed(2)}</div>
+                        <div class="text-xl font-black mt-1 ${isPositive ? 'text-emerald-500' : 'text-red-600'}">
+                            ${isPositive ? '+' : ''}${APP.currentStock.changePercent.toFixed(2)}%
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-5 mb-3 flex-wrap">
+                    <span class="flex items-center gap-1.5 text-[10px] font-black text-slate-500 uppercase tracking-wider">
+                        <span class="inline-block w-3 h-3 rounded-sm" style="background:#26a69a"></span>Bullish
+                    </span>
+                    <span class="flex items-center gap-1.5 text-[10px] font-black text-slate-500 uppercase tracking-wider">
+                        <span class="inline-block w-3 h-3 rounded-sm" style="background:#ef5350"></span>Bearish
+                    </span>
+                    <span class="flex items-center gap-1.5 text-[10px] font-black text-slate-500 uppercase tracking-wider">
+                        <span class="inline-block w-7 h-0.5" style="background:#3b82f6"></span>SMA 20
+                    </span>
+                    <span class="flex items-center gap-1.5 text-[10px] font-black text-slate-500 uppercase tracking-wider">
+                        <span class="inline-block w-7 h-0.5" style="background:#f59e0b"></span>SMA 50
+                    </span>
+                </div>
+                <div id="lw_main_${symbol}" class="relative rounded-xl overflow-hidden border border-slate-100" style="height:460px"></div>
+            `;
+
+            const candles = await fetchOHLCV(symbol, 12);
+            if (!candles.length) return;
+
+            const el    = document.getElementById(`lw_main_${symbol}`);
+            const chart = LW.createChart(el, lwOpts(460));
+            APP.lwcChart = chart;
+
+            // Candlestick
+            const candleSeries = chart.addCandlestickSeries({
+                upColor: C.up, downColor: C.down,
+                borderUpColor: C.up, borderDownColor: C.down,
+                wickUpColor: C.up, wickDownColor: C.down,
+            });
+            candleSeries.setData(candles);
+
+            // Volume (bottom 22%)
+            const volSeries = chart.addHistogramSeries({
+                priceScaleId: 'vol',
+                priceFormat:  { type: 'volume' },
+            });
+            chart.priceScale('vol').applyOptions({
+                scaleMargins: { top: 0.80, bottom: 0 },
+            });
+            volSeries.setData(candles.map(c => ({
+                time:  c.time,
+                value: c.volume,
+                color: c.close >= c.open ? C.upVol : C.downVol,
+            })));
+
+            // SMA 20
+            const sma20 = chart.addLineSeries({
+                color: C.sma20, lineWidth: 1.5,
+                priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
+            });
+            sma20.setData(calcSMA(candles, 20));
+
+            // SMA 50
+            const sma50 = chart.addLineSeries({
+                color: C.sma50, lineWidth: 1.5,
+                priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
+            });
+            sma50.setData(calcSMA(candles, 50));
+
+            // Show last 3 months
+            const last3m = luxon.DateTime.fromISO(candles[candles.length - 1].time).minus({ months: 3 }).toISODate();
+            chart.timeScale().setVisibleRange({ from: last3m, to: candles[candles.length - 1].time });
+
+            // Custom Tooltip
+            const tip = makeTooltip(el);
+            chart.subscribeCrosshairMove(p => {
+                if (!p.time || !p.point || p.point.x < 0 || p.point.y < 0) {
+                    tip.style.display = 'none'; return;
+                }
+                const c   = p.seriesData.get(candleSeries);
+                const vol = p.seriesData.get(volSeries);
+                if (!c) { tip.style.display = 'none'; return; }
+
+                const up   = c.close >= c.open;
+                const col  = up ? C.up : C.down;
+                const dt   = luxon.DateTime.fromISO(p.time).toFormat('dd MMM yyyy');
+
+                tip.innerHTML = `
+                    <div style="color:#94a3b8;font-size:10px;font-weight:800;letter-spacing:.1em;margin-bottom:7px;text-transform:uppercase">${dt} · ${symbol}</div>
+                    <div style="display:grid;grid-template-columns:30px 1fr;gap:3px 8px">
+                        ${tipRow('O', '฿' + c.open.toFixed(2), col)}
+                        ${tipRow('H', '฿' + c.high.toFixed(2), '#34d399')}
+                        ${tipRow('L', '฿' + c.low.toFixed(2),  '#f87171')}
+                        ${tipRow('C', (up ? '▲ ' : '▼ ') + '฿' + c.close.toFixed(2), col)}
+                        ${vol ? tipRow('V', fmtVol(vol.value), '#a78bfa') : ''}
+                    </div>
+                `;
+                const { width } = el.getBoundingClientRect();
+                tip.style.left  = p.point.x > width / 2 ? '12px' : 'auto';
+                tip.style.right = p.point.x > width / 2 ? 'auto' : '12px';
+                tip.style.display = 'block';
+            });
+        }
+
+        // ── Sidebar stock click — updates Dashboard + pre-loads Predict ──
+        /** Smooth-scroll the page back up to the main chart after switching stocks */
+        function scrollToChart() {
+            const chart = document.getElementById('mainChart');
+            if (chart) {
+                chart.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            }
+            // Fallback: scroll the overflow-y container that wraps all pages to top
+            const scroller = document.querySelector('.overflow-y-auto');
+            if (scroller) scroller.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function selectStockSidebar(symbol) {
+            const stock = APP.stocks.find(s => s.symbol === symbol);
+            if (!stock) return;
+            APP.currentStock = stock;
+            // If on Predict page, update prediction view (no scroll needed there)
+            if (APP.currentPage === 'predict') {
+                choosePredictStock(symbol);
+            } else {
+                renderDashboard();
+                scrollToChart();
+            }
+        }
+
+        async function selectStock(symbol) {
+            APP.currentStock = APP.stocks.find(s => s.symbol === symbol);
+            renderDashboard();
+            scrollToChart();
+        }
+
+        function renderTable() {
+            const tableEl = document.getElementById('stockTable');
+            if (!tableEl) return;
+
+            tableEl.innerHTML = APP.stocks.map(stock => {
+                const isPositive = stock.changePercent >= 0;
+                const changeColor = isPositive ? 'text-emerald-500' : 'text-red-600';
+                const isCurrent = APP.currentStock && APP.currentStock.symbol === stock.symbol;
+
+                return `
+                    <tr onclick="selectStock('${stock.symbol}')" class="hover:bg-slate-50/80 transition-colors group cursor-pointer ${isCurrent ? 'bg-red-50/30' : ''}">
+                        <td class="px-6 py-4 text-left">
+                            <span class="text-xs font-black ${isCurrent ? 'text-red-600' : 'text-slate-900'} uppercase tracking-wider">${stock.symbol}</span>
+                        </td>
+                        
+                        <td class="px-6 py-4 text-center">
+                            <span class="text-[11px] font-bold text-slate-500 uppercase line-clamp-1">
+                                ${stock.fullName || '-'}
+                            </span>
+                        </td>
+
+                        <td class="px-6 py-4 text-center">
+                            <span class="text-xs font-black ${changeColor} tracking-tight">
+                                ${isPositive ? '+' : ''}${stock.changePercent.toFixed(2)}%
+                            </span>
+                        </td>
+                        
+                        <td class="px-6 py-4 text-right">
+                            <span class="text-xs font-black text-slate-900">฿${stock.price.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                        </td>
+                        
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function switchPage(pageName) {
+            APP.currentPage = pageName;
+
+            document.querySelectorAll('.page-content').forEach(el => el.classList.remove('active'));
+            const targetPage = document.getElementById(`page-${pageName}`);
+            if (targetPage) targetPage.classList.add('active');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-red-600', 'text-white', 'shadow-lg');
+                btn.classList.add('text-slate-400', 'hover:bg-slate-50');
+            });
+            
+            const activeNav = document.getElementById(`nav-${pageName}`);
+            if (activeNav) {
+                activeNav.classList.add('bg-red-600', 'text-white', 'shadow-lg');
+                activeNav.classList.remove('text-slate-400', 'hover:bg-slate-50');
+            }
+
+            if (pageName === 'news' && APP.allNews.length === 0) {
+                loadNews();
+            }
+
+            if (pageName === 'predict') {
+                if (!APP.predictSymbols) {
+                    console.log("🚀 Starting Prediction Engine...");
+                    initPredictPage();
+                }
+            }
+        }
+
+       
+        // ══════════════════════════════════════════════════════════════
+        // SET100
+        // ══════════════════════════════════════════════════════════════
+        const SET100_SYMBOLS = [
+            "AAV","ADVANC","AEONTS","AMATA","AOT","AP","AURA","AWC","BA","BAM",
+            "BANPU","BBL","BCH","BCP","BCPG","BDMS","BEM","BGRIM","BH","BJC",
+            "BLA","BTG","BTS","CBG","CCET","CENTEL","CHG","CK","COM7","CPALL",
+            "CPF","CPN","CRC","DELTA","DOHOME","EA","EGCO","ERW","GFPT","GLOBAL",
+            "GPSC","GULF","GUNKUL","HANA","HMPRO","ICHI","IRPC","IVL","JAS","JMART",
+            "JMT","JTS","KBANK","KCE","KKP","KTB","KTC","LH","M","MEGA",
+            "MINT","MOSHI","MTC","OR","OSP","PLANB","PR9","PRM","PTG","PTT",
+            "PTTEP","PTTGC","QH","RATCH","RCL","SAWAD","SCB","SCC","SCGP","SIRI",
+            "SISB","SJWD","SPALI","SPRC","STA","STECON","STGT","TASCO","TCAP","TFG",
+            "TIDLOR","TISCO","TLI","TOA","TOP","TRUE","TTB","TU","VGI","WHA"
+        ];
+
+        
+        function createAutocomplete({ inputId, dropId, symbols, maxItems = 10,
+                                      onSelect, getStock, getName, keepValue = false }) {
+            const input = document.getElementById(inputId);
+            const drop  = document.getElementById(dropId);
+            if (!input || !drop) return;
+
+            let activeIdx = -1;   // keyboard cursor
+
+            // ── Search + rank ─────────────────────────────────────────
+            function rank(sym, term) {
+                const s = sym.toLowerCase();
+                if (s === term)          return 0;   // exact match
+                if (s.startsWith(term))  return 1;   // prefix
+                return 2;                             // contains
+            }
+
+            function getMatches(term) {
+                if (!term) return symbols.slice(0, maxItems);
+                const t = term.toLowerCase();
+                return symbols
+                    .filter(s => s.toLowerCase().includes(t))
+                    .sort((a, b) => rank(a, t) - rank(b, t))
+                    .slice(0, maxItems);
+            }
+
+            // ── Highlight matching chars ──────────────────────────────
+            function highlight(sym, term) {
+                if (!term) return sym;
+                const t = term.toUpperCase();
+                const i = sym.toUpperCase().indexOf(t);
+                if (i === -1) return sym;
+                return sym.slice(0, i) + '<mark>' + sym.slice(i, i + t.length) + '</mark>' + sym.slice(i + t.length);
+            }
+
+            // ── Render dropdown ───────────────────────────────────────
+            function render(term) {
+                const matches = getMatches(term);
+                activeIdx = -1;
+
+                if (!matches.length) {
+                    drop.innerHTML = `<div class="ac-empty">ไม่พบหุ้น "${term.toUpperCase()}"</div>`;
+                    drop.classList.add('open');
+                    return;
+                }
+
+                const header = term
+                    ? `<div class="ac-drop-header">ผลการค้นหา "${term.toUpperCase()}" · ${matches.length} รายการ</div>`
+                    : `<div class="ac-drop-header">SET100 · ${symbols.length} SYMBOLS</div>`;
+
+                drop.innerHTML = header + matches.map((sym, i) => {
+                    const st      = getStock ? getStock(sym) : null;
+                    const isUp    = st ? st.changePercent >= 0 : true;
+                    const price   = st ? `<span class="ac-price">฿${st.price.toFixed(2)}</span>` : '';
+                    const chg     = st ? `<span class="ac-chg" style="color:${isUp?'#10b981':'#ef4444'}">${isUp?'+':''}${st.changePercent.toFixed(2)}%</span>` : '';
+                    const name    = getName ? getName(sym) : '';
+                    const symHtml = highlight(sym, term);
+                    return `<div class="ac-item" data-idx="${i}" data-sym="${sym}" onmousedown="event.preventDefault()">
+                        <div class="ac-left">
+                            <span class="ac-sym">${symHtml}</span>
+                            ${name ? `<span class="ac-name">${name}</span>` : ''}
+                        </div>
+                        <div class="ac-right">${price}${chg}</div>
+                    </div>`;
+                }).join('');
+
+                // Attach click listeners
+                drop.querySelectorAll('.ac-item').forEach(el => {
+                    el.addEventListener('mousedown', () => select(el.dataset.sym));
+                });
+
+                drop.classList.add('open');
+            }
+
+            // ── Select a symbol ───────────────────────────────────────
+            function select(sym) {
+                if (keepValue) { input.value = sym; }
+                else           { input.value = '';  }
+                drop.classList.remove('open');
+                activeIdx = -1;
+                if (onSelect) onSelect(sym);
+            }
+
+            // ── Keyboard navigation ───────────────────────────────────
+            function getItems() { return drop.querySelectorAll('.ac-item'); }
+
+            function setActive(idx) {
+                const items = getItems();
+                items.forEach(el => el.classList.remove('ac-active'));
+                if (idx >= 0 && idx < items.length) {
+                    items[idx].classList.add('ac-active');
+                    items[idx].scrollIntoView({ block: 'nearest' });
+                }
+            }
+
+            input.addEventListener('keydown', e => {
+                const items = getItems();
+                if (!drop.classList.contains('open')) {
+                    if (e.key === 'ArrowDown') { render(input.value.trim()); return; }
+                    return;
+                }
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    activeIdx = Math.min(activeIdx + 1, items.length - 1);
+                    setActive(activeIdx);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    activeIdx = Math.max(activeIdx - 1, 0);
+                    setActive(activeIdx);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (activeIdx >= 0 && items[activeIdx]) {
+                        select(items[activeIdx].dataset.sym);
+                    } else {
+                        // กด Enter โดยไม่ highlight → ใช้ตัวแรกที่ match ถ้ามี
+                        const term = input.value.trim().toUpperCase();
+                        const exact = SET100_SYMBOLS.find(s => s === term);
+                        if (exact) select(exact);
+                        else if (items[0]) select(items[0].dataset.sym);
+                    }
+                } else if (e.key === 'Escape') {
+                    drop.classList.remove('open');
+                    input.blur();
+                }
+            });
+
+            // ── Input event ───────────────────────────────────────────
+            input.addEventListener('input', e => {
+                const term = e.target.value.trim();
+                render(term);
+                if (typeof onInput === 'function') onInput(term);
+            });
+
+            // ── Focus → show dropdown ─────────────────────────────────
+            input.addEventListener('focus', () => {
+                render(input.value.trim());
+            });
+
+            // ── Blur → hide ───────────────────────────────────────────
+            input.addEventListener('blur', () => {
+                setTimeout(() => drop.classList.remove('open'), 180);
+            });
+
+            // ── Click outside ─────────────────────────────────────────
+            document.addEventListener('click', e => {
+                if (!input.contains(e.target) && !drop.contains(e.target)) {
+                    drop.classList.remove('open');
+                }
+            });
+        }
+
+        // ══════════════════════════════════════════════════════════════
+        // PAGE: DASHBOARD — Search setup
+        // ══════════════════════════════════════════════════════════════
+        (function setupSearch() {
+            createAutocomplete({
+                inputId  : 'searchInput',
+                dropId   : 'searchDropdown',
+                symbols  : SET100_SYMBOLS,
+                maxItems : 12,
+                keepValue: false,
+                getStock : sym => APP.stocks.find(s => s.symbol === sym) || null,
+                getName  : sym => {
+                    const s = APP.stocks.find(st => st.symbol === sym);
+                    return s ? s.fullName.replace(' PUBLIC COMPANY LIMITED','').replace(' PCL','') : '';
+                },
+                onSelect : sym => {
+                    const stock = APP.stocks.find(s => s.symbol === sym);
+                    if (!stock) return;
+                    APP.currentStock     = stock;
+                    APP._sidebarSearching = false;
+                    APP.filteredStocks   = [...APP.stocks];
+                    const titleEl    = document.getElementById('listTitle');
+                    const subtitleEl = document.getElementById('listSubtitle');
+                    if (titleEl)    { titleEl.textContent = 'Top 10'; titleEl.style.color = '#f59e0b'; }
+                    if (subtitleEl) subtitleEl.textContent = 'Most Active';
+                    renderDashboard();
+                    scrollToChart();
+                },
+            });
+
+            // Also filter sidebar list while typing (retain existing feature)
+            document.getElementById('searchInput')?.addEventListener('input', e => {
+                const term = e.target.value.trim().toLowerCase();
+                APP._sidebarSearching = !!term;
+                APP.filteredStocks = term
+                    ? APP.stocks.filter(s => s.symbol.toLowerCase().includes(term) || s.fullName.toLowerCase().includes(term))
+                    : [...APP.stocks];
+                const titleEl    = document.getElementById('listTitle');
+                const subtitleEl = document.getElementById('listSubtitle');
+                if (titleEl)    { titleEl.textContent = term ? 'Search' : 'Top 10'; titleEl.style.color = term ? '#94a3b8' : '#f59e0b'; }
+                if (subtitleEl) subtitleEl.textContent = term ? 'Results' : 'Most Active';
+                renderStockList();
+            });
+        })();
+
+        // ── compat shim สำหรับ inline onmousedown เดิมที่ยังอยู่ ──
+        function selectStockFromSearch(symbol) {
+            const stock = APP.stocks.find(s => s.symbol === symbol);
+            if (!stock) return;
+            APP.currentStock      = stock;
+            APP._sidebarSearching = false;
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchDropdown').classList.remove('open');
+            const titleEl    = document.getElementById('listTitle');
+            const subtitleEl = document.getElementById('listSubtitle');
+            if (titleEl)    { titleEl.textContent = 'Top 10'; titleEl.style.color = '#f59e0b'; }
+            if (subtitleEl) subtitleEl.textContent = 'Most Active';
+            APP.filteredStocks = [...APP.stocks];
+            renderDashboard();
+            scrollToChart();
+        }
+
+        // ══════════════════════════════════════════════════════════════
+        // PAGE: NEWS — Search setup
+        // ══════════════════════════════════════════════════════════════
+        (function setupNewsSearch() {
+            createAutocomplete({
+                inputId  : 'newsSearchInput',
+                dropId   : 'newsDropdown',
+                symbols  : SET100_SYMBOLS,
+                maxItems : 10,
+                keepValue: true,   // เก็บชื่อหุ้นไว้ในช่อง input หลังเลือก
+                getStock : sym => APP.stocks.find(s => s.symbol === sym) || null,
+                getName  : sym => {
+                    const s = APP.stocks.find(st => st.symbol === sym);
+                    return s ? s.fullName.replace(' PUBLIC COMPANY LIMITED','').replace(' PCL','') : '';
+                },
+                onSelect : sym => {
+                    // Filter news ตาม symbol ที่เลือก
+                    APP.filteredNews = (APP.allNews || []).filter(n =>
+                        n.symbol?.toUpperCase() === sym.toUpperCase()
+                    );
+                    renderNews();
+                },
+            });
+
+            // Also support free-text search while typing (ตาม symbol หรือ title)
+            document.getElementById('newsSearchInput')?.addEventListener('input', e => {
+                const term = e.target.value.trim().toLowerCase();
+                if (!term) {
+                    APP.filteredNews = [...(APP.allNews || [])];
+                } else {
+                    APP.filteredNews = (APP.allNews || []).filter(n =>
+                        n.symbol?.toLowerCase().includes(term) ||
+                        n.title?.toLowerCase().includes(term)
+                    );
+                }
+                renderNews();
+            });
+        })();
+
+        // ── Horizon pill switcher ────────────────────────────────────
+        function setHorizon(h) {
+            APP.predictHorizon = h;
+            ['7D','15D','30D'].forEach(id => {
+                const el = document.getElementById(`pill-${id}`);
+                if (!el) return;
+                el.classList.toggle('active', id === h);
+            });
+            if (APP.predictSymbol) updatePredictUI(APP.predictSymbol, h);
+        }
+
+        // ══════════════════════════════════════════════════════════════
+        // PAGE: PREDICT — Search setup  (wired in initPredictPage below)
+        // ══════════════════════════════════════════════════════════════
+        function choosePredictStock(sym) {
+            APP.predictSymbol = sym;
+            const inp = document.getElementById('predictSearchInput');
+            if (inp) inp.value = sym;
+            const dd = document.getElementById('predictStockDropdown');
+            if (dd) dd.classList.remove('open');
+            updatePredictUI(sym, APP.predictHorizon || '7D');
+        }
+
+        // ─── fetchHistoricalForPredict ─────────────────────────────────
+        // reuse fetchOHLCV ที่ define ไว้แล้ว — แค่จำกัด months ให้สั้นลง
+        async function fetchHistoricalForPredict(symbol, days = 60) {
+            // คำนวณเดือนจาก days เพื่อส่งให้ fetchOHLCV
+            const months = Math.ceil(days / 21) + 1;
+            const all    = await fetchOHLCV(symbol.trim().toUpperCase(), months);
+            return all.slice(-days); // ตัดเหลือแค่ N วันล่าสุด
+        }
+
+       
+        async function renderPredictChart(symbol, futurePred) {
+            const container = document.getElementById('predictCanvas');
+            if (!container) return;
+
+            if (APP.predictLwcChart) { APP.predictLwcChart.remove(); APP.predictLwcChart = null; }
+            container.innerHTML = '';
+
+            // ── ① Fetch candles (historical + realtime merged) ───────────
+            const rawCandles = await fetchHistoricalForPredict(symbol, 60);
+            if (!rawCandles || !rawCandles.length) {
+                console.warn('[renderPredictChart] ❌ ไม่พบข้อมูล candles สำหรับ', symbol);
+                container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:12px;font-weight:700">ไม่พบข้อมูลราคาสำหรับ ${symbol}</div>`;
+                return;
+            }
+
+            // ── ② Sanitise candles ───────────────────────────────────────
+            // Sort ascending, deduplicate by time (ป้องกัน LWC crash จาก duplicate time)
+            const seenTimes = new Set();
+            const candles = rawCandles
+                .filter(c => {
+                    if (!c.time || isNaN(c.open) || isNaN(c.close) || isNaN(c.high) || isNaN(c.low)) return false;
+                    if (seenTimes.has(c.time)) return false;
+                    seenTimes.add(c.time);
+                    return true;
+                })
+                .sort((a, b) => a.time < b.time ? -1 : 1);
+
+            if (!candles.length) {
+                console.warn('[renderPredictChart] ❌ candles ว่างหลัง sanitise');
+                return;
+            }
+
+            // ── ③ Anchor point = candles[last] = realtime วันนี้ ─────────
+            const anchorCandle = candles[candles.length - 1];
+            const anchorPoint  = { time: anchorCandle.time, value: anchorCandle.close };
+
+            // ── ④ Sanitise futurePred ────────────────────────────────────
+            // Sort ascending, deduplicate, ตัดค่า null/NaN ออก
+            const seenPredTimes = new Set();
+            const cleanFuture = (futurePred || [])
+                .filter(d => {
+                    if (!d.prediction_date) return false;
+                    if (isNaN(parseFloat(d.predicted_price))) return false;
+                    if (seenPredTimes.has(d.prediction_date)) return false;
+                    seenPredTimes.add(d.prediction_date);
+                    return true;
+                })
+                .sort((a, b) => a.prediction_date < b.prediction_date ? -1 : 1);
+
+            // ── ⑤ Build line series data ─────────────────────────────────
+            // predLine: [anchor, ...cleanFuture]  → เส้นประลากต่อจากวันนี้
+            const predLine  = [anchorPoint, ...cleanFuture.map(d => ({
+                time: d.prediction_date, value: parseFloat(d.predicted_price),
+            }))];
+            const upperLine = [anchorPoint, ...cleanFuture.map(d => ({
+                time: d.prediction_date, value: parseFloat(d.upper_bound),
+            }))];
+            const lowerLine = [anchorPoint, ...cleanFuture.map(d => ({
+                time: d.prediction_date, value: parseFloat(d.lower_bound),
+            }))];
+
+            // ── ⑥ DEBUG console.log ──────────────────────────────────────
+            console.group(`[PredictChart Debug] ${symbol}`);
+            console.log('📊 candles (Actual series) — total:', candles.length);
+            console.log('  First:', candles[0]);
+            console.log('  Last (anchor):', anchorCandle);
+            console.log('📈 futurePred (raw from DB) — total:', (futurePred||[]).length);
+            console.log('  cleanFuture (after filter+sort) — total:', cleanFuture.length);
+            if (cleanFuture.length) {
+                console.log('  First:', cleanFuture[0]);
+                console.log('  Last:', cleanFuture[cleanFuture.length - 1]);
+            }
+            console.log('🔵 predLine (เส้นประ) — total points:', predLine.length, predLine);
+            console.log('🟣 upperLine — total:', upperLine.length);
+            console.log('🟣 lowerLine — total:', lowerLine.length);
+            if (cleanFuture.length === 0) {
+                console.warn('⚠️  cleanFuture ว่าง → กราฟจะแสดงเฉพาะ anchor point ไม่มีเส้นประ');
+            }
+            console.groupEnd();
+
+            // ── ⑦ Create LWC chart ───────────────────────────────────────
+            const chart = LW.createChart(container, {
+                ...lwOpts(350),
+                rightPriceScale: {
+                    borderColor:  C.border,
+                    scaleMargins: { top: 0.05, bottom: 0.22 },
+                },
+            });
+            APP.predictLwcChart = chart;
+
+            // Candlestick (เส้นทึบ — historical + realtime วันนี้)
+            const candleSeries = chart.addCandlestickSeries({
+                upColor: C.up, downColor: C.down,
+                borderUpColor: C.up, borderDownColor: C.down,
+                wickUpColor:   C.up, wickDownColor:   C.down,
+            });
+            candleSeries.setData(candles);
+
+            // Volume bar
+            const volSeries = chart.addHistogramSeries({
+                priceScaleId: 'vol', priceFormat: { type: 'volume' },
+            });
+            chart.priceScale('vol').applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } });
+            volSeries.setData(candles.map(c => ({
+                time: c.time, value: c.volume,
+                color: c.close >= c.open ? C.upVol : C.downVol,
+            })));
+
+            // SMA 20
+            const sma20 = chart.addLineSeries({
+                color: C.sma20, lineWidth: 1.5,
+                priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
+            });
+            sma20.setData(calcSMA(candles, 20));
+
+            // Upper 80% CI (เส้นประ)
+            const upperSeries = chart.addLineSeries({
+                color: C.ci, lineWidth: 1,
+                lineStyle: LW.LineStyle.Dashed,
+                priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
+            });
+            upperSeries.setData(upperLine);
+
+            // Lower 80% CI (เส้นประ)
+            const lowerSeries = chart.addLineSeries({
+                color: C.ci, lineWidth: 1,
+                lineStyle: LW.LineStyle.Dashed,
+                priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
+            });
+            lowerSeries.setData(lowerLine);
+
+            // AI Forecast median (เส้นประหนา)
+            const predSeries = chart.addLineSeries({
+                color: C.predict, lineWidth: 2,
+                lineStyle: LW.LineStyle.LargeDashed,
+                priceLineVisible: false,
+                lastValueVisible: true,
+                crosshairMarkerRadius: 4,
+                crosshairMarkerBackgroundColor: C.predict,
+            });
+            predSeries.setData(predLine);
+
+            // ── ⑧ Visible range: 30 days back → last forecast day ────────
+            const from = luxon.DateTime.fromISO(anchorCandle.time).minus({ days: 30 }).toISODate();
+            const to   = cleanFuture.length
+                ? cleanFuture[cleanFuture.length - 1].prediction_date
+                : anchorCandle.time;
+            chart.timeScale().setVisibleRange({ from, to });
+
+            // ── ⑨ Custom Tooltip ─────────────────────────────────────────
+            const tip = makeTooltip(container);
+            chart.subscribeCrosshairMove(p => {
+                if (!p.time || !p.point || p.point.x < 0) { tip.style.display = 'none'; return; }
+                const c    = p.seriesData.get(candleSeries);
+                const pred = p.seriesData.get(predSeries);
+                const upp  = p.seriesData.get(upperSeries);
+                const low  = p.seriesData.get(lowerSeries);
+                const vol  = p.seriesData.get(volSeries);
+                const dt   = luxon.DateTime.fromISO(p.time).toFormat('dd MMM yyyy');
+
+                let rows = '';
+                if (c) {
+                    const up  = c.close >= c.open;
+                    const col = up ? C.up : C.down;
+                    rows += tipRow('O', '฿' + c.open.toFixed(2),  col)
+                          + tipRow('H', '฿' + c.high.toFixed(2),  '#34d399')
+                          + tipRow('L', '฿' + c.low.toFixed(2),   '#f87171')
+                          + tipRow('C', (up ? '▲ ' : '▼ ') + '฿' + c.close.toFixed(2), col);
+                    if (vol) rows += tipRow('V', fmtVol(vol.value), '#a78bfa');
+                }
+                if (pred) rows += tipRow('AI', '฿' + pred.value.toFixed(2), '#818cf8');
+                if (upp && low)
+                    rows += tipRow('CI', `฿${low.value.toFixed(2)}–฿${upp.value.toFixed(2)}`, '#a5b4fc');
+
+                tip.innerHTML = `
+                    <div style="color:#94a3b8;font-size:10px;font-weight:800;letter-spacing:.1em;margin-bottom:7px;text-transform:uppercase">${dt}</div>
+                    <div style="display:grid;grid-template-columns:30px 1fr;gap:3px 8px">${rows}</div>
+                `;
+                const { width } = container.getBoundingClientRect();
+                tip.style.left  = p.point.x > width / 2 ? '12px' : 'auto';
+                tip.style.right = p.point.x > width / 2 ? 'auto' : '12px';
+                tip.style.display = 'block';
+            });
+        }
+
+        // ══════════════════════════════════════════════════════════════
+        // PREDICT PAGE — Searchable Dropdown
+        // ══════════════════════════════════════════════════════════════
+        async function initPredictPage() {
+            try {
+                // ดึง unique symbols จาก DB (เป็น superset ของ SET100_SYMBOLS ที่มีข้อมูลพยากรณ์)
+                const { data, error } = await APP.supabaseClient
+                    .from('stock_predictions_v3')
+                    .select('symbol')
+                    .order('symbol', { ascending: true });
+                if (error) throw error;
+
+                const dbSymbols = [...new Set((data || []).map(d => d.symbol.trim().toUpperCase()))].sort();
+                // ใช้ SET100_SYMBOLS ครบ 100 ตัวเสมอ — ไม่ filter ตาม DB
+                // เพื่อให้ผู้ใช้ค้นหาหุ้นได้ครบ แม้บางตัวยังไม่มีข้อมูลพยากรณ์
+                const predictSymbols = SET100_SYMBOLS;
+                APP.predictSymbols   = predictSymbols;
+
+                // Wire up createAutocomplete สำหรับ Predict page
+                createAutocomplete({
+                    inputId  : 'predictSearchInput',
+                    dropId   : 'predictStockDropdown',
+                    symbols  : predictSymbols,
+                    maxItems : 15,
+                    keepValue: true,   // เก็บ sym ไว้ใน input (แสดง symbol ที่เลือก)
+                    getStock : sym => APP.stocks.find(s => s.symbol === sym) || null,
+                    getName  : sym => {
+                        const s = APP.stocks.find(st => st.symbol === sym);
+                        return s ? s.fullName.replace(' PUBLIC COMPANY LIMITED','').replace(' PCL','') : '';
+                    },
+                    onSelect : sym => choosePredictStock(sym),
+                });
+
+                // Auto-load หุ้นแรกที่มีพยากรณ์
+                if (predictSymbols.length > 0) {
+                    choosePredictStock(predictSymbols[0]);
+                }
+            } catch (err) {
+                console.error('❌ initPredictPage Error:', err);
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════
+        // updatePredictUI — master update function
+        // Updates Hero metrics, Chart, Forecast Table, AI Insights
+        //
+        // Data Pipeline:
+        //   stock_historical  → candles (via fetchOHLCV, includes realtime bar today)
+        //   stock_realtime    → APP.stocks[sym].price  (today's realtime close)
+        //   stock_predictions_v3 → futurePred (filtered: prediction_date > todayISO only)
+        //   Conflict rule: ถ้า prediction_date ≤ todayISO → ตัดทิ้ง ใช้ราคาจริงแทน
+        // ══════════════════════════════════════════════════════════════
+        async function updatePredictUI(symbol, horizon) {
+            if (!symbol) return;
+            const cleanSymbol  = symbol.trim().toUpperCase();
+            const cleanHorizon = horizon || APP.predictHorizon || '7D';
+            APP.predictSymbol  = cleanSymbol;
+            APP.predictHorizon = cleanHorizon;
+
+            // Sync horizon pills
+            ['7D','15D','30D'].forEach(id => {
+                const el = document.getElementById(`pill-${id}`);
+                if (el) el.classList.toggle('active', id === cleanHorizon);
+            });
+
+            // Show loading state on insights
+            const insightsBody = document.getElementById('predictInsightsBody');
+            const insightBadge = document.getElementById('insightStatusBadge');
+            if (insightsBody) insightsBody.innerHTML = `<div class="flex items-center justify-center py-10 gap-3"><div class="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div><span class="text-slate-500 text-[11px] font-bold uppercase tracking-widest">Loading insights...</span></div>`;
+            if (insightBadge) insightBadge.textContent = 'LOADING';
+
+            try {
+                // ── 1. todayISO — วันที่วันนี้ตาม Bangkok timezone ──────────
+                // ใช้เป็น cutoff: prediction_date > todayISO = "อนาคตเท่านั้น"
+                const todayISO = luxon.DateTime.now()
+                    .setZone('Asia/Bangkok')
+                    .toISODate();  // e.g. "2026-03-12"
+
+                // ── 2. Fetch ALL forecast rows (ไม่ filter วัน ดึงมาก่อน) ──
+                const { data: allPredData, error: predErr } = await APP.supabaseClient
+                    .from('stock_predictions_v3')
+                    .select('prediction_date, predicted_price, lower_bound, upper_bound, actual_price, error_percent, day_index, model_name, created_at')
+                    .eq('symbol', cleanSymbol)
+                    .eq('horizon_type', cleanHorizon)
+                    .order('prediction_date', { ascending: true });
+                if (predErr) throw predErr;
+
+                // ── 2. Fetch AI insights from model_insights table ────────
+                const { data: insightRows } = await APP.supabaseClient
+                    .from('model_insights')
+                    .select('insight_type, insight_text, created_at')
+                    .eq('symbol', cleanSymbol)
+                    .eq('horizon_type', cleanHorizon)
+                    .order('created_at', { ascending: false })
+                    .limit(8);
+
+                // ── 3. No forecast data ───────────────────────────────────
+                if (!allPredData || !allPredData.length) {
+                    if (insightsBody) insightsBody.innerHTML = `<p class="text-red-400 text-[11px] font-bold p-4">⚠️ ยังไม่มีข้อมูลพยากรณ์สำหรับ ${cleanSymbol} (${cleanHorizon})<br>กรุณารัน model_forecast_v3.py ก่อน</p>`;
+                    if (insightBadge) insightBadge.textContent = 'NO DATA';
+                    return;
+                }
+
+                // ── 4. Conflict Resolution + Filter ──────────────────────
+                // กฎ: prediction_date ≤ todayISO → ตัดออก ใช้ราคาจริงแทน
+                // กฎ: sort ascending เสมอ (localeCompare บน YYYY-MM-DD ใช้ได้ถูกต้อง)
+                const futurePred = allPredData
+                    .filter(d => d.prediction_date > todayISO)
+                    .sort((a, b) => a.prediction_date.localeCompare(b.prediction_date));
+
+                // predData ทั้งหมดที่ผ่านไปแล้ว (มี actual_price) สำหรับคำนวณ MAPE
+                const evaluatedPred = allPredData.filter(d => d.error_percent != null);
+
+                // ── 5. Computed stats ─────────────────────────────────────
+                const currentStockObj = APP.stocks.find(s => s.symbol === cleanSymbol);
+                const currentPrice    = currentStockObj?.price || 0;
+                const changePercent   = currentStockObj?.changePercent || 0;
+
+                // Target = last future prediction
+                const lastPred    = futurePred.length ? futurePred[futurePred.length - 1]
+                                                      : allPredData[allPredData.length - 1];
+                const targetPrice = parseFloat(lastPred.predicted_price);
+                const expectedRet = currentPrice > 0 ? ((targetPrice - currentPrice) / currentPrice * 100) : 0;
+                const isUp        = expectedRet >= 0;
+                const signalText  = expectedRet > 3 ? 'BUY' : expectedRet < -3 ? 'SELL' : 'HOLD';
+                const signalBg    = expectedRet > 3 ? '#dcfce7' : expectedRet < -3 ? '#fee2e2' : '#f1f5f9';
+                const signalFg    = expectedRet > 3 ? '#15803d' : expectedRet < -3 ? '#dc2626' : '#475569';
+
+                const refPred   = futurePred.length ? futurePred : allPredData;
+                const avgBand   = refPred.reduce((s,d) => s + (parseFloat(d.upper_bound||0) - parseFloat(d.lower_bound||0)), 0) / refPred.length;
+                const avgMedian = refPred.reduce((s,d) => s + parseFloat(d.predicted_price), 0) / refPred.length;
+                const relBand   = avgMedian > 0 ? (avgBand / avgMedian) * 100 : 50;
+
+                const avgMAPE = evaluatedPred.length
+                    ? evaluatedPred.reduce((s,d) => s + Math.abs(parseFloat(d.error_percent)), 0) / evaluatedPred.length
+                    : null;
+
+                const fullName = getFullCompanyName(cleanSymbol)
+                    .replace(' PUBLIC COMPANY LIMITED','').replace(' PCL','');
+
+                // ── 6. Hero Header ────────────────────────────────────────
+                const metricsStrip = document.getElementById('predictMetricsStrip');
+                if (metricsStrip) metricsStrip.classList.remove('hidden');
+
+                const setEl    = (id, val)       => { const el = document.getElementById(id); if(el) el.textContent = val; };
+                const setStyle = (id, prop, val) => { const el = document.getElementById(id); if(el) el.style[prop] = val; };
+
+                setEl('predictHeroSymbol', cleanSymbol);
+                setEl('predictHeroName', fullName + ' · ' + cleanHorizon + ' HORIZON');
+
+                const badge = document.getElementById('predictHeroSignalBadge');
+                if (badge) {
+                    badge.textContent = signalText;
+                    badge.style.cssText = `background:${signalBg};color:${signalFg};padding:3px 10px;border-radius:7px;font-size:10px;font-weight:900;letter-spacing:.1em;border:1px solid ${signalFg}33`;
+                }
+
+                if (currentPrice > 0) {
+                    const cpUp = changePercent >= 0;
+                    setEl('predictHeroPrice', `฿${currentPrice.toFixed(2)}`);
+                    const retEl = document.getElementById('predictHeroReturn');
+                    if (retEl) {
+                        retEl.textContent = `${cpUp ? '+' : ''}${changePercent.toFixed(2)}% today`;
+                        retEl.style.color = cpUp ? '#10b981' : '#ef4444';
+                    }
+                } else {
+                    setEl('predictHeroPrice', '฿—');
+                    setEl('predictHeroReturn', '—');
+                }
+
+                setEl('predictHeroTarget', `฿${targetPrice.toFixed(2)}`);
+                const trEl = document.getElementById('predictHeroTargetReturn');
+                if (trEl) {
+                    trEl.textContent = `${isUp?'+':''}${expectedRet.toFixed(2)}% vs current`;
+                    trEl.style.color = isUp ? '#10b981' : '#ef4444';
+                }
+
+                setEl('predictHeroBandLow',  `Low:  ฿${parseFloat(lastPred.lower_bound).toFixed(2)}`);
+                setEl('predictHeroBandHigh', `High: ฿${parseFloat(lastPred.upper_bound).toFixed(2)}`);
+                setEl('predictChartSubtitle', `${cleanSymbol} · ${cleanHorizon} Horizon · ${futurePred.length} Days Ahead`);
+
+                // ── 7. AI Strategic Insights ──────────────────────────────
+                if (insightBadge) insightBadge.textContent = insightRows?.length ? 'LIVE' : 'COMPUTED';
+
+                if (insightsBody) {
+                    if (insightRows && insightRows.length > 0) {
+                        // Render from Supabase model_insights table
+                        const iconMap = {
+                            'signal':    { bg:'#1e3a5f', icon:'🎯', color:'#60a5fa' },
+                            'trend':     { bg:'#14532d', icon:'📈', color:'#4ade80' },
+                            'risk':      { bg:'#7f1d1d', icon:'⚠️', color:'#f87171' },
+                            'accuracy':  { bg:'#1e1b4b', icon:'📐', color:'#a78bfa' },
+                            'strategy':  { bg:'#0c4a6e', icon:'🧭', color:'#38bdf8' },
+                            'default':   { bg:'#1e293b', icon:'💡', color:'#94a3b8' },
+                        };
+                        insightsBody.innerHTML = insightRows.map(row => {
+                            const typ = (row.insight_type || 'default').toLowerCase();
+                            const cfg = iconMap[typ] || iconMap.default;
+                            const ts  = row.created_at
+                                ? luxon.DateTime.fromISO(row.created_at).setZone('Asia/Bangkok').toFormat('dd MMM yyyy HH:mm')
+                                : '';
+                            return `<div class="insight-bullet">
+                                <div class="insight-bullet-icon" style="background:${cfg.bg}20;border:1px solid ${cfg.bg}60">${cfg.icon}</div>
+                                <div>
+                                    <div class="text-[9px] font-black uppercase tracking-widest mb-1" style="color:${cfg.color}">${row.insight_type||'Insight'}</div>
+                                    <p class="text-[12px] text-slate-300 leading-relaxed font-medium">${row.insight_text}</p>
+                                    ${ts ? `<div class="text-[9px] text-slate-600 mt-1.5 font-bold">${ts}</div>` : ''}
+                                </div>
+                            </div>`;
+                        }).join('');
+                    } else {
+                        // Fallback: computed insight from real prediction data
+                        const trend      = isUp ? 'ขาขึ้น (Bullish)' : 'ขาลง (Bearish)';
+                        const trendColor = isUp ? '#4ade80' : '#f87171';
+                        const uncert     = relBand < 5 ? 'ต่ำมาก — เชื่อถือได้สูง' : relBand < 15 ? 'ปานกลาง' : 'สูง — ระวังความเสี่ยง';
+                        const uncertColor= relBand < 5 ? '#4ade80' : relBand < 15 ? '#fbbf24' : '#f87171';
+                        const horizonRec = avgMAPE == null ? '—' : avgMAPE < 3 ? 'เหมาะสำหรับการเทรดระยะสั้น' : avgMAPE < 8 ? 'เหมาะสำหรับประเมินแนวโน้ม' : 'ใช้เป็นข้อมูลเสริมเท่านั้น';
+                        const firstFuture = futurePred[0] || lastPred;
+                        const dateRange  = `${luxon.DateTime.fromISO(firstFuture.prediction_date).toFormat('dd MMM')} → ${luxon.DateTime.fromISO(lastPred.prediction_date).toFormat('dd MMM yyyy')}`;
+
+                        insightsBody.innerHTML = [
+                            { icon:'🎯', type:'Signal', color:'#60a5fa', bg:'#1e3a5f',
+                              text:`<strong style="color:#e2e8f0">${cleanSymbol}</strong> มีสัญญาณ <strong style="color:${signalFg}">${signalText}</strong> — Target ฿${targetPrice.toFixed(2)} (<span style="color:${isUp?'#4ade80':'#f87171'}">${isUp?'+':''}${expectedRet.toFixed(2)}%</span> จากราคาปัจจุบัน)` },
+                            { icon:'📈', type:'Trend', color:'#4ade80', bg:'#14532d',
+                              text:`แนวโน้มราคาในช่วง ${cleanHorizon}: <strong style="color:${trendColor}">${trend}</strong> · ช่วงพยากรณ์: ${dateRange}` },
+                            { icon:'📐', type:'Confidence', color:'#a78bfa', bg:'#1e1b4b',
+                              text:`Confidence Band 80% กว้างเฉลี่ย ฿${avgBand.toFixed(2)} → ความไม่แน่นอน <strong style="color:${uncertColor}">${uncert}</strong>` },
+                            avgMAPE != null && { icon:'🏹', type:'Accuracy', color:'#38bdf8', bg:'#0c4a6e',
+                              text:`MAPE ย้อนหลัง: <strong style="color:#e2e8f0">${avgMAPE.toFixed(2)}%</strong> · คำแนะนำ: ${horizonRec}` },
+                        ].filter(Boolean).map(b => `
+                            <div class="insight-bullet">
+                                <div class="insight-bullet-icon" style="background:${b.bg}40;border:1px solid ${b.bg}aa">${b.icon}</div>
+                                <div>
+                                    <div class="text-[9px] font-black uppercase tracking-widest mb-1" style="color:${b.color}">${b.type}</div>
+                                    <p class="text-[12px] text-slate-300 leading-relaxed font-medium">${b.text}</p>
+                                </div>
+                            </div>`).join('');
+                    }
+                }
+
+                // ── 8. Render chart — ส่ง futurePred (future-only, sorted) ──
+                await renderPredictChart(cleanSymbol, futurePred);
+
+            } catch (err) {
+                console.error('❌ updatePredictUI Error:', err);
+                const ib = document.getElementById('predictInsightsBody');
+                if (ib) ib.innerHTML = `<p class="text-red-400 text-[11px] font-bold p-4">❌ Error loading data: ${err.message}</p>`;
+            }
+        }
+        // ============================================
+        // INIT — Auth Guard → Load Data
+        // ============================================
+        (async function init() {
+            console.log('🚀 Starting AI Stock Platform...');
+
+            // 1. ตรวจสอบสิทธิ์ก่อนโหลดข้อมูลใดๆ
+            const isAuthenticated = await checkAuth();
+            if (!isAuthenticated) return; // redirect แล้ว
+
+            // 2. แสดง User Info ใน Sidebar
+            renderUserInfo();
+
+            // 3. เริ่มโหลดข้อมูลตลาด
+            if (initSupabase()) {
+                setTimeout(async () => {
+                    await loadDashboardData();
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                    document.getElementById('mainContainer').style.display = 'flex';
+                    switchPage('dashboard'); 
+                }, 1000);
+            }
+
+            // 4. Auto-refresh ทุก 30 วินาที (พร้อมตรวจ auth)
+            setInterval(async () => {
+                if (APP.currentPage === 'dashboard' && APP.currentStock) {
+                    // ตรวจสอบ token ยัง valid อยู่หรือไม่ (silent check)
+                    const token = localStorage.getItem(TOKEN_KEY);
+                    if (!token) { handleSessionExpired(); return; }
+
+                    console.log('🔄 Auto-Refreshing Market Data...');
+                    await loadDashboardData();
+                    await renderChart();
+                }
+            }, 30000);
+        })();
+    </script>
+</body>
+</html>
