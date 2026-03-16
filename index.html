@@ -213,9 +213,39 @@
 
 <script>
 // ================================================================
-//  CONFIG
+//  CONFIG — Environment-aware API routing
 // ================================================================
-const API_BASE = '/api';
+const API_BASE = (() => {
+    const host = window.location.hostname;
+    // Local development → point to FastAPI dev server
+    if (host === 'localhost' || host === '127.0.0.1') {
+        return 'http://localhost:8000/api';
+    }
+    // Production (Vercel / any deployment) → relative path
+    // Vercel rewrites /api/* → serverless FastAPI function
+    return '/api';
+})();
+
+/**
+ * resilientFetch — Wrapper that retries on network failure (Vercel cold-start)
+ * Retries up to `maxRetries` times with exponential backoff before giving up.
+ */
+async function resilientFetch(url, options = {}, maxRetries = 2) {
+    let lastError;
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+            const res = await fetch(url, options);
+            return res; // success — return immediately
+        } catch (err) {
+            lastError = err;
+            if (attempt < maxRetries) {
+                // Wait 1s → 2s between retries (cold-start buffer)
+                await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+            }
+        }
+    }
+    throw lastError; // all retries exhausted
+}
 
 // ================================================================
 //  PANEL SWITCHER
@@ -275,7 +305,7 @@ async function handleSignIn() {
 
     setLoading('btnSI', 'siSpin', 'siLbl', true);
     try {
-        const res  = await fetch(`${API_BASE}/login`, {
+        const res  = await resilientFetch(`${API_BASE}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
@@ -288,7 +318,7 @@ async function handleSignIn() {
             renderDashboard(data.user);
         }
     } catch {
-        showMsg('siMsg', 'Cannot reach the server. Is FastAPI running on port 8000?');
+        showMsg('siMsg', 'Cannot reach the server. Please check your connection and try again.');
     } finally {
         setLoading('btnSI', 'siSpin', 'siLbl', false);
     }
@@ -331,7 +361,7 @@ async function handleSignUp() {
 
     setLoading('btnSU', 'suSpin', 'suLbl', true);
     try {
-        const res  = await fetch(`${API_BASE}/register`, {
+        const res  = await resilientFetch(`${API_BASE}/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, password, confirm_password: confirm })
@@ -345,7 +375,7 @@ async function handleSignUp() {
             setTimeout(() => renderDashboard(data.user), 900);
         }
     } catch {
-        showMsg('suMsg', 'Cannot reach the server. Is FastAPI running on port 8000?');
+        showMsg('suMsg', 'Cannot reach the server. Please check your connection and try again.');
     } finally {
         setLoading('btnSU', 'suSpin', 'suLbl', false);
     }
@@ -358,7 +388,7 @@ async function checkSession() {
     const token = localStorage.getItem('trinity_token');
     if (!token) return;
     try {
-        const res = await fetch(`${API_BASE}/profile`, {
+        const res = await resilientFetch(`${API_BASE}/profile`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.ok) {
@@ -367,7 +397,9 @@ async function checkSession() {
             localStorage.removeItem('trinity_token');
         }
     } catch {
-        localStorage.removeItem('trinity_token');
+        // Network failure — don't remove token (might be cold-start)
+        // User can retry manually via Sign In
+        console.warn('Session check failed — server may be starting up');
     }
 }
 
