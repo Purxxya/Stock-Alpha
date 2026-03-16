@@ -1,7 +1,3 @@
-"""
-Trinity AI — Authentication Backend (FastAPI) - FIXED VERSION
-"""
-
 import os
 from datetime import datetime, timedelta
 from typing import Optional
@@ -30,10 +26,6 @@ engine = create_engine(
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-# ──────────────────────────────────────────────
-#  JWT CONFIG
-# ──────────────────────────────────────────────
-# แนะนำให้ใช้ค่าจาก os.getenv("SECRET_KEY") ในอนาคต
 SECRET_KEY = os.getenv("SECRET_KEY", "fallback_secret_for_dev_only")
 ALGORITHM = "HS256"
 TOKEN_EXPIRE_HOURS = 24
@@ -42,7 +34,6 @@ TOKEN_EXPIRE_HOURS = 24
 # ──────────────────────────────────────────────
 #  PASSWORD HASHING (FIXED BCRYPT IDENT)
 # ──────────────────────────────────────────────
-# แก้ไขปัญหา AttributeError: module 'bcrypt' has no attribute '__about__'
 pwd_context = CryptContext(
     schemes=["bcrypt"], 
     deprecated="auto",
