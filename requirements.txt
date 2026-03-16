@@ -1,13 +1,9 @@
-# --- Web Server & Framework ---
 fastapi
 uvicorn
-
-# --- Database ---
 sqlalchemy
-psycopg2-binary
-
-# --- Authentication & Security ---
+passlib
+bcrypt==3.2.2
 python-jose[cryptography]
-passlib[bcrypt]
+psycopg2-binary
 pydantic[email]
 email-validator
