@@ -458,8 +458,34 @@
         // ============================================
         // AUTH GUARD — ต้องตรวจสอบก่อนโหลดข้อมูลใดๆ
         // ============================================
-        const AUTH_API_BASE = '/api';
+
+        // ── Environment-aware API routing ──────────────────────────
+        const API_BASE = (() => {
+            const host = window.location.hostname;
+            if (host === 'localhost' || host === '127.0.0.1') {
+                return 'http://localhost:8000/api';
+            }
+            return '/api';
+        })();
         const TOKEN_KEY = 'trinity_token';
+
+        /**
+         * resilientFetch — Retries on network failure (Vercel cold-start protection)
+         */
+        async function resilientFetch(url, options = {}, maxRetries = 2) {
+            let lastError;
+            for (let attempt = 0; attempt <= maxRetries; attempt++) {
+                try {
+                    return await fetch(url, options);
+                } catch (err) {
+                    lastError = err;
+                    if (attempt < maxRetries) {
+                        await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+                    }
+                }
+            }
+            throw lastError;
+        }
 
         /**
          * checkAuth() — ตรวจสอบว่ามี Token อยู่ใน localStorage หรือไม่
@@ -476,7 +502,7 @@
             }
 
             try {
-                const res = await fetch(`${AUTH_API_BASE}/verify-token`, {
+                const res = await resilientFetch(`${API_BASE}/verify-token`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
@@ -520,11 +546,11 @@
             // แจ้ง server (best-effort, ไม่ block ถ้า server ไม่ตอบ)
             if (token) {
                 try {
-                    await fetch(`${AUTH_API_BASE}/logout`, {
+                    await fetch(`${API_BASE}/logout`, {
                         method: 'POST',
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
-                } catch { /* ignore — จะลบ token ฝั่ง client อยู่ดี */ }
+                } catch { /* ignore — client-side cleanup will proceed regardless */ }
             }
 
             localStorage.removeItem(TOKEN_KEY);
@@ -549,7 +575,7 @@
                 'Authorization': `Bearer ${token}`
             };
 
-            const res = await fetch(url, { ...options, headers });
+            const res = await resilientFetch(url, { ...options, headers });
 
             if (res.status === 401) {
                 handleSessionExpired();
@@ -2332,7 +2358,6 @@
 
                 if (insightsBody) {
                     if (insightRows && insightRows.length > 0) {
-                        // Render from Supabase model_insights table
                         const iconMap = {
                             'signal':    { bg:'#1e3a5f', icon:'🎯', color:'#60a5fa' },
                             'trend':     { bg:'#14532d', icon:'📈', color:'#4ade80' },
