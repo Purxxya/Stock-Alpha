@@ -395,11 +395,9 @@
                                     <p id="predictChartSubtitle" class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">Actual Candlestick · AI Forecast · 80% Confidence Band</p>
                                 </div>
                                 <div class="flex flex-wrap gap-4 text-[9px] font-black uppercase tracking-wider text-slate-500">
-                                    <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded-sm" style="background:#26a69a"></span>Bullish</span>
-                                    <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded-sm" style="background:#ef5350"></span>Bearish</span>
-                                    <span class="flex items-center gap-1.5"><span class="inline-block w-6 h-0.5" style="background:#3b82f6"></span>SMA 20</span>
-                                    <span class="flex items-center gap-1.5"><span class="inline-block w-6 h-px border-t-2 border-dashed" style="border-color:#6366f1"></span>AI Forecast</span>
-                                    <span class="flex items-center gap-1.5"><span class="inline-block w-6 h-px border-t border-dashed" style="border-color:rgba(99,102,241,.4)"></span>80% CI</span>
+                                    <span class="flex items-center gap-1.5"><span class="inline-block w-6 h-[2.5px] rounded-full" style="background:#2ecc71"></span>Actual Price</span>
+                                    <span class="flex items-center gap-1.5"><span class="inline-block w-6 h-[2px] border-t-2 border-dashed" style="border-color:#3498db"></span>AI Forecast</span>
+                                    <span class="flex items-center gap-1.5"><span class="inline-block w-4 h-3 rounded-sm" style="background:rgba(52,152,219,.12);border:1px solid rgba(52,152,219,.3)"></span>80% CI Band</span>
                                 </div>
                             </div>
                             <div class="p-6">
@@ -1988,183 +1986,201 @@
         }
 
        
-        async function renderPredictChart(symbol, futurePred) {
+        /**
+         * renderPredictChart — Fan Chart (Line-based, no Candlestick)
+         *
+         * สาเหตุที่ต้อง rewrite:
+         *   1. Candlestick ต้องการ O/H/L/C — ถ้า stock_historical มี NULL → candle หายหมด
+         *   2. Fan Chart ใช้แค่ close price → Line series
+         *   3. Prediction line ต้องไม่ anchor กับ candle สุดท้าย — ใช้ timeline อิสระ
+         *
+         * @param {string} symbol
+         * @param {Array}  allPredData — ข้อมูลพยากรณ์ทั้งหมด (ทุกวัน ไม่ filter)
+         *   แต่ละ row: { prediction_date, predicted_price, lower_bound, upper_bound, actual_price }
+         */
+        async function renderPredictChart(symbol, allPredData) {
             const container = document.getElementById('predictCanvas');
             if (!container) return;
 
+            // ── ① Destroy previous chart ─────────────────────────────────
             if (APP.predictLwcChart) { APP.predictLwcChart.remove(); APP.predictLwcChart = null; }
             container.innerHTML = '';
 
-            // ── ① Fetch candles (historical + realtime merged) ───────────
-            const rawCandles = await fetchHistoricalForPredict(symbol, 60);
-            if (!rawCandles || !rawCandles.length) {
-                console.warn('[renderPredictChart] ❌ ไม่พบข้อมูล candles สำหรับ', symbol);
-                container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:12px;font-weight:700">ไม่พบข้อมูลราคาสำหรับ ${symbol}</div>`;
-                return;
-            }
+            // ── ② Fetch historical close prices ──────────────────────────
+            const rawCandles = await fetchHistoricalForPredict(symbol, 90);
 
-            // ── ② Sanitise candles ───────────────────────────────────────
-            // Sort ascending, deduplicate by time (ป้องกัน LWC crash จาก duplicate time)
-            const seenTimes = new Set();
-            const candles = rawCandles
-                .filter(c => {
-                    if (!c.time || isNaN(c.open) || isNaN(c.close) || isNaN(c.high) || isNaN(c.low)) return false;
-                    if (seenTimes.has(c.time)) return false;
-                    seenTimes.add(c.time);
-                    return true;
-                })
-                .sort((a, b) => a.time < b.time ? -1 : 1);
+            // Build close-price map { 'YYYY-MM-DD': closePrice }
+            // ★ เปลี่ยนจาก filter OHLC → filter แค่ close (แก้ปัญหาหุ้นที่ high/low เป็น null)
+            const closeMap = {};
+            (rawCandles || []).forEach(c => {
+                if (c.time && !isNaN(c.close) && c.close > 0) {
+                    closeMap[c.time] = c.close;
+                }
+            });
 
-            if (!candles.length) {
-                console.warn('[renderPredictChart] ❌ candles ว่างหลัง sanitise');
-                return;
-            }
-
-            // ── ③ Anchor point = candles[last] = realtime วันนี้ ─────────
-            const anchorCandle = candles[candles.length - 1];
-            const anchorPoint  = { time: anchorCandle.time, value: anchorCandle.close };
-
-            // ── ④ Sanitise futurePred ────────────────────────────────────
-            // Sort ascending, deduplicate, ตัดค่า null/NaN ออก
-            const seenPredTimes = new Set();
-            const cleanFuture = (futurePred || [])
+            // ── ③ Sanitise prediction data ───────────────────────────────
+            const todayISO = luxon.DateTime.now().setZone('Asia/Bangkok').toISODate();
+            const seenDates = new Set();
+            const preds = (allPredData || [])
                 .filter(d => {
-                    if (!d.prediction_date) return false;
-                    if (isNaN(parseFloat(d.predicted_price))) return false;
-                    if (seenPredTimes.has(d.prediction_date)) return false;
-                    seenPredTimes.add(d.prediction_date);
+                    if (!d.prediction_date || isNaN(parseFloat(d.predicted_price))) return false;
+                    if (seenDates.has(d.prediction_date)) return false;
+                    seenDates.add(d.prediction_date);
                     return true;
                 })
-                .sort((a, b) => a.prediction_date < b.prediction_date ? -1 : 1);
+                .sort((a, b) => a.prediction_date.localeCompare(b.prediction_date));
 
-            // ── ⑤ Build line series data ─────────────────────────────────
-            // predLine: [anchor, ...cleanFuture]  → เส้นประลากต่อจากวันนี้
-            const predLine  = [anchorPoint, ...cleanFuture.map(d => ({
-                time: d.prediction_date, value: parseFloat(d.predicted_price),
-            }))];
-            const upperLine = [anchorPoint, ...cleanFuture.map(d => ({
-                time: d.prediction_date, value: parseFloat(d.upper_bound),
-            }))];
-            const lowerLine = [anchorPoint, ...cleanFuture.map(d => ({
-                time: d.prediction_date, value: parseFloat(d.lower_bound),
-            }))];
+            if (!preds.length && !Object.keys(closeMap).length) {
+                container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:12px;font-weight:700">No data available for ${symbol}</div>`;
+                return;
+            }
 
-            // ── ⑥ DEBUG console.log ──────────────────────────────────────
-            console.group(`[PredictChart Debug] ${symbol}`);
-            console.log('📊 candles (Actual series) — total:', candles.length);
-            console.log('  First:', candles[0]);
-            console.log('  Last (anchor):', anchorCandle);
-            console.log('📈 futurePred (raw from DB) — total:', (futurePred||[]).length);
-            console.log('  cleanFuture (after filter+sort) — total:', cleanFuture.length);
-            if (cleanFuture.length) {
-                console.log('  First:', cleanFuture[0]);
-                console.log('  Last:', cleanFuture[cleanFuture.length - 1]);
+            // ── ④ Build Actual Price line (close prices from historical) ─
+            // เรียงตามวัน, deduplicate
+            const actualLine = Object.entries(closeMap)
+                .map(([time, value]) => ({ time, value }))
+                .sort((a, b) => a.time.localeCompare(b.time));
+
+            // ── ⑤ Build Prediction + CI lines ────────────────────────────
+            // ★ KEY FIX: ไม่ prepend anchor point — ให้ prediction ยืนบน timeline ของตัวเอง
+            // แต่เพิ่ม bridge point: ถ้าวันแรกของ prediction อยู่หลัง actual วันสุดท้าย
+            // → สร้างจุดเชื่อม 1 จุดที่ actual วันสุดท้ายเพื่อให้เส้นต่อเนื่อง
+            const predLine  = [];
+            const upperLine = [];
+            const lowerLine = [];
+
+            // หา actual วันสุดท้ายสำหรับ bridge
+            const lastActual = actualLine.length ? actualLine[actualLine.length - 1] : null;
+            const firstPredDate = preds.length ? preds[0].prediction_date : null;
+
+            // เพิ่ม bridge point ถ้า actual จบก่อน prediction เริ่ม
+            if (lastActual && firstPredDate && lastActual.time < firstPredDate) {
+                predLine.push({ time: lastActual.time, value: lastActual.value });
+                upperLine.push({ time: lastActual.time, value: lastActual.value });
+                lowerLine.push({ time: lastActual.time, value: lastActual.value });
             }
-            console.log('🔵 predLine (เส้นประ) — total points:', predLine.length, predLine);
-            console.log('🟣 upperLine — total:', upperLine.length);
-            console.log('🟣 lowerLine — total:', lowerLine.length);
-            if (cleanFuture.length === 0) {
-                console.warn('⚠️  cleanFuture ว่าง → กราฟจะแสดงเฉพาะ anchor point ไม่มีเส้นประ');
-            }
+
+            preds.forEach(d => {
+                const pp = parseFloat(d.predicted_price);
+                const ub = parseFloat(d.upper_bound);
+                const lb = parseFloat(d.lower_bound);
+                predLine.push({ time: d.prediction_date, value: pp });
+                upperLine.push({ time: d.prediction_date, value: isNaN(ub) ? pp : ub });
+                lowerLine.push({ time: d.prediction_date, value: isNaN(lb) ? pp : lb });
+
+                // ★ DRIFT: ถ้า prediction date ≤ today และมี actual_price → เพิ่มลง actualLine
+                if (d.prediction_date <= todayISO) {
+                    const ap = parseFloat(d.actual_price);
+                    if (!isNaN(ap) && ap > 0 && !closeMap[d.prediction_date]) {
+                        actualLine.push({ time: d.prediction_date, value: ap });
+                    }
+                }
+            });
+
+            // Re-sort actual line หลังเพิ่ม drift points
+            actualLine.sort((a, b) => a.time.localeCompare(b.time));
+            // Deduplicate
+            const actualSeen = new Set();
+            const cleanActual = actualLine.filter(p => {
+                if (actualSeen.has(p.time)) return false;
+                actualSeen.add(p.time);
+                return true;
+            });
+
+            // ── ⑥ Debug log ──────────────────────────────────────────────
+            console.group(`[FanChart] ${symbol}`);
+            console.log('Actual line points:', cleanActual.length, cleanActual.length > 0 ? `${cleanActual[0].time} → ${cleanActual[cleanActual.length-1].time}` : 'empty');
+            console.log('Prediction line points:', predLine.length, predLine.length > 0 ? `${predLine[0].time} → ${predLine[predLine.length-1].time}` : 'empty');
+            console.log('CI upper/lower points:', upperLine.length);
             console.groupEnd();
 
             // ── ⑦ Create LWC chart ───────────────────────────────────────
             const chart = LW.createChart(container, {
-                ...lwOpts(350),
+                ...lwOpts(360),
                 rightPriceScale: {
-                    borderColor:  C.border,
-                    scaleMargins: { top: 0.05, bottom: 0.22 },
+                    borderColor: C.border,
+                    scaleMargins: { top: 0.05, bottom: 0.08 },
                 },
             });
             APP.predictLwcChart = chart;
 
-            // Candlestick (เส้นทึบ — historical + realtime วันนี้)
-            const candleSeries = chart.addCandlestickSeries({
-                upColor: C.up, downColor: C.down,
-                borderUpColor: C.up, borderDownColor: C.down,
-                wickUpColor:   C.up, wickDownColor:   C.down,
+            // ── Series 1: Actual Price — solid green line ────────────────
+            const actualSeries = chart.addLineSeries({
+                color: '#2ecc71',
+                lineWidth: 2.5,
+                priceLineVisible: false,
+                lastValueVisible: true,
+                crosshairMarkerRadius: 4,
+                crosshairMarkerBackgroundColor: '#2ecc71',
             });
-            candleSeries.setData(candles);
+            if (cleanActual.length) actualSeries.setData(cleanActual);
 
-            // Volume bar
-            const volSeries = chart.addHistogramSeries({
-                priceScaleId: 'vol', priceFormat: { type: 'volume' },
-            });
-            chart.priceScale('vol').applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } });
-            volSeries.setData(candles.map(c => ({
-                time: c.time, value: c.volume,
-                color: c.close >= c.open ? C.upVol : C.downVol,
-            })));
-
-            // SMA 20
-            const sma20 = chart.addLineSeries({
-                color: C.sma20, lineWidth: 1.5,
-                priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
-            });
-            sma20.setData(calcSMA(candles, 20));
-
-            // Upper 80% CI (เส้นประ)
+            // ── Series 2: Upper 80% CI — thin dashed blue ────────────────
             const upperSeries = chart.addLineSeries({
-                color: C.ci, lineWidth: 1,
+                color: 'rgba(52, 152, 219, 0.35)',
+                lineWidth: 1,
                 lineStyle: LW.LineStyle.Dashed,
                 priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
             });
-            upperSeries.setData(upperLine);
+            if (upperLine.length) upperSeries.setData(upperLine);
 
-            // Lower 80% CI (เส้นประ)
+            // ── Series 3: Lower 80% CI — thin dashed blue ────────────────
             const lowerSeries = chart.addLineSeries({
-                color: C.ci, lineWidth: 1,
+                color: 'rgba(52, 152, 219, 0.35)',
+                lineWidth: 1,
                 lineStyle: LW.LineStyle.Dashed,
                 priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
             });
-            lowerSeries.setData(lowerLine);
+            if (lowerLine.length) lowerSeries.setData(lowerLine);
 
-            // AI Forecast median (เส้นประหนา)
+            // ── Series 4: AI Forecast — dashed blue line ─────────────────
             const predSeries = chart.addLineSeries({
-                color: C.predict, lineWidth: 2,
+                color: '#3498db',
+                lineWidth: 2,
                 lineStyle: LW.LineStyle.LargeDashed,
                 priceLineVisible: false,
                 lastValueVisible: true,
                 crosshairMarkerRadius: 4,
-                crosshairMarkerBackgroundColor: C.predict,
+                crosshairMarkerBackgroundColor: '#3498db',
             });
-            predSeries.setData(predLine);
+            if (predLine.length) predSeries.setData(predLine);
 
-            // ── ⑧ Visible range: 30 days back → last forecast day ────────
-            const from = luxon.DateTime.fromISO(anchorCandle.time).minus({ days: 30 }).toISODate();
-            const to   = cleanFuture.length
-                ? cleanFuture[cleanFuture.length - 1].prediction_date
-                : anchorCandle.time;
+            // ── ⑧ Visible range ──────────────────────────────────────────
+            // แสดงจาก: prediction วันแรก - 14 วัน (เพื่อเห็น actual ก่อนหน้า)
+            // ถึง: prediction วันสุดท้าย + 2 วัน
+            const firstDate = preds.length ? preds[0].prediction_date
+                            : cleanActual.length ? cleanActual[0].time : todayISO;
+            const lastDate  = preds.length ? preds[preds.length - 1].prediction_date
+                            : cleanActual.length ? cleanActual[cleanActual.length - 1].time : todayISO;
+
+            const from = luxon.DateTime.fromISO(firstDate).minus({ days: 14 }).toISODate();
+            const to   = luxon.DateTime.fromISO(lastDate).plus({ days: 2 }).toISODate();
             chart.timeScale().setVisibleRange({ from, to });
 
-            // ── ⑨ Custom Tooltip ─────────────────────────────────────────
+            // ── ⑨ Tooltip ────────────────────────────────────────────────
             const tip = makeTooltip(container);
             chart.subscribeCrosshairMove(p => {
                 if (!p.time || !p.point || p.point.x < 0) { tip.style.display = 'none'; return; }
-                const c    = p.seriesData.get(candleSeries);
+                const act  = p.seriesData.get(actualSeries);
                 const pred = p.seriesData.get(predSeries);
                 const upp  = p.seriesData.get(upperSeries);
                 const low  = p.seriesData.get(lowerSeries);
-                const vol  = p.seriesData.get(volSeries);
                 const dt   = luxon.DateTime.fromISO(p.time).toFormat('dd MMM yyyy');
 
                 let rows = '';
-                if (c) {
-                    const up  = c.close >= c.open;
-                    const col = up ? C.up : C.down;
-                    rows += tipRow('O', '฿' + c.open.toFixed(2),  col)
-                          + tipRow('H', '฿' + c.high.toFixed(2),  '#34d399')
-                          + tipRow('L', '฿' + c.low.toFixed(2),   '#f87171')
-                          + tipRow('C', (up ? '▲ ' : '▼ ') + '฿' + c.close.toFixed(2), col);
-                    if (vol) rows += tipRow('V', fmtVol(vol.value), '#a78bfa');
-                }
-                if (pred) rows += tipRow('AI', '฿' + pred.value.toFixed(2), '#818cf8');
+                if (act)  rows += tipRow('Actual', '฿' + act.value.toFixed(2), '#2ecc71');
+                if (pred) rows += tipRow('AI', '฿' + pred.value.toFixed(2), '#3498db');
                 if (upp && low)
-                    rows += tipRow('CI', `฿${low.value.toFixed(2)}–฿${upp.value.toFixed(2)}`, '#a5b4fc');
+                    rows += tipRow('80% CI', `฿${low.value.toFixed(2)} – ฿${upp.value.toFixed(2)}`, '#94a3b8');
+                if (act && pred) {
+                    const dev = ((act.value - pred.value) / pred.value * 100).toFixed(2);
+                    const devCol = Math.abs(dev) > 3 ? '#ef4444' : '#10b981';
+                    rows += tipRow('Dev', `${dev > 0 ? '+' : ''}${dev}%`, devCol);
+                }
 
                 tip.innerHTML = `
-                    <div style="color:#94a3b8;font-size:10px;font-weight:800;letter-spacing:.1em;margin-bottom:7px;text-transform:uppercase">${dt}</div>
-                    <div style="display:grid;grid-template-columns:30px 1fr;gap:3px 8px">${rows}</div>
+                    <div style="color:#94a3b8;font-size:10px;font-weight:800;letter-spacing:.1em;margin-bottom:7px;text-transform:uppercase">${dt} · ${symbol}</div>
+                    <div style="display:grid;grid-template-columns:48px 1fr;gap:3px 8px">${rows}</div>
                 `;
                 const { width } = container.getBoundingClientRect();
                 tip.style.left  = p.point.x > width / 2 ? '12px' : 'auto';
@@ -2411,8 +2427,8 @@
                     }
                 }
 
-                // ── 8. Render chart — ส่ง futurePred (future-only, sorted) ──
-                await renderPredictChart(cleanSymbol, futurePred);
+                // ── 8. Render Fan Chart — ส่ง allPredData (ทุกวัน ทั้ง timeline) ──
+                await renderPredictChart(cleanSymbol, allPredData);
 
             } catch (err) {
                 console.error('❌ updatePredictUI Error:', err);
