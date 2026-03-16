@@ -1,0 +1,13 @@
+# --- Web Server & Framework ---
+fastapi
+uvicorn
+
+# --- Database ---
+sqlalchemy
+psycopg2-binary
+
+# --- Authentication & Security ---
+python-jose[cryptography]
+passlib[bcrypt]
+pydantic[email]
+email-validator
