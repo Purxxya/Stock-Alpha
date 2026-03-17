@@ -198,8 +198,8 @@
             <div class="px-4 py-3 bg-slate-50/50 border-y border-slate-100">
                 <div class="flex items-center justify-between">
                     <h2 class="text-[10px] font-black uppercase tracking-[0.15em] flex items-center gap-1.5">
-                        <span class="text-[13px] leading-none">🌟</span>
-                        <span id="listTitle" class="text-[11px] font-black uppercase tracking-[0.15em]" style="color:#f59e0b">Top 10</span>
+                        <span class="text-[13px] leading-none" style="color: #dc2626;">★</span>
+                        <span id="listTitle" class="text-[11px] font-black uppercase tracking-[0.15em]" style="color: #1e293b;">Top 10</span>
                     </h2>
                     <span id="listSubtitle" class="text-[8px] font-black text-slate-300 uppercase tracking-widest">Most Active</span>
                 </div>
@@ -2025,263 +2025,208 @@
 
         // ─── fetchHistoricalForPredict ─────────────────────────────────
         // reuse fetchOHLCV ที่ define ไว้แล้ว — แค่จำกัด months ให้สั้นลง
-        async function fetchHistoricalForPredict(symbol, days = 60) {
-            // คำนวณเดือนจาก days เพื่อส่งให้ fetchOHLCV
-            const months = Math.ceil(days / 21) + 1;
-            const all    = await fetchOHLCV(symbol.trim().toUpperCase(), months);
-            return all.slice(-days); // ตัดเหลือแค่ N วันล่าสุด
+        async function fetchHistoricalForPredict(symbol, days = 500) {
+            // ปรับให้ดึงย้อนหลังประมาณ 24 เดือนเพื่อให้ครอบคลุม 2 ปี
+            const months = 24; 
+            const all = await fetchOHLCV(symbol.trim().toUpperCase(), months);
+            return all; 
         }
 
-        async function renderPredictChart(symbol, allPredData) {
-            const container = document.getElementById('predictCanvas');
-            if (!container) return;
+       async function renderPredictChart(symbol, allPredData) {
+        const container = document.getElementById('predictCanvas');
+        if (!container) return;
 
-            if (APP.predictLwcChart) { APP.predictLwcChart.remove(); APP.predictLwcChart = null; }
-            container.innerHTML = '';
+        if (APP.predictLwcChart) { APP.predictLwcChart.remove(); APP.predictLwcChart = null; }
+        container.innerHTML = '';
 
-            // ── ① Fetch & sanitise historical candles (60 days) ─────────
-            const rawCandles = await fetchHistoricalForPredict(symbol, 60);
-            if (!rawCandles || !rawCandles.length) {
-                container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:12px;font-weight:700">ไม่พบข้อมูลราคาสำหรับ ${symbol}</div>`;
-                return;
-            }
-            const seenTimes = new Set();
-            const candles = rawCandles
-                .filter(c => {
-                    if (!c.time || isNaN(c.open) || isNaN(c.close) || isNaN(c.high) || isNaN(c.low)) return false;
-                    if (seenTimes.has(c.time)) return false;
-                    seenTimes.add(c.time);
-                    return true;
-                })
-                .sort((a, b) => a.time < b.time ? -1 : 1);
+        // 1. ดึงข้อมูลราคาจริงย้อนหลัง 2 ปี (24 เดือน)
+        const rawHistory = await fetchHistoricalForPredict(symbol, 500); // ประมาณ 500 วันทำการ = 2 ปี
+        if (!rawHistory || !rawHistory.length) {
+            container.innerHTML = `<div class="flex items-center justify-center h-full text-slate-400 font-bold uppercase tracking-widest text-[11px]">ไม่พบข้อมูลราคาประวัติศาสตร์สำหรับ ${symbol}</div>`;
+            return;
+        }
 
-            if (!candles.length) return;
-            const anchorCandle = candles[candles.length - 1];
+        const historyData = rawHistory.map(d => ({ time: d.time, value: d.close }));
+        
+        // 2. เตรียมข้อมูลพยากรณ์ (Predict) - เริ่มตั้งแต่วันแรกที่มีการพยากรณ์ใน DB
+        const sortedPred = [...(allPredData || [])].sort((a, b) => a.prediction_date.localeCompare(b.prediction_date));
+        
+        const forecastLine = sortedPred.map(d => ({ 
+            time: d.prediction_date, 
+            value: parseFloat(d.predicted_price) 
+        }));
 
-            // ── ② Build Fan Chart data from ALL prediction rows ──────────
-            // Sort allPredData ascending by date
-            const todayISO  = luxon.DateTime.now().setZone('Asia/Bangkok').toISODate();
-            const sortedPred = [...(allPredData || [])].sort((a, b) =>
-                a.prediction_date.localeCompare(b.prediction_date));
+        const confidenceArea = sortedPred.map(d => ({
+            time: d.prediction_date,
+            low: parseFloat(d.lower_bound),
+            high: parseFloat(d.upper_bound)
+        }));
 
-            // Anchor point ties historical candle → first forecast date
-            const anchorPoint = { time: anchorCandle.time, value: anchorCandle.close };
+        // 3. สร้าง Chart พร้อมตั้งค่าพื้นฐาน
+        const chart = LightweightCharts.createChart(container, {
+            ...lwOpts(380),
+            rightPriceScale: { 
+                borderColor: '#e2e8f0', 
+                scaleMargins: { top: 0.1, bottom: 0.2 },
+                autoScale: true 
+            },
+        });
+        APP.predictLwcChart = chart;
 
-            // Full predicted_price line: [anchor, ...all sorted]
-            const seenPred = new Set();
-            const cleanPred = sortedPred.filter(d => {
-                if (!d.prediction_date || isNaN(parseFloat(d.predicted_price))) return false;
-                if (seenPred.has(d.prediction_date)) return false;
-                seenPred.add(d.prediction_date);
-                return true;
+        // --- ส่วนการวาดเส้น (Layering) ---
+
+        // A. วาดแถบ Confidence Band (ใช้ Area Series)
+        const areaSeries = chart.addAreaSeries({
+            topColor: 'rgba(99, 102, 241, 0.2)',
+            bottomColor: 'rgba(99, 102, 241, 0.05)',
+            lineColor: 'transparent',
+            lastValueVisible: false,
+            priceLineVisible: false,
+        });
+        areaSeries.setData(forecastLine); // วาดพื้นที่เงาตามเส้นพยากรณ์
+
+        // B. เส้นราคาพยากรณ์ (Indigo Dashed Line)
+        const forecastSeries = chart.addLineSeries({
+            color: '#6366f1',
+            lineWidth: 2,
+            lineStyle: LightweightCharts.LineStyle.Dashed,
+            title: 'AI Forecast',
+            lastValueVisible: true,
+        });
+        forecastSeries.setData(forecastLine);
+
+        // C. เส้นราคาจริง (Deep Slate Solid Line) - ย้อนหลัง 2 ปี
+        const actualSeries = chart.addLineSeries({
+            color: '#0f172a',
+            lineWidth: 2,
+            title: 'Actual Price',
+            lastValueVisible: true,
+        });
+        actualSeries.setData(historyData);
+
+        // 4. จัดการการมองเห็น (Visible Range) 
+        // ให้ Focus ที่ 30 วันก่อนหน้า จนถึงวันสุดท้ายที่พยากรณ์
+        if (forecastLine.length > 0) {
+            const firstPredictDate = forecastLine[0].time;
+            const lastPredictDate = forecastLine[forecastLine.length - 1].time;
+            const focusStartDate = luxon.DateTime.fromISO(firstPredictDate).minus({ days: 45 }).toISODate();
+            
+            chart.timeScale().setVisibleRange({ 
+                from: focusStartDate, 
+                to: lastPredictDate 
             });
+        }
 
-            // predLine — full horizon (past + future)
-            const predLine  = [anchorPoint, ...cleanPred.map(d => ({ time: d.prediction_date, value: parseFloat(d.predicted_price) }))];
+        // 5. Tooltip (ปรับปรุงให้แสดงข้อมูลครบถ้วน)
+        const tip = makeTooltip(container);
+        chart.subscribeCrosshairMove(p => {
+            if (!p.time || !p.point || p.point.x < 0) { tip.style.display = 'none'; return; }
+            
+            const actualVal = p.seriesData.get(actualSeries);
+            const foreVal = p.seriesData.get(forecastSeries);
+            const dt = luxon.DateTime.fromISO(p.time).toFormat('dd MMM yyyy');
 
-            // upperLine / lowerLine — full horizon CI band
-            const upperLine = [anchorPoint, ...cleanPred.map(d => ({ time: d.prediction_date, value: parseFloat(d.upper_bound) }))];
-            const lowerLine = [anchorPoint, ...cleanPred.map(d => ({ time: d.prediction_date, value: parseFloat(d.lower_bound) }))];
-
-            // actualLine — only rows with actual_price filled in (past)
-            const actualLine = cleanPred
-                .filter(d => d.actual_price != null && !isNaN(parseFloat(d.actual_price)))
-                .map(d => ({ time: d.prediction_date, value: parseFloat(d.actual_price) }));
-
-            console.group(`[FanChart] ${symbol}`);
-            console.log('candles:', candles.length, '| pred rows:', cleanPred.length, '| actual rows:', actualLine.length);
-            console.groupEnd();
-
-            // ── ③ Create LWC chart ────────────────────────────────────────
-            const chart = LW.createChart(container, {
-                ...lwOpts(350),
-                rightPriceScale: {
-                    borderColor:  C.border,
-                    scaleMargins: { top: 0.06, bottom: 0.20 },
-                },
-            });
-            APP.predictLwcChart = chart;
-
-            // Candlestick — historical OHLCV
-            const candleSeries = chart.addCandlestickSeries({
-                upColor: C.up, downColor: C.down,
-                borderUpColor: C.up, borderDownColor: C.down,
-                wickUpColor:   C.up, wickDownColor:   C.down,
-            });
-            candleSeries.setData(candles);
-
-            // Volume bar
-            const volSeries = chart.addHistogramSeries({
-                priceScaleId: 'vol', priceFormat: { type: 'volume' },
-            });
-            chart.priceScale('vol').applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } });
-            volSeries.setData(candles.map(c => ({
-                time: c.time, value: c.volume,
-                color: c.close >= c.open ? C.upVol : C.downVol,
-            })));
-
-            // SMA 20
-            const sma20 = chart.addLineSeries({
-                color: C.sma20, lineWidth: 1.5,
-                priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
-            });
-            sma20.setData(calcSMA(candles, 20));
-
-            // ── Fan Chart: Upper CI (solid band edge) ─────────────────────
-            const upperSeries = chart.addLineSeries({
-                color: 'rgba(99,102,241,0.50)', lineWidth: 1,
-                lineStyle: LW.LineStyle.Dashed,
-                priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
-            });
-            if (upperLine.length > 1) upperSeries.setData(upperLine);
-
-            // ── Fan Chart: Lower CI ───────────────────────────────────────
-            const lowerSeries = chart.addLineSeries({
-                color: 'rgba(99,102,241,0.50)', lineWidth: 1,
-                lineStyle: LW.LineStyle.Dashed,
-                priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
-            });
-            if (lowerLine.length > 1) lowerSeries.setData(lowerLine);
-
-            // ── Fan Chart: AI Forecast Median (full horizon) ──────────────
-            const predSeries = chart.addLineSeries({
-                color: C.predict, lineWidth: 2,
-                lineStyle: LW.LineStyle.LargeDashed,
-                priceLineVisible: false,
-                lastValueVisible: true,
-                crosshairMarkerRadius: 4,
-                crosshairMarkerBackgroundColor: C.predict,
-            });
-            if (predLine.length > 1) predSeries.setData(predLine);
-
-            // ── Actual Price Overlay (past dates only, solid amber) ───────
-            let actualSeries = null;
-            if (actualLine.length > 0) {
-                actualSeries = chart.addLineSeries({
-                    color: '#f59e0b', lineWidth: 2,
-                    priceLineVisible: false, lastValueVisible: true,
-                    crosshairMarkerRadius: 3,
-                    crosshairMarkerBackgroundColor: '#f59e0b',
-                    title: 'Actual',
-                });
-                actualSeries.setData(actualLine);
-            }
-
-            // ── ④ Visible range: 30 days before first pred → last pred ────
-            const firstPredDate = cleanPred.length ? cleanPred[0].prediction_date : anchorCandle.time;
-            const lastPredDate  = cleanPred.length ? cleanPred[cleanPred.length - 1].prediction_date : anchorCandle.time;
-            const fromDate = luxon.DateTime.fromISO(firstPredDate).minus({ days: 15 }).toISODate();
-            chart.timeScale().setVisibleRange({ from: fromDate, to: lastPredDate });
-
-            // ── ⑤ Custom Tooltip ──────────────────────────────────────────
-            const tip = makeTooltip(container);
-            chart.subscribeCrosshairMove(p => {
-                if (!p.time || !p.point || p.point.x < 0) { tip.style.display = 'none'; return; }
-                const c      = p.seriesData.get(candleSeries);
-                const pred   = p.seriesData.get(predSeries);
-                const upp    = p.seriesData.get(upperSeries);
-                const low    = p.seriesData.get(lowerSeries);
-                const vol    = p.seriesData.get(volSeries);
-                const actual = actualSeries ? p.seriesData.get(actualSeries) : null;
-                const dt     = luxon.DateTime.fromISO(p.time).toFormat('dd MMM yyyy');
-
-                let rows = '';
-                if (c) {
-                    const up  = c.close >= c.open;
-                    const col = up ? C.up : C.down;
-                    rows += tipRow('O', '฿' + c.open.toFixed(2),  col)
-                          + tipRow('H', '฿' + c.high.toFixed(2),  '#34d399')
-                          + tipRow('L', '฿' + c.low.toFixed(2),   '#f87171')
-                          + tipRow('C', (up ? '▲ ' : '▼ ') + '฿' + c.close.toFixed(2), col);
-                    if (vol) rows += tipRow('V', fmtVol(vol.value), '#a78bfa');
+            let rows = '';
+            if (actualVal) rows += tipRow('ACTUAL', '฿' + actualVal.value.toFixed(2), '#0f172a');
+            if (foreVal) {
+                rows += tipRow('PREDICT', '฿' + foreVal.value.toFixed(2), '#6366f1');
+                // ค้นหา CI จากข้อมูลดิบ
+                const raw = sortedPred.find(d => d.prediction_date === p.time);
+                if (raw) {
+                    rows += tipRow('80% CI', `฿${parseFloat(raw.lower_bound).toFixed(2)}-${parseFloat(raw.upper_bound).toFixed(2)}`, '#94a3b8');
                 }
-                if (actual) rows += tipRow('ACT', '฿' + actual.value.toFixed(2), '#f59e0b');
-                if (pred)   rows += tipRow('FORE', '฿' + pred.value.toFixed(2), '#818cf8');
-                if (upp && low)
-                    rows += tipRow('CI', `฿${low.value.toFixed(2)}–฿${upp.value.toFixed(2)}`, '#a5b4fc');
+            }
 
-                tip.innerHTML = `
-                    <div style="color:#94a3b8;font-size:10px;font-weight:800;letter-spacing:.1em;margin-bottom:7px;text-transform:uppercase">${dt}</div>
-                    <div style="display:grid;grid-template-columns:36px 1fr;gap:3px 8px">${rows}</div>
-                `;
-                const { width } = container.getBoundingClientRect();
-                tip.style.left  = p.point.x > width / 2 ? '12px' : 'auto';
-                tip.style.right = p.point.x > width / 2 ? 'auto' : '12px';
-                tip.style.display = 'block';
-            });
-        }
-
+            tip.innerHTML = `
+                <div style="color:#64748b;font-size:10px;font-weight:800;text-transform:uppercase;margin-bottom:5px">${dt}</div>
+                <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 10px">${rows}</div>
+            `;
+            tip.style.display = 'block';
+            const { width } = container.getBoundingClientRect();
+            tip.style.left = p.point.x > width / 2 ? '15px' : 'auto';
+            tip.style.right = p.point.x > width / 2 ? 'auto' : '15px';
+        });
+    }
         // ══════════════════════════════════════════════════════════════
         // renderPredictTable — Bloomberg-style Forecast Data Table
         // ══════════════════════════════════════════════════════════════
         function renderPredictTable(data) {
-            const container = document.getElementById('predictTableContainer');
-            if (!container) return;
+        const container = document.getElementById('predictTableContainer');
+        if (!container) return;
 
-            if (!data || !data.length) {
-                container.innerHTML = `<div class="flex items-center justify-center py-10 text-slate-400 text-[11px] font-bold uppercase tracking-widest">ไม่พบข้อมูล</div>`;
-                return;
-            }
-
-            const todayISO = luxon.DateTime.now().setZone('Asia/Bangkok').toISODate();
-
-            // Error % color coding
-            const errClass = (ep) => {
-                if (ep == null) return 'text-slate-400';
-                const abs = Math.abs(parseFloat(ep));
-                if (abs <= 2) return 'text-emerald-600 font-black';
-                if (abs <= 5) return 'text-amber-600 font-black';
-                return 'text-rose-600 font-black';
-            };
-
-            const sorted = [...data].sort((a, b) => a.prediction_date.localeCompare(b.prediction_date));
-
-            const rows = sorted.map((d, i) => {
-                const isPast   = d.prediction_date <= todayISO;
-                const dateStr  = luxon.DateTime.fromISO(d.prediction_date).toFormat('dd MMM yyyy');
-                const dayIdx   = d.day_index != null ? `D+${d.day_index}` : `#${i+1}`;
-                const pred     = parseFloat(d.predicted_price);
-                const lower    = parseFloat(d.lower_bound);
-                const upper    = parseFloat(d.upper_bound);
-                const actual   = d.actual_price != null ? parseFloat(d.actual_price) : null;
-                const ep       = d.error_percent != null ? parseFloat(d.error_percent) : null;
-                const epStr    = ep != null ? `${ep >= 0 ? '+' : ''}${ep.toFixed(2)}%` : '—';
-                const actualStr = actual != null ? `฿${actual.toFixed(2)}` : '—';
-                const rowCls   = !isPast ? 'future-row' : '';
-                const dateCls  = !isPast ? 'text-blue-700 font-black' : 'text-slate-600';
-
-                return `<tr class="border-b border-slate-50 hover:bg-amber-50/40 transition-colors ${rowCls}">
-                    <td class="px-4 py-2.5 whitespace-nowrap font-mono text-[11px] ${dateCls}">${dateStr}</td>
-                    <td class="px-4 py-2.5 text-center font-mono text-[10px] text-slate-400">${dayIdx}</td>
-                    <td class="px-4 py-2.5 text-right font-mono text-[11px] text-slate-800">${actualStr}</td>
-                    <td class="px-4 py-2.5 text-right font-mono text-[11px] text-indigo-700 font-bold">฿${pred.toFixed(2)}</td>
-                    <td class="px-4 py-2.5 text-right font-mono text-[11px] text-slate-400 hidden sm:table-cell">฿${lower.toFixed(2)}</td>
-                    <td class="px-4 py-2.5 text-right font-mono text-[11px] text-slate-400 hidden sm:table-cell">฿${upper.toFixed(2)}</td>
-                    <td class="px-4 py-2.5 text-right font-mono text-[11px] ${errClass(ep)}">${epStr}</td>
-                </tr>`;
-            }).join('');
-
-            container.innerHTML = `<table class="w-full min-w-[560px]">
-                <thead class="border-b-2 border-slate-200" style="position:sticky;top:0;z-index:10;background:#f8fafc">
-                    <tr class="text-[10px] font-black text-slate-400 uppercase tracking-[.18em]">
-                        <th class="px-4 py-3 text-left">Date</th>
-                        <th class="px-4 py-3 text-center">Day</th>
-                        <th class="px-4 py-3 text-right">Actual</th>
-                        <th class="px-4 py-3 text-right">Forecast</th>
-                        <th class="px-4 py-3 text-right hidden sm:table-cell">Lower 80%</th>
-                        <th class="px-4 py-3 text-right hidden sm:table-cell">Upper 80%</th>
-                        <th class="px-4 py-3 text-right">Error %</th>
-                    </tr>
-                </thead>
-                <tbody>${rows}</tbody>
-            </table>`;
-
-            // Update subtitle badge
-            const badge    = document.getElementById('predictTableBadge');
-            const evCount  = sorted.filter(d => d.error_percent != null).length;
-            const futCount = sorted.filter(d => d.prediction_date > todayISO).length;
-            if (badge) badge.textContent = `${sorted.length} ROWS · ${evCount} EVALUATED · ${futCount} AHEAD`;
+        if (!data || !data.length) {
+            container.innerHTML = `<div class="flex items-center justify-center py-10 text-slate-400 text-[11px] font-bold uppercase tracking-widest">ไม่พบข้อมูล</div>`;
+            return;
         }
+
+        // 1. กำหนดจำนวนวันที่ต้องการแสดงผลจาก Horizon
+        const horizonMapping = { '7D': 7, '15D': 15, '30D': 30 };
+        const maxDays = horizonMapping[APP.predictHorizon] || 7;
+
+        const todayISO = luxon.DateTime.now().setZone('Asia/Bangkok').toISODate();
+
+        // 2. จัดเรียงและตัดข้อมูลให้เหลือเท่ากับจำนวน Horizon ที่เลือก (7, 15, 30)
+        // โดยเริ่มนับจากข้อมูลตัวแรกที่ระบบพยากรณ์ออกมา
+        const sorted = [...data]
+            .sort((a, b) => a.prediction_date.localeCompare(b.prediction_date))
+            .slice(0, maxDays); // บังคับให้เหลือแค่ 7, 15 หรือ 30 แถวเท่านั้น
+
+        const errClass = (ep) => {
+            if (ep == null) return 'text-slate-400';
+            const abs = Math.abs(parseFloat(ep));
+            if (abs <= 2) return 'text-emerald-600 font-black';
+            if (abs <= 5) return 'text-amber-600 font-black';
+            return 'text-rose-600 font-black';
+        };
+
+        const rows = sorted.map((d, i) => {
+            const isPast   = d.prediction_date <= todayISO;
+            const dateStr  = luxon.DateTime.fromISO(d.prediction_date).toFormat('dd MMM yyyy');
+            // ใช้ i+1 เพื่อให้ลำดับในตารางรัน 1 ถึง 7 (หรือ 15, 30) อย่างถูกต้อง
+            const dayIdx   = `D+${i + 1}`; 
+            const pred     = parseFloat(d.predicted_price);
+            const lower    = parseFloat(d.lower_bound);
+            const upper    = parseFloat(d.upper_bound);
+            const actual   = d.actual_price != null ? parseFloat(d.actual_price) : null;
+            const ep       = d.error_percent != null ? parseFloat(d.error_percent) : null;
+            
+            const epStr    = ep != null ? `${ep >= 0 ? '+' : ''}${ep.toFixed(2)}%` : '—';
+            const actualStr = actual != null ? `฿${actual.toFixed(2)}` : '—';
+            const rowCls   = !isPast ? 'future-row' : '';
+            const dateCls  = !isPast ? 'text-blue-700 font-black' : 'text-slate-600';
+
+            return `<tr class="border-b border-slate-50 hover:bg-amber-50/40 transition-colors ${rowCls}">
+                <td class="px-4 py-2.5 whitespace-nowrap font-mono text-[11px] ${dateCls}">${dateStr}</td>
+                <td class="px-4 py-2.5 text-center font-mono text-[10px] text-slate-400">${dayIdx}</td>
+                <td class="px-4 py-2.5 text-right font-mono text-[11px] text-slate-800">${actualStr}</td>
+                <td class="px-4 py-2.5 text-right font-mono text-[11px] text-indigo-700 font-bold">฿${pred.toFixed(2)}</td>
+                <td class="px-4 py-2.5 text-right font-mono text-[11px] text-slate-400 hidden sm:table-cell">฿${lower.toFixed(2)}</td>
+                <td class="px-4 py-2.5 text-right font-mono text-[11px] text-slate-400 hidden sm:table-cell">฿${upper.toFixed(2)}</td>
+                <td class="px-4 py-2.5 text-right font-mono text-[11px] ${errClass(ep)}">${epStr}</td>
+            </tr>`;
+        }).join('');
+
+        container.innerHTML = `<table class="w-full min-w-[560px]">
+            <thead class="border-b-2 border-slate-200" style="position:sticky;top:0;z-index:10;background:#f8fafc">
+                <tr class="text-[10px] font-black text-slate-400 uppercase tracking-[.18em]">
+                    <th class="px-4 py-3 text-left">Date</th>
+                    <th class="px-4 py-3 text-center">Day</th>
+                    <th class="px-4 py-3 text-right">Actual</th>
+                    <th class="px-4 py-3 text-right">Forecast</th>
+                    <th class="px-4 py-3 text-right hidden sm:table-cell">Lower 80%</th>
+                    <th class="px-4 py-3 text-right hidden sm:table-cell">Upper 80%</th>
+                    <th class="px-4 py-3 text-right">Error %</th>
+                </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+        </table>`;
+
+        // อัปเดตตัวเลขสรุปที่ Badge ด้านบน
+        const badge    = document.getElementById('predictTableBadge');
+        const evCount  = sorted.filter(d => d.error_percent != null).length;
+        const futCount = sorted.filter(d => d.prediction_date > todayISO).length;
+        if (badge) badge.textContent = `${sorted.length} DAYS · ${evCount} EVALUATED · ${futCount} AHEAD`;
+    }
 
         // ══════════════════════════════════════════════════════════════
         // PREDICT PAGE — Searchable Dropdown
