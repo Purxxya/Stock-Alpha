@@ -2112,7 +2112,7 @@
             const dt = luxon.DateTime.fromISO(p.time).toFormat('dd MMM yyyy');
 
             let rows = '';
-            if (actualVal) rows += tipRow('ACTUAL PRICE', '฿' + actualVal.value.toFixed(2), '#0f172a');
+            if (actualVal) rows += tipRow('ACTUAL PRICE', '฿' + actualVal.value.toFixed(2), '#94a3b8');
             if (foreVal) {
                 rows += tipRow('AI FORECAST', '฿' + foreVal.value.toFixed(2), '#6366f1');
                 // ค้นหา CI จากข้อมูลดิบ
