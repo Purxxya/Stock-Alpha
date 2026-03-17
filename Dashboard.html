@@ -7,11 +7,24 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
-    <!-- Lightweight Charts v4 — by TradingView, renders from our own Supabase data -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+       *, ::before, ::after { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Inter', sans-serif !important; 
+        }
+
+        /* 3. บังคับเพิ่มเติมสำหรับ Tag ที่มักจะมีปัญหา */
+        html, body, button, input, optgroup, select, textarea, span, div, table, tr, td, th {
+            font-family: 'Inter', sans-serif !important;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -29,23 +42,7 @@
             -webkit-box-orient: vertical; 
             overflow: hidden; 
         }
-
-        /* ════════════════════════════════════════════════
-           UNIFIED AUTOCOMPLETE SYSTEM — ใช้กับทุกหน้า
-           ════════════════════════════════════════════════ */
-
-        /* Predict page search wrapper (ยังคงใช้) */
-        .predict-search-wrap { position:relative; min-width:220px; }
-        .predict-search-input {
-            width:100%; padding:10px 16px 10px 42px;
-            border:2px solid #e2e8f0; border-radius:12px;
-            font-size:12px; font-weight:900; letter-spacing:.08em; text-transform:uppercase;
-            outline:none; background:#f8fafc; color:#0f172a;
-            transition:border-color .15s, background .15s; cursor:pointer;
-        }
-        .predict-search-input:focus { border-color:#dc2626; background:#fff; }
-        .predict-search-input::placeholder { color:#94a3b8; font-weight:700; }
-        .predict-search-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); pointer-events:none; color:#94a3b8; }
+    
 
         /* ── Unified Dropdown Shell ── */
         .ac-drop {
@@ -206,24 +203,28 @@
             </div>
 
             <nav id="stockList" class="flex-1 overflow-y-auto px-3 py-2 space-y-1 custom-scrollbar"></nav>
-            
-            <div class="px-3 py-3 border-t border-slate-200 bg-slate-50/30 shrink-0">
-                <h2 class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5 px-1">
-                    <svg class="w-3 h-3 text-blue-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+
+            <div id="userInfoPanel" class="px-3 py-3 border-t border-slate-200 bg-white shrink-0">
+                </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col overflow-hidden relative">
+
+            <div class="w-full bg-white border-b border-slate-100 py-3 px-6 flex items-center shrink-0 z-20 shadow-sm">
+                <div class="text-[10px] font-black uppercase tracking-widest text-slate-400 mr-4 shrink-0 flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
                     Sector Avg
-                </h2>
-                <div id="sectorContainer" class="grid grid-cols-2 gap-2 overflow-y-auto custom-scrollbar px-1 max-h-[160px] pb-1">
+                </div>
+                
+                <div id="sectorContainer" class="flex items-center gap-3 overflow-x-auto custom-scrollbar flex-1 pb-1 -mb-1">
                     </div>
             </div>
 
-            <!-- User Info & Logout -->
-            <div id="userInfoPanel" class="px-3 py-3 border-t border-slate-200 bg-white shrink-0">
-                <!-- จะถูก render โดย renderUserInfo() -->
-            </div>
-        </aside>
+            <div class="absolute top-0 left-0 right-0 h-64 bg-gradient-to-b from-white to-transparent pointer-events-none z-0"></div>
 
-        <main class="flex-1 flex flex-col overflow-hidden">
-            <div class="flex-1 overflow-y-auto custom-scrollbar">
+            <div class="flex-1 overflow-y-auto custom-scrollbar z-10 relative">
 
                 <div id="page-dashboard" class="page-content p-8 space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
@@ -241,9 +242,9 @@
                                     <h3 class="text-lg font-black text-slate-900 uppercase tracking-tight">Market Explorer</h3>
                                 </div>
                             </div>
-                            <div class="relative w-96">
-                                <div class="absolute left-5 top-1/2 -translate-y-1/2 text-red-600 z-10">
-                                    <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <div class="relative w-96">
+                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 z-10">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                         <circle cx="11" cy="11" r="8"></circle>
                                         <path d="m21 21-4.35-4.35"></path>
                                     </svg>
@@ -251,12 +252,12 @@
                                 <input 
                                     id="searchInput"
                                     type="text" 
-                                    placeholder="SEARCH STOCK..." 
+                                    placeholder="Search..." 
                                     autocomplete="off"
-                                    class="w-full bg-white border-2 border-red-600 rounded-full pl-14 pr-6 py-3 text-[13px] font-black focus:ring-4 focus:ring-red-600/10 outline-none transition-all tracking-[0.2em] uppercase placeholder:text-slate-300"
+                                    class="w-full bg-slate-50 border-2 border-slate-200 focus:bg-white focus:border-red-600 rounded-full pl-12 pr-6 py-3 text-[13px] font-black focus:ring-4 focus:ring-red-600/10 outline-none transition-all tracking-[0.1em] uppercase placeholder:text-slate-400 placeholder:normal-case"
                                 />
                                 <div id="searchDropdown" class="ac-drop custom-scrollbar"></div>
-                            </div> 
+                            </div>
                         </div>
                     </div>
 
@@ -288,18 +289,19 @@
 
                 <div id="page-news" class="page-content p-8 space-y-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <div class="relative">
-                            <div class="absolute left-5 top-1/2 -translate-y-1/2 text-red-600 z-10">
+                        <div class="relative w-full">
+                            <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 z-10">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path>
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="m21 21-4.35-4.35"></path>
                                 </svg>
                             </div>
                             <input 
                                 id="newsSearchInput"
                                 type="text" 
-                                placeholder="SEARCH STOCK…  (e.g. PTT, KBANK, DELTA)"
+                                placeholder="Search..."
                                 autocomplete="off"
-                                class="w-full bg-slate-50 border-2 border-transparent focus:border-red-600 focus:bg-white rounded-full pl-14 pr-6 py-3 text-sm font-black focus:ring-4 focus:ring-red-600/5 outline-none uppercase tracking-widest"
+                                class="w-full bg-slate-50 border-2 border-slate-200 focus:bg-white focus:border-red-600 rounded-full pl-12 pr-6 py-3 text-[13px] font-black focus:ring-4 focus:ring-red-600/10 outline-none transition-all tracking-[0.1em] uppercase placeholder:text-slate-400 placeholder:normal-case"
                             />
                             <div id="newsDropdown" class="ac-drop custom-scrollbar"></div>
                         </div>
@@ -309,8 +311,7 @@
                         <div class="col-span-5 space-y-4">
                             <div class="flex items-center justify-between">
                                 <h3 class="text-lg font-black text-slate-900 uppercase">News</h3>
-                                <!-- <span id="newsCount" class="px-3 py-1 bg-red-50 text-red-600 text-xs font-black rounded-lg">0</span> -->
-                            </div>
+                                </div>
                             <div id="newsContainer" class="space-y-4 max-h-[800px] overflow-y-auto custom-scrollbar"></div>
                         </div>
 
@@ -334,13 +335,8 @@
 
                 <div id="page-predict" class="page-content p-8 space-y-6">
 
-                    <!-- ══════════════════════════════════════════════════════
-                         HERO CARD — matches "Market Explorer" style
-                    ══════════════════════════════════════════════════════ -->
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm animate-in">
-                        <!-- Row 1: Title (left) + Controls (right) -->
                         <div class="flex items-center justify-between gap-4 flex-wrap">
-                            <!-- Left: icon + title -->
                             <div class="flex items-center gap-3">
                                 <div class="p-3 bg-red-600 rounded-2xl text-white shadow-lg shadow-red-600/20">
                                     <svg class="w-[22px] h-[22px]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -353,23 +349,23 @@
                                 </div>
                             </div>
 
-                            <!-- Right: Searchable dropdown + horizon pills -->
                             <div class="flex items-center gap-3 flex-wrap">
-                                <!-- Searchable Stock Dropdown -->
-                                <div class="predict-search-wrap" id="predictSearchWrap">
-                                    <svg class="predict-search-icon w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-                                    </svg>
-                                    <input
-                                        id="predictSearchInput"
-                                        class="predict-search-input"
-                                        type="text"
-                                        placeholder="Search SET100…"
-                                        autocomplete="off"
-                                    />
-                                    <div id="predictStockDropdown" class="ac-drop custom-scrollbar"></div>
-                                </div>
-                                <!-- Horizon Pills -->
+                                <div class="relative w-72" id="predictSearchWrap">
+                                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 z-10">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                <circle cx="11" cy="11" r="8"></circle>
+                                                <path d="m21 21-4.35-4.35"></path>
+                                            </svg>
+                                        </div>
+                                        <input
+                                            id="predictSearchInput"
+                                            type="text"
+                                            placeholder="Search..."
+                                            autocomplete="off"
+                                            class="w-full bg-slate-50 border-2 border-slate-200 focus:bg-white focus:border-red-600 rounded-full pl-12 pr-6 py-3 text-[13px] font-black focus:ring-4 focus:ring-red-600/10 outline-none transition-all tracking-[0.1em] uppercase placeholder:text-slate-400 placeholder:normal-case"
+                                        />
+                                        <div id="predictStockDropdown" class="ac-drop custom-scrollbar"></div>
+                                    </div>
                                 <div class="flex gap-2">
                                     <button onclick="setHorizon('7D')"  id="pill-7D"  class="horizon-pill active">7D</button>
                                     <button onclick="setHorizon('15D')" id="pill-15D" class="horizon-pill">15D</button>
@@ -378,9 +374,7 @@
                             </div>
                         </div>
 
-                        <!-- Row 2: Key Metrics strip (shows after stock selected) -->
                         <div id="predictMetricsStrip" class="mt-5 pt-5 border-t border-slate-100 grid grid-cols-4 gap-4 hidden">
-                            <!-- Stock + Badge -->
                             <div class="flex items-center gap-2.5">
                                 <div>
                                     <div class="flex items-center gap-2 mb-0.5">
@@ -390,19 +384,16 @@
                                     <p id="predictHeroName" class="text-[9px] font-bold text-slate-400 uppercase tracking-[.12em] truncate max-w-[160px]">—</p>
                                 </div>
                             </div>
-                            <!-- Current Price -->
                             <div class="border-l border-slate-100 pl-4">
                                 <div class="text-[8px] font-black text-slate-400 uppercase tracking-[.15em] mb-1">Current Price</div>
                                 <div id="predictHeroPrice" class="text-xl font-black text-slate-900 leading-none">฿—</div>
                                 <div id="predictHeroReturn" class="text-[10px] font-black text-slate-400 mt-0.5">—</div>
                             </div>
-                            <!-- AI Target -->
                             <div class="border-l border-slate-100 pl-4">
                                 <div class="text-[8px] font-black text-slate-400 uppercase tracking-[.15em] mb-1">AI Target Price</div>
                                 <div id="predictHeroTarget" class="text-xl font-black text-blue-600 leading-none">฿—</div>
                                 <div id="predictHeroTargetReturn" class="text-[10px] font-black text-slate-400 mt-0.5">— vs current</div>
                             </div>
-                            <!-- 80% CI -->
                             <div class="border-l border-slate-100 pl-4">
                                 <div class="text-[8px] font-black text-slate-400 uppercase tracking-[.15em] mb-1">80% Confidence Band</div>
                                 <div id="predictHeroBandLow"  class="text-[10px] font-black text-slate-500 leading-snug">Low: ฿—</div>
@@ -411,14 +402,11 @@
                         </div>
                     </div>
 
-                    <!-- ══════════════════════════════════════════════════════
-                         CHART — Full width
-                    ══════════════════════════════════════════════════════ -->
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm">
                             <div class="px-7 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
                                 <div>
                                     <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">Price Projection Chart</h3>
-                                    <p id="predictChartSubtitle" class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">Actual Candlestick · AI Forecast · 80% Confidence Band</p>
+                                    <p id="predictChartSubtitle" class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">AI Forecast</p>
                                 </div>
                                 <div class="flex flex-wrap gap-4 text-[9px] font-black uppercase tracking-wider text-slate-500">
                                     <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded-sm" style="background:#26a69a"></span>Bullish</span>
@@ -436,14 +424,11 @@
                             </div>
                     </div>
 
-                    <!-- ══════════════════════════════════════════════════════
-                         FORECAST DATA TABLE — Bloomberg Style
-                    ══════════════════════════════════════════════════════ -->
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                         <div class="px-7 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
                             <div>
                                 <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">Forecast Data Table</h3>
-                                <p id="predictTableSubtitle" class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">Daily Prediction · 80% Confidence Band · Error Analysis</p>
+                                <p id="predictTableSubtitle" class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">Daily Prediction</p>
                             </div>
                             <span id="predictTableBadge" class="text-[9px] font-black text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-slate-200">—</span>
                         </div>
@@ -452,9 +437,6 @@
                         </div>
                     </div>
 
-                    <!-- ══════════════════════════════════════════════════════
-                         BOTTOM ROW — AI Insights (full width)
-                    ══════════════════════════════════════════════════════ -->
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:shadow-md">
     
                         <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
@@ -498,6 +480,10 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </main>
+    </div>
 
     <script>
         // ============================================
@@ -706,8 +692,8 @@
         filteredStocks: [],
         allNews: [],
         filteredNews: [],
-        lwcChart:        null,   // Lightweight Charts instance (Dashboard)
-        predictLwcChart: null,   // Lightweight Charts instance (Predict page)
+        lwcChart:        null,   
+        predictLwcChart: null,   
         chartType: 'candlestick',
         predictData: [],
         predictSymbol: null,
@@ -1138,12 +1124,16 @@
             const perf = calculateSectorPerformance();
             container.innerHTML = perf.map(s => {
                 const isPositive = s.avgChange >= 0;
-                const colorClass = isPositive ? 'text-emerald-500 bg-emerald-50 border-emerald-100' : 'text-red-500 bg-red-50 border-red-100';
+                // ปรับสีให้ดูเป็นมิตรขึ้นเมื่อเป็นแคปซูลแนวนอน
+                const colorClass = isPositive 
+                    ? 'text-emerald-600 bg-emerald-50/50 border-emerald-100 hover:bg-emerald-50' 
+                    : 'text-rose-600 bg-rose-50/50 border-rose-100 hover:bg-rose-50';
                 const sign = isPositive ? '+' : '';
+                
                 return `
-                    <div class="flex flex-col items-center justify-center px-2 py-2 rounded-lg border ${colorClass} w-full">
-                        <span class="text-[9px] font-black uppercase tracking-wider text-slate-500 truncate w-full text-center mb-0.5" title="${s.name}">${s.name}</span>
-                        <span class="text-xs font-black">${sign}${s.avgChange.toFixed(2)}%</span>
+                    <div class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border ${colorClass} shrink-0 transition-colors cursor-default shadow-sm">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">${s.name}</span>
+                        <span class="text-[11px] font-black">${sign}${s.avgChange.toFixed(2)}%</span>
                     </div>
                 `;
             }).join('');
@@ -1249,52 +1239,47 @@
             }
 
             listEl.innerHTML = displayStocks.map((stock, rank) => {
-                const isActive   = APP.currentStock && APP.currentStock.symbol === stock.symbol;
-                const isPositive = stock.changePercent >= 0;
+            const isActive   = APP.currentStock && APP.currentStock.symbol === stock.symbol;
+            const isPositive = stock.changePercent >= 0;
 
-                // Sparkline: use cached bezier path or dashed-line placeholder
-                const sparkStroke = isActive ? 'rgba(255,255,255,0.85)'
-                                 : isPositive ? '#10b981'    // emerald-500
-                                              : '#f43f5e';   // rose-500
-                const cachedPath = APP.sparklines[stock.symbol]
-                    ? buildSparkPath(APP.sparklines[stock.symbol], 52, 20)
-                    : null;
-                const sparkInner = cachedPath
-                    ? `<path d="${cachedPath}" fill="none" stroke="${sparkStroke}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`
-                    : `<line x1="2" y1="10" x2="50" y2="10" stroke="${isActive ? 'rgba(255,255,255,0.2)' : '#e2e8f0'}" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 2"/>`;
+            const sparkStroke = isActive ? 'rgba(255,255,255,0.85)'
+                            : isPositive ? '#10b981'
+                                        : '#f43f5e';
+            const cachedPath = APP.sparklines[stock.symbol]
+                ? buildSparkPath(APP.sparklines[stock.symbol], 52, 20)
+                : null;
+            const sparkInner = cachedPath
+                ? `<path d="${cachedPath}" fill="none" stroke="${sparkStroke}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`
+                : `<line x1="2" y1="10" x2="50" y2="10" stroke="${isActive ? 'rgba(255,255,255,0.2)' : '#e2e8f0'}" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 2"/>`;
 
-                return `
-                    <button
-                        onclick="selectStockSidebar('${stock.symbol}')"
-                        class="flex items-center justify-between w-full px-3 py-2.5 rounded-xl transition-all ${
-                            isActive
-                                ? 'bg-red-600 text-white shadow-lg shadow-red-600/20'
-                                : 'hover:bg-slate-50 text-slate-700'
-                        }"
-                    >
-                        <!-- Rank + Symbol + Name -->
-                        <div class="flex items-center gap-1.5 min-w-0 flex-1">
-                            <span class="text-[8px] font-black w-3.5 text-center shrink-0 ${isActive ? 'text-red-200' : 'text-slate-300'}">${rank+1}</span>
-                            <div class="min-w-0">
-                                <div class="text-[13px] font-black leading-none ${isActive ? 'text-white' : 'text-slate-900'}">${stock.symbol}</div>
-                                <div class="text-[8px] font-bold truncate mt-0.5 ${isActive ? 'text-red-200' : 'text-slate-400'}" style="max-width:68px">${stock.fullName.substring(0,11)}</div>
-                            </div>
+            return `
+                <button
+                    onclick="selectStockSidebar('${stock.symbol}')"
+                    class="flex items-center justify-between w-full px-3 py-2.5 rounded-xl transition-all ${
+                        isActive
+                            ? 'bg-red-600 text-white shadow-lg shadow-red-600/20'
+                            : 'hover:bg-slate-50 text-slate-700'
+                    }"
+                >
+                    <div class="flex items-center gap-2 min-w-0 flex-1">
+                        <span class="text-[9px] font-black w-3 text-left shrink-0 ${isActive ? 'text-red-200' : 'text-slate-300'}">${rank+1}</span>
+                        <div class="min-w-0 flex-1 text-left">
+                            <div class="text-[13px] font-black leading-none tracking-tight ${isActive ? 'text-white' : 'text-slate-900'}">${stock.symbol}</div>
+                            <div class="text-[8px] font-bold truncate mt-1 ${isActive ? 'text-red-200' : 'text-slate-400'}" style="max-width:70px">${stock.fullName.substring(0,12)}</div>
                         </div>
+                    </div>
 
-                        <!-- Dynamic Sparkline SVG -->
-                        <svg id="spark-${stock.symbol}" class="shrink-0 mx-1.5" width="52" height="20" viewBox="0 0 52 20">
-                            ${sparkInner}
-                        </svg>
+                    <svg id="spark-${stock.symbol}" class="shrink-0 mx-1.5" width="52" height="20" viewBox="0 0 52 20">
+                        ${sparkInner}
+                    </svg>
 
-                        <!-- Price + Change -->
-                        <div class="text-right shrink-0">
-                            <div class="text-[12px] font-black leading-none ${isActive ? 'text-white' : 'text-slate-900'}">฿${stock.price.toFixed(2)}</div>
-                            <div class="text-[9px] font-black mt-0.5 ${isPositive ? (isActive ? 'text-white' : 'text-emerald-500') : (isActive ? 'text-white' : 'text-rose-500')}">${isPositive ? '+' : ''}${stock.changePercent.toFixed(2)}%</div>
-                        </div>
-                    </button>
-                `;
-            }).join('');
-
+                    <div class="text-right shrink-0">
+                        <div class="text-[12px] font-black leading-none ${isActive ? 'text-white' : 'text-slate-900'}">฿${stock.price.toFixed(2)}</div>
+                        <div class="text-[9px] font-black mt-1 ${isPositive ? (isActive ? 'text-white' : 'text-emerald-500') : (isActive ? 'text-white' : 'text-rose-500')}">${isPositive ? '+' : ''}${stock.changePercent.toFixed(2)}%</div>
+                    </div>
+                </button>
+            `;
+        }).join('');
             // Fetch sparklines for uncached symbols (async — paints when ready)
             const symbols  = displayStocks.map(s => s.symbol);
             const uncached = symbols.filter(sym => !APP.sparklines[sym]);
