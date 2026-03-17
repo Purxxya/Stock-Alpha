@@ -154,21 +154,21 @@
 
     <div id="mainContainer" style="display: none;" class="flex h-screen overflow-hidden">
         
-        <aside class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0">
-            <div class="p-5 flex items-center gap-2.5 border-b border-slate-100">
-                <div class="w-9 h-9 bg-red-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-red-600/25">
-                    <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+       <aside class="w-[260px] bg-white border-r border-slate-200 flex flex-col shrink-0 h-screen relative z-20">
+            <div class="p-5 flex items-center gap-3 border-b border-slate-100 shrink-0">
+                <div class="w-9 h-9 bg-red-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-red-600/20">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-sm font-black text-slate-900 tracking-tight uppercase leading-none">Dashboard Finance</h1>
-                    <span class="text-[9px] text-red-600 font-black tracking-widest uppercase" id="stockCount">SET 100</span>
+                    <h1 class="text-[13px] font-black text-slate-900 tracking-tight uppercase leading-none mb-1">Dashboard Finance</h1>
+                    <span class="text-[10px] text-red-600 font-black tracking-widest uppercase">SET 100</span>
                 </div>
             </div>
 
-            <div class="px-3 py-4 space-y-1">
-                <button onclick="switchPage('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black uppercase tracking-wide transition-all">
+            <div class="px-3 py-4 space-y-1.5 shrink-0">
+                <button onclick="switchPage('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all bg-red-600 text-white shadow-lg shadow-red-600/20">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <rect x="3" y="3" width="7" height="7"></rect>
                         <rect x="14" y="3" width="7" height="7"></rect>
@@ -177,34 +177,33 @@
                     </svg>
                     Dashboard
                 </button>
-                <button onclick="switchPage('news')" id="nav-news" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black uppercase tracking-wide transition-all">
+                <button onclick="switchPage('news')" id="nav-news" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all text-slate-500 hover:bg-slate-50 hover:text-slate-900">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
                     </svg>
                     News
                 </button>
-                <button onclick="switchPage('predict')" id="nav-predict" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black uppercase tracking-wide transition-all">
+                <button onclick="switchPage('predict')" id="nav-predict" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all text-slate-500 hover:bg-slate-50 hover:text-slate-900">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
                     </svg>
                     Predict
                 </button>
             </div>
-            
 
-            <div class="px-4 py-3 bg-slate-50/50 border-y border-slate-100">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-[10px] font-black uppercase tracking-[0.15em] flex items-center gap-1.5">
-                        <span class="text-[13px] leading-none" style="color: #dc2626;">★</span>
-                        <span id="listTitle" class="text-[11px] font-black uppercase tracking-[0.15em]" style="color: #1e293b;">Top 10</span>
-                    </h2>
-                    <span id="listSubtitle" class="text-[8px] font-black text-slate-300 uppercase tracking-widest">Most Active</span>
-                </div>
+            <div class="px-5 py-3 bg-slate-50/80 border-y border-slate-100 shrink-0 flex items-center justify-between">
+                <h2 class="text-[11px] font-black uppercase tracking-[0.15em] flex items-center gap-1.5">
+                    <span class="text-[14px] leading-none text-red-600">★</span>
+                    <span id="listTitle" class="text-slate-800">Top 10</span>
+                </h2>
+                <span id="listSubtitle" class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Most Active</span>
             </div>
 
-            <nav id="stockList" class="flex-1 overflow-y-auto px-3 py-2 space-y-1 custom-scrollbar"></nav>
+            <div class="flex-1 overflow-hidden bg-slate-50/30 flex flex-col">
+                <nav id="stockList" class="flex-1 overflow-y-auto px-3 py-3 space-y-1.5 custom-scrollbar"></nav>
+            </div>
 
-            <div id="userInfoPanel" class="px-3 py-3 border-t border-slate-200 bg-white shrink-0">
+            <div id="userInfoPanel" class="px-4 py-4 border-t border-slate-200 bg-white shrink-0 shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.03)] z-10">
                 </div>
         </aside>
 
@@ -2070,13 +2069,14 @@
         });
         areaSeries.setData(forecastLine); // วาดพื้นที่เงาตามเส้นพยากรณ์
 
-        // B. เส้นราคาพยากรณ์ (Indigo Dashed Line)
+        
+       // B. เส้นราคาพยากรณ์ (Indigo Dashed Line)
         const forecastSeries = chart.addLineSeries({
             color: '#6366f1',
             lineWidth: 2,
             lineStyle: LightweightCharts.LineStyle.Dashed,
-            title: 'AI Forecast',
-            lastValueVisible: true,
+            lastValueVisible: false, // ปิดป้ายราคาอันสุดท้ายที่แกนขวา
+            priceLineVisible: false, // ปิดเส้นแนวนอนที่ลากยาว
         });
         forecastSeries.setData(forecastLine);
 
@@ -2084,8 +2084,8 @@
         const actualSeries = chart.addLineSeries({
             color: '#0f172a',
             lineWidth: 2,
-            title: 'Actual Price',
-            lastValueVisible: true,
+            lastValueVisible: false, // ปิดป้ายราคาอันสุดท้ายที่แกนขวา
+            priceLineVisible: false, // ปิดเส้นแนวนอนที่ลากยาว
         });
         actualSeries.setData(historyData);
 
@@ -2112,13 +2112,13 @@
             const dt = luxon.DateTime.fromISO(p.time).toFormat('dd MMM yyyy');
 
             let rows = '';
-            if (actualVal) rows += tipRow('ACTUAL', '฿' + actualVal.value.toFixed(2), '#0f172a');
+            if (actualVal) rows += tipRow('ACTUAL PRICE', '฿' + actualVal.value.toFixed(2), '#0f172a');
             if (foreVal) {
-                rows += tipRow('PREDICT', '฿' + foreVal.value.toFixed(2), '#6366f1');
+                rows += tipRow('AI FORECAST', '฿' + foreVal.value.toFixed(2), '#6366f1');
                 // ค้นหา CI จากข้อมูลดิบ
                 const raw = sortedPred.find(d => d.prediction_date === p.time);
                 if (raw) {
-                    rows += tipRow('80% CI', `฿${parseFloat(raw.lower_bound).toFixed(2)}-${parseFloat(raw.upper_bound).toFixed(2)}`, '#94a3b8');
+                    rows += tipRow('80% CI BAND', `฿${parseFloat(raw.lower_bound).toFixed(2)} - ${parseFloat(raw.upper_bound).toFixed(2)}`, '#94a3b8');
                 }
             }
 
