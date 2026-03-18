@@ -194,7 +194,7 @@
             <div class="px-5 py-3 bg-slate-50/80 border-y border-slate-100 shrink-0 flex items-center justify-between">
                 <h2 class="text-[11px] font-black uppercase tracking-[0.15em] flex items-center gap-1.5">
                     <span class="text-[14px] leading-none text-red-600">★</span>
-                    <span id="listTitle" class="text-slate-800" font-black >Top 10</span>
+                    <span id="listTitle" class="text-slate-800" font-black>Top 10</span>
                 </h2>
                 <span id="listSubtitle" class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Most Active</span>
             </div>
@@ -559,54 +559,36 @@
         /**
          * handleSessionExpired() — จัดการเมื่อ Token หมดอายุระหว่างใช้งาน
          */
-        /**
-         * handleSessionExpired() — จัดการเมื่อ Token หมดอายุระหว่างใช้งาน
-         */
         function handleSessionExpired() {
-            // 1. เคลียร์ฝั่ง Supabase ด้วย
-            if (typeof APP !== 'undefined' && APP.supabaseClient) {
-                APP.supabaseClient.auth.signOut().catch(() => {});
-            }
-            
-            // 2. ลบของฝั่งเรา
             localStorage.removeItem(TOKEN_KEY);
             localStorage.removeItem('user_name');
             localStorage.removeItem('user_email');
-            
             alert('เซสชันหมดอายุ กรุณาเข้าสู่ระบบอีกครั้ง');
-            window.location.replace('index.html'); // ใช้ replace กันกด Back
+            window.location.href = 'login.html';
         }
 
         /**
-         * handleLogout() — ลบ Token ทั้งระบบและ Supabase แล้ว redirect ไป Login
+         * handleLogout() — ลบ Token และ redirect ไป Login
          */
         async function handleLogout() {
-            try {
-                // 1. เคลียร์ Session ของ Supabase ออกให้หมดจด
-                if (typeof APP !== 'undefined' && APP.supabaseClient) {
-                    await APP.supabaseClient.auth.signOut();
-                }
-
-                // 2. แจ้ง Server ฝั่ง API แบบไม่ต้องรอ (เอา await ออก)
-                const token = localStorage.getItem(TOKEN_KEY);
-                if (token) {
-                    fetch(`${API_BASE}/logout`, {
+            const token = localStorage.getItem(TOKEN_KEY);
+            
+            // แจ้ง server (best-effort, ไม่ block ถ้า server ไม่ตอบ)
+            if (token) {
+                try {
+                    await fetch(`${API_BASE}/logout`, {
                         method: 'POST',
                         headers: { 'Authorization': `Bearer ${token}` }
-                    }).catch(() => {});
-                }
-            } catch (err) {
-                console.error('Logout error:', err);
-            } finally {
-                // 3. เคลียร์ LocalStorage ของเราให้สะอาด
-                localStorage.removeItem(TOKEN_KEY);
-                localStorage.removeItem('user_name');
-                localStorage.removeItem('user_email');
-                
-                // 4. Redirect ไปหน้า login (ใช้ replace กันกด Back)
-                window.location.replace('index.html');
+                    });
+                } catch { /* ignore — client-side cleanup will proceed regardless */ }
             }
+
+            localStorage.removeItem(TOKEN_KEY);
+            localStorage.removeItem('user_name');
+            localStorage.removeItem('user_email');
+            window.location.href = 'login.html';
         }
+
         /**
          * authFetch() — Wrapper สำหรับ fetch ที่แนบ Bearer Token อัตโนมัติ
          * ถ้าได้ 401 → จัดการ session expired
@@ -709,6 +691,8 @@
         filteredStocks: [],
         allNews: [],
         filteredNews: [],
+        newsFallbackMode: null,  // null | 'sector' | 'set'
+        fallbackSectorName: '',  // ชื่อ Sector สำหรับแสดงใน Alert
         lwcChart:        null,   
         predictLwcChart: null,   
         chartType: 'candlestick',
@@ -898,7 +882,70 @@
             return performance.sort((a, b) => b.avgChange - a.avgChange);
         }
 
-        function initSupabase() {
+        // ══════════════════════════════════════════════════════════════
+        // NEWS FALLBACK STRATEGY
+        // Priority: Exact Symbol → Sector → SET Market Overview
+        // ══════════════════════════════════════════════════════════════
+
+        /** คืน array ของ symbol ทั้งหมดในกลุ่มอุตสาหกรรมที่ระบุ */
+        function getSymbolsInSector(sectorName) {
+            let symbols = [];
+            for (const [mainSector, subSectors] of Object.entries(SECTORS)) {
+                if (mainSector !== sectorName) continue;
+                if (Array.isArray(subSectors)) {
+                    symbols = subSectors;
+                } else {
+                    for (const sub of Object.values(subSectors)) {
+                        symbols = symbols.concat(sub);
+                    }
+                }
+                break;
+            }
+            return symbols;
+        }
+
+        /**
+         * filterNewsWithFallback(sym)
+         * กรองข่าวแบบ 3-tier:
+         *   1. Exact match  → แสดงข่าวหุ้นนั้นโดยตรง
+         *   2. Sector match → แสดงข่าวกลุ่มอุตสาหกรรมเดียวกัน
+         *   3. SET fallback → แสดงภาพรวมตลาด
+         */
+        function filterNewsWithFallback(sym) {
+            if (!sym) {
+                APP.filteredNews    = [...APP.allNews];
+                APP.newsFallbackMode = null;
+                return;
+            }
+
+            const exactSym = sym.trim().toUpperCase();
+
+            // 1. Exact match
+            let filtered = APP.allNews.filter(n => n.symbol?.toUpperCase() === exactSym);
+            if (filtered.length > 0) {
+                APP.filteredNews    = filtered;
+                APP.newsFallbackMode = null;
+                return;
+            }
+
+            // 2. Sector fallback
+            const sectorName = getSectorForSymbol(exactSym);
+            if (sectorName && sectorName !== 'General') {
+                const sectorSymbols = getSymbolsInSector(sectorName);
+                filtered = APP.allNews.filter(n => sectorSymbols.includes(n.symbol?.toUpperCase()));
+                if (filtered.length > 0) {
+                    APP.filteredNews    = filtered;
+                    APP.newsFallbackMode = 'sector';
+                    APP.fallbackSectorName = sectorName;
+                    return;
+                }
+            }
+
+            // 3. SET market overview fallback
+            filtered = APP.allNews.filter(n => n.symbol?.toUpperCase() === 'SET');
+            APP.filteredNews    = filtered;
+            APP.newsFallbackMode = 'set';
+        }
             try {
                 APP.supabaseClient = window.supabase.createClient(CONFIG.supabase.url, CONFIG.supabase.key);
                 console.log('✅ Supabase initialized');
@@ -1025,39 +1072,75 @@
 
         function renderNews() {
             const container = document.getElementById('newsContainer');
-            const newsCount = document.getElementById('newsCount');
-            // newsCount.textContent = `${APP.filteredNews.length} Symbols`;
 
-            container.innerHTML = APP.filteredNews.length === 0 
-                ? '<div class="bg-slate-50 p-10 rounded-2xl text-center"><p class="text-sm text-slate-400 font-bold uppercase tracking-widest">No news available</p></div>' 
-                : APP.filteredNews.map((group, index) => { 
-                    const analysis = group.stock_summary;
-                    const sentimentStr = analysis?.sentiment_label || analysis?.sentiment || 'Neutral';
-                    const color = sentimentStr.toLowerCase() === 'positive' || sentimentStr.toLowerCase() === 'bullish' ? 'emerald' : 
-                                  sentimentStr.toLowerCase() === 'negative' || sentimentStr.toLowerCase() === 'bearish' ? 'red' : 'slate';
-
-                    const timeDisplay = formatTimeAgo(group.latest_published_at);
-                    const articleCount = group.related_articles.length;
-
-                    return `
-                        <div class="bg-white rounded-2xl p-5 border border-slate-100 hover:border-red-500 hover:shadow-md transition-all cursor-pointer mb-4 flex flex-col" onclick="analyzeNews(${index})">
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="px-3 py-1.5 bg-slate-900 text-white text-[10px] font-black rounded-lg uppercase tracking-wider">${group.symbol}</span>
-                                ${analysis ? `<span class="px-3 py-1.5 bg-${color}-50 text-${color}-600 text-[10px] font-bold rounded-lg uppercase tracking-wider">${sentimentStr}</span>` : ''}
-                            </div>
-                            
-                            <h4 class="text-sm font-bold text-slate-800 leading-relaxed line-clamp-2 mb-3">${group.latest_title}</h4>
-
-                            <div class="flex items-center justify-between pt-3 border-t border-slate-50 mt-auto">
-                                <div class="flex items-center gap-1.5 text-slate-400 font-medium">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"></circle><path d="M12 6v6l4 2" stroke-width="2" stroke-linecap="round"></path></svg>
-                                    <span class="text-[11px] tracking-wide">ล่าสุด ${timeDisplay}</span>
-                                </div>
-                                <span class="text-[10px] font-black text-blue-500 bg-blue-50 px-2 py-1 rounded-md uppercase">${articleCount} ข่าว</span>
-                            </div>
+            // ── Fallback Alert Banner ──────────────────────────────────
+            let fallbackAlertHtml = '';
+            if (APP.newsFallbackMode === 'sector') {
+                fallbackAlertHtml = `
+                    <div class="mb-5 p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-3 shadow-sm">
+                        <svg class="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <div>
+                            <p class="text-[10px] font-black text-amber-800 uppercase tracking-widest mb-1">Sector Context</p>
+                            <p class="text-[12px] text-amber-700 font-medium leading-relaxed">
+                                ขณะนี้ไม่มีข่าวเฉพาะของ <strong class="font-black">${APP.globalSelectedSymbol || ''}</strong>
+                                ระบบจึงแสดงภาพรวมข่าวในกลุ่มอุตสาหกรรม
+                                <strong class="font-black">${APP.fallbackSectorName}</strong> เพื่อใช้ประกอบการวิเคราะห์แทน
+                            </p>
                         </div>
-                    `;
-                }).join('');
+                    </div>`;
+            } else if (APP.newsFallbackMode === 'set') {
+                fallbackAlertHtml = `
+                    <div class="mb-5 p-4 bg-blue-50 border border-blue-200 rounded-2xl flex items-start gap-3 shadow-sm">
+                        <svg class="w-5 h-5 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <div>
+                            <p class="text-[10px] font-black text-blue-800 uppercase tracking-widest mb-1">Market Context</p>
+                            <p class="text-[12px] text-blue-700 font-medium leading-relaxed">
+                                ขณะนี้ไม่มีข่าวเฉพาะของอุตสาหกรรมหรือ <strong class="font-black">${APP.globalSelectedSymbol || ''}</strong>
+                                ระบบจึงแสดงภาพรวมเศรษฐกิจตลาดหุ้น <strong class="font-black">(SET)</strong> เพื่อใช้ประกอบการวิเคราะห์
+                            </p>
+                        </div>
+                    </div>`;
+            }
+
+            // ── Empty state (หลังผ่าน 3-tier หมดแล้วยังไม่มีข้อมูล) ──
+            if (APP.filteredNews.length === 0) {
+                container.innerHTML = fallbackAlertHtml +
+                    '<div class="bg-slate-50 p-10 rounded-2xl text-center"><p class="text-sm text-slate-400 font-bold uppercase tracking-widest">No news available</p></div>';
+                return;
+            }
+
+            // ── Render news cards ──────────────────────────────────────
+            const newsHtml = APP.filteredNews.map((group, index) => {
+                const analysis    = group.stock_summary;
+                const sentimentStr = analysis?.sentiment_label || analysis?.sentiment || 'Neutral';
+                const color = sentimentStr.toLowerCase() === 'positive' || sentimentStr.toLowerCase() === 'bullish' ? 'emerald' :
+                              sentimentStr.toLowerCase() === 'negative' || sentimentStr.toLowerCase() === 'bearish' ? 'red' : 'slate';
+                const timeDisplay  = formatTimeAgo(group.latest_published_at);
+                const articleCount = group.related_articles.length;
+
+                return `
+                    <div class="bg-white rounded-2xl p-5 border border-slate-100 hover:border-red-500 hover:shadow-md transition-all cursor-pointer mb-4 flex flex-col" onclick="analyzeNews(${index})">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-3 py-1.5 bg-slate-900 text-white text-[10px] font-black rounded-lg uppercase tracking-wider">${group.symbol}</span>
+                            ${analysis ? `<span class="px-3 py-1.5 bg-${color}-50 text-${color}-600 text-[10px] font-bold rounded-lg uppercase tracking-wider">${sentimentStr}</span>` : ''}
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-800 leading-relaxed line-clamp-2 mb-3">${group.latest_title}</h4>
+                        <div class="flex items-center justify-between pt-3 border-t border-slate-50 mt-auto">
+                            <div class="flex items-center gap-1.5 text-slate-400 font-medium">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"></circle><path d="M12 6v6l4 2" stroke-width="2" stroke-linecap="round"></path></svg>
+                                <span class="text-[11px] tracking-wide">ล่าสุด ${timeDisplay}</span>
+                            </div>
+                            <span class="text-[10px] font-black text-blue-500 bg-blue-50 px-2 py-1 rounded-md uppercase">${articleCount} ข่าว</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = fallbackAlertHtml + newsHtml;
         }
 
         function analyzeNews(index) {
@@ -1425,53 +1508,10 @@
                     borderColor:    C.border,
                     timeVisible:    false,
                     secondsVisible: false,
-                    // 1. ขยายแท่งเทียนให้กว้าง 45px เพื่อให้มีพื้นที่ "โชว์วันที่ได้ทุกแท่ง" โดยไม่โดนซ่อน
-                    barSpacing:     45,  
-                    minBarSpacing:  10,
-                    tickMarkFormatter: (time) => {
-                        try {
-                            const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                            // กรณี Object ปกติของ Lightweight Charts
-                            if (time && time.year !== undefined) {
-                                return `${time.day} ${m[time.month - 1]}`;
-                            }
-                            // กรณีส่งมาเป็น String (เช่น '2025-03-12') จับหั่นข้อความตรงๆ เลย ไม่ง้อ Date()
-                            if (typeof time === 'string') {
-                                const parts = time.split('-'); 
-                                if (parts.length >= 3) {
-                                    return `${parseInt(parts[2], 10)} ${m[parseInt(parts[1], 10) - 1]}`;
-                                }
-                            }
-                            // กรณีส่งมาเป็นตัวเลข Timestamp
-                            if (typeof time === 'number') {
-                                const d = new Date(time * 1000);
-                                return `${d.getUTCDate()} ${m[d.getUTCMonth()]}`;
-                            }
-                        } catch (e) {}
-                        return String(time);
-                    },
-                },
-                localization: {
-                    // Tooltip เวลาเอาเมาส์ชี้
-                    timeFormatter: (time) => {
-                        try {
-                            const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                            if (time && time.year !== undefined) {
-                                return `${time.day} ${m[time.month - 1]} ${time.year}`;
-                            }
-                            if (typeof time === 'string') {
-                                const parts = time.split('-');
-                                if (parts.length >= 3) {
-                                    return `${parseInt(parts[2], 10)} ${m[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
-                                }
-                            }
-                            if (typeof time === 'number') {
-                                const d = new Date(time * 1000);
-                                return `${d.getUTCDate()} ${m[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
-                            }
-                        } catch(e) {}
-                        return String(time);
-                    }
+                    barSpacing:     15,   // ขยายระยะห่างเริ่มต้น → label ไม่ชนกัน
+                    minBarSpacing:  5,    // ป้องกัน label ทับกันเมื่อ zoom out สุด
+                    // บังคับ "d MMM" ทุก tick ไม่ว่า boundary ไหน (Day/Month/Year)
+                    tickMarkFormatter: (t) => luxon.DateTime.fromISO(t).toFormat('d MMM'),
                 },
                 handleScroll: { mouseWheel: true, pressedMouseMove: true },
                 handleScale:  { axisPressedMouseMove: true, mouseWheel: true, pinch: true },
@@ -1820,10 +1860,8 @@
             if (pageName === 'news') {
                 const inp = document.getElementById('newsSearchInput');
                 if (inp) inp.value = sym;
-                const filtered = (APP.allNews || []).filter(n =>
-                    n.symbol?.toUpperCase() === sym.toUpperCase()
-                );
-                APP.filteredNews = filtered.length ? filtered : [...APP.allNews];
+                // ใช้ 3-tier fallback แทน exact-only filter เดิม
+                filterNewsWithFallback(sym);
                 renderNews();
             }
 
@@ -2081,10 +2119,8 @@
                 },
                 onSelect : sym => {
                     APP.globalSelectedSymbol = sym; // [FEATURE 1]
-                    // Filter news ตาม symbol ที่เลือก
-                    APP.filteredNews = (APP.allNews || []).filter(n =>
-                        n.symbol?.toUpperCase() === sym.toUpperCase()
-                    );
+                    // ใช้ 3-tier fallback แทน exact-only filter เดิม
+                    filterNewsWithFallback(sym);
                     renderNews();
                 },
             });
@@ -2092,6 +2128,8 @@
             // Also support free-text search while typing (ตาม symbol หรือ title)
             document.getElementById('newsSearchInput')?.addEventListener('input', e => {
                 const term = e.target.value.trim().toLowerCase();
+                // ปิด Fallback UI เมื่อผู้ใช้พิมพ์ค้นหาแบบ free-text
+                APP.newsFallbackMode = null;
                 if (!term) {
                     APP.filteredNews = [...(APP.allNews || [])];
                 } else {
