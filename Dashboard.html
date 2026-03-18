@@ -697,7 +697,10 @@
         predictData: [],
         predictSymbol: null,
         predictHorizon: '7D',
-        sparklines: {}     // { symbol: float[] } — last 14-day close prices cache
+        sparklines: {},    // { symbol: float[] } — last 14-day close prices cache
+        // ── [FEATURE 1] Global Stock Sync ─────────────────────────────
+        // บันทึก symbol ล่าสุดที่ User เลือก (ข้ามทุกหน้า)
+        globalSelectedSymbol: null
         };
 
         // ============================================
@@ -1634,6 +1637,7 @@
             const stock = APP.stocks.find(s => s.symbol === symbol);
             if (!stock) return;
             APP.currentStock = stock;
+            APP.globalSelectedSymbol = symbol; // [FEATURE 1]
             // If on Predict page, update prediction view (no scroll needed there)
             if (APP.currentPage === 'predict') {
                 choosePredictStock(symbol);
@@ -1645,6 +1649,7 @@
 
         async function selectStock(symbol) {
             APP.currentStock = APP.stocks.find(s => s.symbol === symbol);
+            APP.globalSelectedSymbol = symbol; // [FEATURE 1]
             renderDashboard();
             scrollToChart();
         }
@@ -1703,15 +1708,70 @@
                 activeNav.classList.remove('text-slate-400', 'hover:bg-slate-50');
             }
 
-            if (pageName === 'news' && APP.allNews.length === 0) {
-                loadNews();
+            // ── [3-WAY SYNC] Global Stock Sync ─────────────────────────
+            if (pageName === 'dashboard') {
+                // sync กลับหน้า Dashboard เสมอ (ไม่ต้องรอ async)
+                syncPageToGlobalStock('dashboard');
+            }
+
+            if (pageName === 'news') {
+                if (APP.allNews.length === 0) {
+                    loadNews().then(() => syncPageToGlobalStock('news'));
+                } else {
+                    syncPageToGlobalStock('news');
+                }
             }
 
             if (pageName === 'predict') {
                 if (!APP.predictSymbols) {
                     console.log("🚀 Starting Prediction Engine...");
+                    // initPredictPage จะเรียก choosePredictStock(globalSelectedSymbol) เองผ่าน autoLoadSym
                     initPredictPage();
+                } else {
+                    syncPageToGlobalStock('predict');
                 }
+            }
+        }
+
+        /**
+         * syncPageToGlobalStock(pageName)
+         * ── [3-WAY SYNC] ──
+         * เมื่อ User สลับหน้า → sync ช่อง Search + โหลดข้อมูล
+         * ให้ตรงกับ globalSelectedSymbol โดยอัตโนมัติ ทั้ง 3 ทิศทาง
+         */
+        function syncPageToGlobalStock(pageName) {
+            const sym = APP.globalSelectedSymbol;
+            if (!sym) return; // ยังไม่มีการเลือกหุ้น → ไม่ต้อง sync
+
+            // ── Dashboard ◄── Sync กลับจาก News / Predict ─────────────
+            if (pageName === 'dashboard') {
+                // 1. อัปเดต currentStock ถ้าไม่ตรงกับ global
+                if (!APP.currentStock || APP.currentStock.symbol !== sym) {
+                    const stock = APP.stocks.find(s => s.symbol === sym);
+                    if (stock) APP.currentStock = stock;
+                }
+                // 2. อัปเดตช่อง Search ให้แสดงชื่อหุ้น
+                const inp = document.getElementById('searchInput');
+                if (inp) inp.value = sym;
+                // 3. รีเฟรช Dashboard (กราฟ, KPI, ตาราง, Sidebar)
+                renderDashboard();
+                scrollToChart();
+            }
+
+            // ── News ──────────────────────────────────────────────────
+            if (pageName === 'news') {
+                const inp = document.getElementById('newsSearchInput');
+                if (inp) inp.value = sym;
+                const filtered = (APP.allNews || []).filter(n =>
+                    n.symbol?.toUpperCase() === sym.toUpperCase()
+                );
+                APP.filteredNews = filtered.length ? filtered : [...APP.allNews];
+                renderNews();
+            }
+
+            // ── Predict ───────────────────────────────────────────────
+            if (pageName === 'predict') {
+                choosePredictStock(sym);
             }
         }
 
@@ -1902,6 +1962,7 @@
                     const stock = APP.stocks.find(s => s.symbol === sym);
                     if (!stock) return;
                     APP.currentStock     = stock;
+                    APP.globalSelectedSymbol = sym; // [FEATURE 1]
                     APP._sidebarSearching = false;
                     APP.filteredStocks   = [...APP.stocks];
                     const titleEl    = document.getElementById('listTitle');
@@ -1961,6 +2022,7 @@
                     return s ? s.fullName.replace(' PUBLIC COMPANY LIMITED','').replace(' PCL','') : '';
                 },
                 onSelect : sym => {
+                    APP.globalSelectedSymbol = sym; // [FEATURE 1]
                     // Filter news ตาม symbol ที่เลือก
                     APP.filteredNews = (APP.allNews || []).filter(n =>
                         n.symbol?.toUpperCase() === sym.toUpperCase()
@@ -2000,6 +2062,7 @@
         // ══════════════════════════════════════════════════════════════
         function choosePredictStock(sym) {
             APP.predictSymbol = sym;
+            APP.globalSelectedSymbol = sym; // [FEATURE 1]
             const inp = document.getElementById('predictSearchInput');
             if (inp) inp.value = sym;
             const dd = document.getElementById('predictStockDropdown');
@@ -2016,7 +2079,7 @@
             return all; 
         }
 
-       async function renderPredictChart(symbol, allPredData) {
+       async function renderPredictChart(symbol, allPredData, isPending = false) {
         const container = document.getElementById('predictCanvas');
         if (!container) return;
 
@@ -2059,38 +2122,39 @@
 
         // --- ส่วนการวาดเส้น (Layering) ---
 
-        // A. วาดแถบ Confidence Band (ใช้ Area Series)
-        const areaSeries = chart.addAreaSeries({
-            topColor: 'rgba(99, 102, 241, 0.2)',
-            bottomColor: 'rgba(99, 102, 241, 0.05)',
-            lineColor: 'transparent',
-            lastValueVisible: false,
-            priceLineVisible: false,
-        });
-        areaSeries.setData(forecastLine); // วาดพื้นที่เงาตามเส้นพยากรณ์
+        // ── [FEATURE 2] Pending Validation: ซ่อนเส้นพยากรณ์สำหรับ 15D/30D ──
+        if (!isPending) {
+            // A. วาดแถบ Confidence Band (ใช้ Area Series)
+            const areaSeries = chart.addAreaSeries({
+                topColor: 'rgba(99, 102, 241, 0.2)',
+                bottomColor: 'rgba(99, 102, 241, 0.05)',
+                lineColor: 'transparent',
+                lastValueVisible: false,
+                priceLineVisible: false,
+            });
+            areaSeries.setData(forecastLine);
 
-        
-       // B. เส้นราคาพยากรณ์ (Indigo Dashed Line)
-        const forecastSeries = chart.addLineSeries({
-            color: '#6366f1',
-            lineWidth: 2,
-            lineStyle: LightweightCharts.LineStyle.Dashed,
-            lastValueVisible: false, // ปิดป้ายราคาอันสุดท้ายที่แกนขวา
-            priceLineVisible: false, // ปิดเส้นแนวนอนที่ลากยาว
-        });
-        forecastSeries.setData(forecastLine);
+            // B. เส้นราคาพยากรณ์ (Indigo Dashed Line)
+            const forecastSeries = chart.addLineSeries({
+                color: '#6366f1',
+                lineWidth: 2,
+                lineStyle: LightweightCharts.LineStyle.Dashed,
+                lastValueVisible: false,
+                priceLineVisible: false,
+            });
+            forecastSeries.setData(forecastLine);
+        }
 
-        // C. เส้นราคาจริง (Deep Slate Solid Line) - ย้อนหลัง 2 ปี
+        // C. เส้นราคาจริง (Deep Slate Solid Line) - ย้อนหลัง 2 ปี — แสดงเสมอ
         const actualSeries = chart.addLineSeries({
             color: '#0f172a',
             lineWidth: 2,
-            lastValueVisible: false, // ปิดป้ายราคาอันสุดท้ายที่แกนขวา
-            priceLineVisible: false, // ปิดเส้นแนวนอนที่ลากยาว
+            lastValueVisible: false,
+            priceLineVisible: false,
         });
         actualSeries.setData(historyData);
 
         // 4. จัดการการมองเห็น (Visible Range) 
-        // ให้ Focus ที่ 30 วันก่อนหน้า จนถึงวันสุดท้ายที่พยากรณ์
         if (forecastLine.length > 0) {
             const firstPredictDate = forecastLine[0].time;
             const lastPredictDate = forecastLine[forecastLine.length - 1].time;
@@ -2102,20 +2166,71 @@
             });
         }
 
+        // ── [FEATURE 2] Pending Validation Overlay ────────────────────
+        if (isPending) {
+            const h = APP.predictHorizon || '15D';
+            const overlay = document.createElement('div');
+            overlay.id = 'forecastPendingOverlay';
+            overlay.style.cssText = [
+                'position:absolute', 'inset:0',
+                'background:rgba(248,250,252,0.93)',
+                'backdrop-filter:blur(5px)',
+                '-webkit-backdrop-filter:blur(5px)',
+                'display:flex', 'flex-direction:column',
+                'align-items:center', 'justify-content:center',
+                'z-index:50', 'border-radius:12px',
+                'gap:16px', 'padding:32px',
+                'pointer-events:none'
+            ].join(';');
+            overlay.innerHTML = `
+                <div style="width:52px;height:52px;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="24" height="24" fill="none" stroke="#475569" stroke-width="2.5" viewBox="0 0 24 24">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0110 0v4"></path>
+                    </svg>
+                </div>
+                <div style="text-align:center;max-width:340px">
+                    <p style="font-size:11px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:.18em;margin-bottom:10px">
+                        Pending Validation
+                    </p>
+                    <p style="font-size:13px;font-weight:600;color:#334155;line-height:1.75;margin-bottom:12px">
+                        รอเก็บข้อมูลราคาจริง <strong style="color:#dc2626;font-weight:900">7 วัน</strong> เพื่อวัดผลความแม่นยำของโมเดล<br>
+                        ก่อนปลดล็อกการแสดงผลพยากรณ์ <strong style="color:#6366f1;font-weight:900">${h} Horizon</strong>
+                    </p>
+                    <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:999px">
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="#64748b">
+                            <circle cx="5" cy="5" r="4.5" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+                            <circle cx="5" cy="5" r="1.5" fill="#94a3b8"/>
+                        </svg>
+                        <span style="font-size:9px;font-weight:900;color:#64748b;text-transform:uppercase;letter-spacing:.18em">
+                            Chronos Validation Protocol · ${h}
+                        </span>
+                    </div>
+                </div>
+            `;
+            container.appendChild(overlay);
+            return; // ไม่แนบ tooltip เมื่ออยู่ใน pending state
+        }
+
         // 5. Tooltip (ปรับปรุงให้แสดงข้อมูลครบถ้วน)
         const tip = makeTooltip(container);
+        // ดึง forecastSeries reference สำหรับ tooltip (rebuild ถ้า !isPending)
+        const _forecastSeries = chart.series ? chart.series[1] : null; // indigo dashed line
         chart.subscribeCrosshairMove(p => {
             if (!p.time || !p.point || p.point.x < 0) { tip.style.display = 'none'; return; }
             
             const actualVal = p.seriesData.get(actualSeries);
-            const foreVal = p.seriesData.get(forecastSeries);
+            // forecastSeries อาจเป็น undefined ถ้า isPending (ไม่ได้สร้าง) แต่ถึงทาง return early แล้ว
+            let foreVal = null;
+            p.seriesData.forEach((val, series) => {
+                if (series !== actualSeries) foreVal = val;
+            });
             const dt = luxon.DateTime.fromISO(p.time).toFormat('dd MMM yyyy');
 
             let rows = '';
             if (actualVal) rows += tipRow('ACTUAL PRICE', '฿' + actualVal.value.toFixed(2), '#94a3b8');
             if (foreVal) {
                 rows += tipRow('AI FORECAST', '฿' + foreVal.value.toFixed(2), '#6366f1');
-                // ค้นหา CI จากข้อมูลดิบ
                 const raw = sortedPred.find(d => d.prediction_date === p.time);
                 if (raw) {
                     rows += tipRow('80% CI BAND', `฿${parseFloat(raw.lower_bound).toFixed(2)} - ${parseFloat(raw.upper_bound).toFixed(2)}`, '#94a3b8');
@@ -2246,9 +2361,11 @@
                     onSelect : sym => choosePredictStock(sym),
                 });
 
-                // Auto-load หุ้นแรกที่มีพยากรณ์
-                if (predictSymbols.length > 0) {
-                    choosePredictStock(predictSymbols[0]);
+                // Auto-load: ถ้า user เคยเลือกหุ้นไว้แล้ว (global sync) ให้โหลดหุ้นนั้น
+                // ถ้ายังไม่มี globalSelectedSymbol ค่อย fallback ไปหุ้นแรกในลิสต์
+                const autoLoadSym = APP.globalSelectedSymbol || predictSymbols[0];
+                if (autoLoadSym) {
+                    choosePredictStock(autoLoadSym);
                 }
             } catch (err) {
                 console.error('❌ initPredictPage Error:', err);
@@ -2394,7 +2511,9 @@
                 setEl('predictChartSubtitle', `${cleanSymbol} · ${cleanHorizon} Horizon · ${allPredData.length} Rows · ${futurePred.length} Days Ahead`);
 
                 // ── 7. Render Fan Chart (ALL data: past + future) ─────────
-                await renderPredictChart(cleanSymbol, allPredData);
+                // [FEATURE 2] ส่ง isPending = true สำหรับ 15D/30D เพื่อซ่อนเส้นพยากรณ์
+                const isPending = ['15D', '30D'].includes(cleanHorizon);
+                await renderPredictChart(cleanSymbol, allPredData, isPending);
 
                 // ── 8. Render Forecast Data Table ─────────────────────────
                 renderPredictTable(allPredData);
