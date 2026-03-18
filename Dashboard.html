@@ -559,36 +559,54 @@
         /**
          * handleSessionExpired() — จัดการเมื่อ Token หมดอายุระหว่างใช้งาน
          */
+        /**
+         * handleSessionExpired() — จัดการเมื่อ Token หมดอายุระหว่างใช้งาน
+         */
         function handleSessionExpired() {
+            // 1. เคลียร์ฝั่ง Supabase ด้วย
+            if (typeof APP !== 'undefined' && APP.supabaseClient) {
+                APP.supabaseClient.auth.signOut().catch(() => {});
+            }
+            
+            // 2. ลบของฝั่งเรา
             localStorage.removeItem(TOKEN_KEY);
             localStorage.removeItem('user_name');
             localStorage.removeItem('user_email');
+            
             alert('เซสชันหมดอายุ กรุณาเข้าสู่ระบบอีกครั้ง');
-            window.location.href = 'login.html';
+            window.location.replace('login.html'); // ใช้ replace กันกด Back
         }
 
         /**
-         * handleLogout() — ลบ Token และ redirect ไป Login
+         * handleLogout() — ลบ Token ทั้งระบบและ Supabase แล้ว redirect ไป Login
          */
         async function handleLogout() {
-            const token = localStorage.getItem(TOKEN_KEY);
-            
-            // แจ้ง server (best-effort, ไม่ block ถ้า server ไม่ตอบ)
-            if (token) {
-                try {
-                    await fetch(`${API_BASE}/logout`, {
+            try {
+                // 1. เคลียร์ Session ของ Supabase ออกให้หมดจด
+                if (typeof APP !== 'undefined' && APP.supabaseClient) {
+                    await APP.supabaseClient.auth.signOut();
+                }
+
+                // 2. แจ้ง Server ฝั่ง API แบบไม่ต้องรอ (เอา await ออก)
+                const token = localStorage.getItem(TOKEN_KEY);
+                if (token) {
+                    fetch(`${API_BASE}/logout`, {
                         method: 'POST',
                         headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                } catch { /* ignore — client-side cleanup will proceed regardless */ }
+                    }).catch(() => {});
+                }
+            } catch (err) {
+                console.error('Logout error:', err);
+            } finally {
+                // 3. เคลียร์ LocalStorage ของเราให้สะอาด
+                localStorage.removeItem(TOKEN_KEY);
+                localStorage.removeItem('user_name');
+                localStorage.removeItem('user_email');
+                
+                // 4. Redirect ไปหน้า login (ใช้ replace กันกด Back)
+                window.location.replace('login.html');
             }
-
-            localStorage.removeItem(TOKEN_KEY);
-            localStorage.removeItem('user_name');
-            localStorage.removeItem('user_email');
-            window.location.href = 'login.html';
         }
-
         /**
          * authFetch() — Wrapper สำหรับ fetch ที่แนบ Bearer Token อัตโนมัติ
          * ถ้าได้ 401 → จัดการ session expired
@@ -1407,13 +1425,53 @@
                     borderColor:    C.border,
                     timeVisible:    false,
                     secondsVisible: false,
-                    tickMarkFormatter: (t, tickType) => {
-                        const dt = luxon.DateTime.fromISO(t);
-                        // TickMarkType: 0=Year, 1=Month, 2=DayOfMonth, 3=Time, 4=TimeWithSeconds
-                        if (tickType === 0) return dt.toFormat('yyyy');        // year boundary
-                        if (tickType === 1) return dt.toFormat('MMM yyyy');    // month boundary
-                        return dt.toFormat('d MMM');                           // day ticks → "12 Mar"
+                    // 1. ขยายแท่งเทียนให้กว้าง 45px เพื่อให้มีพื้นที่ "โชว์วันที่ได้ทุกแท่ง" โดยไม่โดนซ่อน
+                    barSpacing:     45,  
+                    minBarSpacing:  10,
+                    tickMarkFormatter: (time) => {
+                        try {
+                            const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                            // กรณี Object ปกติของ Lightweight Charts
+                            if (time && time.year !== undefined) {
+                                return `${time.day} ${m[time.month - 1]}`;
+                            }
+                            // กรณีส่งมาเป็น String (เช่น '2025-03-12') จับหั่นข้อความตรงๆ เลย ไม่ง้อ Date()
+                            if (typeof time === 'string') {
+                                const parts = time.split('-'); 
+                                if (parts.length >= 3) {
+                                    return `${parseInt(parts[2], 10)} ${m[parseInt(parts[1], 10) - 1]}`;
+                                }
+                            }
+                            // กรณีส่งมาเป็นตัวเลข Timestamp
+                            if (typeof time === 'number') {
+                                const d = new Date(time * 1000);
+                                return `${d.getUTCDate()} ${m[d.getUTCMonth()]}`;
+                            }
+                        } catch (e) {}
+                        return String(time);
                     },
+                },
+                localization: {
+                    // Tooltip เวลาเอาเมาส์ชี้
+                    timeFormatter: (time) => {
+                        try {
+                            const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                            if (time && time.year !== undefined) {
+                                return `${time.day} ${m[time.month - 1]} ${time.year}`;
+                            }
+                            if (typeof time === 'string') {
+                                const parts = time.split('-');
+                                if (parts.length >= 3) {
+                                    return `${parseInt(parts[2], 10)} ${m[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
+                                }
+                            }
+                            if (typeof time === 'number') {
+                                const d = new Date(time * 1000);
+                                return `${d.getUTCDate()} ${m[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+                            }
+                        } catch(e) {}
+                        return String(time);
+                    }
                 },
                 handleScroll: { mouseWheel: true, pressedMouseMove: true },
                 handleScale:  { axisPressedMouseMove: true, mouseWheel: true, pinch: true },
