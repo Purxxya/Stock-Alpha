@@ -1500,6 +1500,15 @@
 
         // ── Base chart options ────────────────────────────────────────
         function lwOpts(height) {
+            // ── helper: แปลง time ทุกรูปแบบ → luxon DateTime ──────────
+            // LWC ส่ง time มา 3 รูปแบบ: string 'YYYY-MM-DD', object {year,month,day}, number (unix)
+            function _toDateTime(time) {
+                if (typeof time === 'string')          return luxon.DateTime.fromISO(time);
+                if (typeof time === 'number')          return luxon.DateTime.fromSeconds(time);
+                if (time && time.year !== undefined)   return luxon.DateTime.fromObject(time);
+                return null;
+            }
+
             return {
                 height,
                 autoSize: true,
@@ -1526,53 +1535,59 @@
                     borderColor:    C.border,
                     timeVisible:    false,
                     secondsVisible: false,
-                    // 1. ขยายแท่งเทียนให้กว้าง 45px เพื่อให้มีพื้นที่ "โชว์วันที่ได้ทุกแท่ง" โดยไม่โดนซ่อน
-                    barSpacing:     45,  
-                    minBarSpacing:  10,
-                    tickMarkFormatter: (time) => {
+
+                    // ── Zoom defaults ──────────────────────────────────
+                    // barSpacing: ระยะห่างเริ่มต้น (px) ระหว่างแท่ง
+                    //   → 12 ให้ default view ดู 3-6 เดือนได้สบาย
+                    //   → ถ้าต้องการเปิดมาแล้วเห็น 1 ปีเต็มจอ ปรับลงเป็น 6-8
+                    barSpacing:    12,
+
+                    // minBarSpacing: floor ขณะ zoom out สุด
+                    //   → 3 ให้ zoom out ได้กว้างมากก่อนที่ bar จะชนกัน
+                    minBarSpacing: 3,
+
+                    // fixLeftEdge / fixRightEdge: ป้องกัน label แรก-สุดท้ายตกขอบ canvas
+                    fixLeftEdge:  true,
+                    fixRightEdge: true,
+
+                    // ── Smart tickMarkFormatter (TradingView-style) ────
+                    // LWC ส่ง tickMarkType บอก "ระดับ" ของ tick นั้น:
+                    //   0 = Year boundary   → ขึ้นปีใหม่
+                    //   1 = Month boundary  → ขึ้นเดือนใหม่
+                    //   2 = Day             → แต่ละวัน (ระดับปกติ)
+                    //   3 = Hour / 4 = Min  → ไม่ใช้ใน daily chart
+                    // LWC จะเลือก tick ที่จะ render เองโดยดูจาก barSpacing ปัจจุบัน
+                    // formatter แค่ต้องบอกว่า "tick นี้จะแสดงข้อความว่าอะไร"
+                    tickMarkFormatter: (time, tickMarkType) => {
                         try {
-                            const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                            // กรณี Object ปกติของ Lightweight Charts
-                            if (time && time.year !== undefined) {
-                                return `${time.day} ${m[time.month - 1]}`;
+                            const dt = _toDateTime(time);
+                            if (!dt) return String(time);
+
+                            switch (tickMarkType) {
+                                case 0:
+                                    // Zoom out มากสุด → เห็นหลายปี → แสดงแค่ "2024"
+                                    return dt.toFormat('yyyy');
+                                case 1:
+                                    // Zoom out ระดับกลาง → เห็น 6-18 เดือน → "Mar '24"
+                                    return dt.toFormat("MMM ''yy");
+                                case 2:
+                                default:
+                                    // Zoom in → เห็นรายวัน → "12 Mar"
+                                    return dt.toFormat('d MMM');
                             }
-                            // กรณีส่งมาเป็น String (เช่น '2025-03-12') จับหั่นข้อความตรงๆ เลย ไม่ง้อ Date()
-                            if (typeof time === 'string') {
-                                const parts = time.split('-'); 
-                                if (parts.length >= 3) {
-                                    return `${parseInt(parts[2], 10)} ${m[parseInt(parts[1], 10) - 1]}`;
-                                }
-                            }
-                            // กรณีส่งมาเป็นตัวเลข Timestamp
-                            if (typeof time === 'number') {
-                                const d = new Date(time * 1000);
-                                return `${d.getUTCDate()} ${m[d.getUTCMonth()]}`;
-                            }
-                        } catch (e) {}
+                        } catch(e) {}
                         return String(time);
                     },
                 },
                 localization: {
-                    // Tooltip เวลาเอาเมาส์ชี้
+                    // crosshair tooltip แสดงวันที่แบบเต็ม เช่น "12 Mar 2025"
                     timeFormatter: (time) => {
                         try {
-                            const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                            if (time && time.year !== undefined) {
-                                return `${time.day} ${m[time.month - 1]} ${time.year}`;
-                            }
-                            if (typeof time === 'string') {
-                                const parts = time.split('-');
-                                if (parts.length >= 3) {
-                                    return `${parseInt(parts[2], 10)} ${m[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
-                                }
-                            }
-                            if (typeof time === 'number') {
-                                const d = new Date(time * 1000);
-                                return `${d.getUTCDate()} ${m[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
-                            }
+                            const dt = _toDateTime(time);
+                            if (dt) return dt.toFormat('d MMM yyyy');
                         } catch(e) {}
                         return String(time);
-                    }
+                    },
                 },
                 handleScroll: { mouseWheel: true, pressedMouseMove: true },
                 handleScale:  { axisPressedMouseMove: true, mouseWheel: true, pinch: true },
