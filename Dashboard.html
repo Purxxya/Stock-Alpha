@@ -2470,13 +2470,33 @@
             try {
                 const todayISO = luxon.DateTime.now().setZone('Asia/Bangkok').toISODate();
 
-                // ── 1. Fetch ALL prediction rows (no date filter — Fan Chart needs all) ──
+                // ── 1a. หา base_date ล่าสุดของหุ้นนี้ (Step 1) ──────────────────────
+                const { data: baseDateRows, error: baseDateErr } = await APP.supabaseClient
+                    .from('stock_predictions_v3')
+                    .select('base_date')
+                    .eq('symbol', cleanSymbol)
+                    .order('base_date', { ascending: false })
+                    .limit(1);
+                if (baseDateErr) throw baseDateErr;
+
+                const latestBaseDate = baseDateRows?.[0]?.base_date;
+                if (!latestBaseDate) {
+                    if (insightsBody) insightsBody.innerHTML = `
+                        <div class="sm:col-span-2 p-5 border-l-4 border-rose-500 bg-rose-50 rounded-r-lg">
+                            <div class="text-[9px] font-black uppercase tracking-widest text-rose-600 mb-1">Data Unavailable</div>
+                            <p class="text-[12px] text-slate-700">ยังไม่มีข้อมูลพยากรณ์สำหรับ ${cleanSymbol} — กรุณารัน model_forecast_v3.py ก่อน</p>
+                        </div>`;
+                    if (insightBadge) insightBadge.textContent = 'NO DATA';
+                    return;
+                }
+
+                // ── 1b. ดึงข้อมูลพยากรณ์ทั้งหมดของ base_date ล่าสุด เรียงตาม day_index (Step 2) ──
                 const { data: allPredData, error: predErr } = await APP.supabaseClient
                     .from('stock_predictions_v3')
                     .select('prediction_date, predicted_price, lower_bound, upper_bound, actual_price, error_percent, day_index, model_name, created_at')
                     .eq('symbol', cleanSymbol)
-                    .eq('horizon_type', cleanHorizon)
-                    .order('prediction_date', { ascending: true });
+                    .eq('base_date', latestBaseDate)
+                    .order('day_index', { ascending: true });
                 if (predErr) throw predErr;
 
                 // ── 2. Fetch live AI insights ─────────────────────────────
