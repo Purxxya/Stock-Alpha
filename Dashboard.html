@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
     <style>
        *, ::before, ::after { 
             margin: 0; 
@@ -137,27 +137,6 @@
         }
         #predictTableContainer tr.future-row { background: #eff6ff; }
         #predictTableContainer tr.future-row:hover { background: #dbeafe; }
-
-        /* ── KPI Accuracy Cards (Predict page) ── */
-        .kpi-acc-card {
-            position: relative; overflow: hidden;
-            background: #ffffff;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 18px 20px;
-            transition: box-shadow .2s, border-color .2s;
-        }
-        .kpi-acc-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.06); border-color: #c7d2fe; }
-        .kpi-acc-card .kpi-accent { position: absolute; top: 0; left: 0; width: 100%; height: 3px; border-radius: 16px 16px 0 0; }
-        .kpi-acc-card .kpi-window { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: .18em; color: #94a3b8; margin-bottom: 10px; }
-        .kpi-acc-card .kpi-mape { font-size: 28px; font-weight: 900; color: #0f172a; line-height: 1; }
-        .kpi-acc-card .kpi-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; margin-top: 4px; }
-        .kpi-acc-card .kpi-samples { font-size: 10px; font-weight: 600; color: #94a3b8; margin-top: 8px; }
-        .kpi-acc-card .kpi-bar-bg { height: 4px; background: #f1f5f9; border-radius: 4px; margin-top: 10px; overflow: hidden; }
-        .kpi-acc-card .kpi-bar-fg { height: 100%; border-radius: 4px; transition: width .8s cubic-bezier(.4,0,.2,1); }
-
-        /* ── ECharts container ── */
-        #predictEChart { width: 100%; height: 440px; }
     </style>
 </head>
 <body class="bg-[#F8FAFC] overflow-hidden">
@@ -422,28 +401,25 @@
                         </div>
                     </div>
 
-                    <!-- ── Model Accuracy KPI Cards ─────────────────────── -->
-                    <div id="predictAccuracyCards" class="grid grid-cols-3 gap-4 hidden">
-                        <!-- Populated by renderPredictKpiCards() -->
-                    </div>
-
                     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm">
                             <div class="px-7 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
                                 <div>
                                     <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">Price Projection Chart</h3>
-                                    <p id="predictChartSubtitle" class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">AI Forecast · ECharts</p>
+                                    <p id="predictChartSubtitle" class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">AI Forecast</p>
                                 </div>
                                 <div class="flex flex-wrap gap-4 text-[9px] font-black uppercase tracking-wider text-slate-500">
-                                    <span class="flex items-center gap-1.5"><span class="inline-block w-16 h-0.5" style="background:#0f172a"></span>Actual</span>
+                                    <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded-sm" style="background:#26a69a"></span>Bullish</span>
+                                    <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded-sm" style="background:#ef5350"></span>Bearish</span>
+                                    <span class="flex items-center gap-1.5"><span class="inline-block w-6 h-0.5" style="background:#3b82f6"></span>SMA 20</span>
+                                    <span class="flex items-center gap-1.5"><span class="inline-block w-6 h-0.5" style="background:#f59e0b"></span>Actual</span>
                                     <span class="flex items-center gap-1.5"><span class="inline-block w-6 h-px border-t-2 border-dashed" style="border-color:#6366f1"></span>AI Forecast</span>
                                     <span class="flex items-center gap-1.5">
-                                        <span class="inline-block w-6 h-3 rounded-sm" style="background:rgba(99,102,241,0.18);border:1px solid rgba(99,102,241,0.35)"></span>80% CI Band
+                                        <span class="inline-block w-6 h-3 rounded-sm" style="background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.35)"></span>80% CI Band
                                     </span>
                                 </div>
                             </div>
-                            <div class="p-4 md:p-6">
-                                <!-- ECharts container — id="mainChart" as per requirement -->
-                                <div id="predictEChart" class="relative rounded-xl overflow-hidden"></div>
+                            <div class="p-6">
+                                <div id="predictCanvas" class="relative rounded-xl overflow-hidden border border-slate-100" style="height:380px"></div>
                             </div>
                     </div>
 
@@ -735,8 +711,8 @@
         filteredNews: [],
         newsFallbackMode: null,
         fallbackSectorName: '',
-        eChart:        null,    // ECharts instance — dashboard candlestick
-        predictEChart: null,    // ECharts instance — predict forecast chart
+        lwcChart:        null,   
+        predictLwcChart: null,   
         chartType: 'candlestick',
         predictData: [],
         predictSymbol: null,
@@ -1382,15 +1358,26 @@
         }
 
         // ═══════════════════════════════════════════════════════════════
-        // ECHARTS ENGINE — Dashboard Candlestick + Volume + SMA
+        // LIGHTWEIGHT CHARTS ENGINE
         // ═══════════════════════════════════════════════════════════════
 
-        // ── Colour palette ────────────────────────────────────────────
+        const LW = LightweightCharts;
+
+        // ── Palette ──────────────────────────────────────────────────
         const C = {
-            up:      '#26a69a', down:    '#ef5350',
-            upVol:   'rgba(38,166,154,0.42)', downVol: 'rgba(239,83,80,0.42)',
-            sma20:   '#3b82f6', sma50:   '#f59e0b',
-            predict: '#6366f1', grid: '#f1f5f9',
+            up:       '#26a69a',           // teal-green (bullish)
+            down:     '#ef5350',           // soft-red   (bearish)
+            upVol:    'rgba(38,166,154,0.45)',
+            downVol:  'rgba(239,83,80,0.45)',
+            sma20:    '#3b82f6',           // blue
+            sma50:    '#f59e0b',           // amber
+            predict:  '#6366f1',           // indigo
+            ci:       'rgba(99,102,241,0.38)',
+            grid:     '#f1f5f9',
+            border:   '#e2e8f0',
+            text:     '#64748b',
+            bg:       '#ffffff',
+            cross:    '#94a3b8',
         };
 
         // ── SMA helper ───────────────────────────────────────────────
@@ -1404,6 +1391,7 @@
             return out;
         }
 
+        // ── Volume formatter ─────────────────────────────────────────
         function fmtVol(v) {
             if (v >= 1e9) return (v / 1e9).toFixed(2) + 'B';
             if (v >= 1e6) return (v / 1e6).toFixed(2) + 'M';
@@ -1411,7 +1399,114 @@
             return String(v);
         }
 
-        // ── Fetch OHLCV ──────────────────────────────────────────────
+        // ── Base chart options ────────────────────────────────────────
+        function lwOpts(height) {
+            return {
+                height,
+                autoSize: true,
+                layout: {
+                    background:  { color: C.bg },
+                    textColor:   C.text,
+                    fontFamily:  "'Inter', -apple-system, sans-serif",
+                    fontSize:    11,
+                },
+                grid: {
+                    vertLines: { color: C.grid },
+                    horzLines: { color: C.grid },
+                },
+                crosshair: {
+                    mode: LW.CrosshairMode.Normal,
+                    vertLine: { color: C.cross, labelBackgroundColor: '#1e293b' },
+                    horzLine: { color: C.cross, labelBackgroundColor: '#1e293b' },
+                },
+                rightPriceScale: {
+                    borderColor:  C.border,
+                    scaleMargins: { top: 0.06, bottom: 0.22 },
+                },
+                timeScale: {
+                    borderColor:    C.border,
+                    timeVisible:    false,
+                    secondsVisible: false,
+                    // 1. ขยายแท่งเทียนให้กว้าง 45px เพื่อให้มีพื้นที่ "โชว์วันที่ได้ทุกแท่ง" โดยไม่โดนซ่อน
+                    barSpacing:     45,  
+                    minBarSpacing:  10,
+                    tickMarkFormatter: (time) => {
+                        try {
+                            const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                            // กรณี Object ปกติของ Lightweight Charts
+                            if (time && time.year !== undefined) {
+                                return `${time.day} ${m[time.month - 1]}`;
+                            }
+                            // กรณีส่งมาเป็น String (เช่น '2025-03-12') จับหั่นข้อความตรงๆ เลย ไม่ง้อ Date()
+                            if (typeof time === 'string') {
+                                const parts = time.split('-'); 
+                                if (parts.length >= 3) {
+                                    return `${parseInt(parts[2], 10)} ${m[parseInt(parts[1], 10) - 1]}`;
+                                }
+                            }
+                            // กรณีส่งมาเป็นตัวเลข Timestamp
+                            if (typeof time === 'number') {
+                                const d = new Date(time * 1000);
+                                return `${d.getUTCDate()} ${m[d.getUTCMonth()]}`;
+                            }
+                        } catch (e) {}
+                        return String(time);
+                    },
+                },
+                localization: {
+                    // Tooltip เวลาเอาเมาส์ชี้
+                    timeFormatter: (time) => {
+                        try {
+                            const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                            if (time && time.year !== undefined) {
+                                return `${time.day} ${m[time.month - 1]} ${time.year}`;
+                            }
+                            if (typeof time === 'string') {
+                                const parts = time.split('-');
+                                if (parts.length >= 3) {
+                                    return `${parseInt(parts[2], 10)} ${m[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
+                                }
+                            }
+                            if (typeof time === 'number') {
+                                const d = new Date(time * 1000);
+                                return `${d.getUTCDate()} ${m[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+                            }
+                        } catch(e) {}
+                        return String(time);
+                    }
+                },
+                handleScroll: { mouseWheel: true, pressedMouseMove: true },
+                handleScale:  { axisPressedMouseMove: true, mouseWheel: true, pinch: true },
+            };
+        }
+
+        // ── Custom tooltip factory ────────────────────────────────────
+        function makeTooltip(container) {
+            container.style.position = 'relative';
+            const d = document.createElement('div');
+            d.style.cssText = [
+                'position:absolute','top:12px','left:12px','z-index:100',
+                'pointer-events:none','display:none',
+                'background:rgba(15,23,42,0.92)',
+                'backdrop-filter:blur(10px)',
+                '-webkit-backdrop-filter:blur(10px)',
+                'border:1px solid rgba(255,255,255,0.09)',
+                'border-radius:10px','padding:10px 14px',
+                'box-shadow:0 8px 32px rgba(0,0,0,0.3)',
+                "font-family:'Inter',sans-serif",'font-size:11px',
+                'min-width:190px','line-height:1.5',
+            ].join(';');
+            container.appendChild(d);
+            return d;
+        }
+
+        // ── Tooltip row helper ────────────────────────────────────────
+        function tipRow(label, val, color = '#e2e8f0') {
+            return `<span style="color:#64748b;font-weight:600">${label}</span>`
+                 + `<span style="color:${color};font-weight:700">${val}</span>`;
+        }
+
+        // ── Fetch OHLCV (Dashboard + Predict share this) ─────────────
         async function fetchOHLCV(symbol, months = 12) {
             try {
                 const from = luxon.DateTime.now().minus({ months }).toISODate();
@@ -1443,7 +1538,7 @@
 
                 if (!rtErr && rt) {
                     const today = luxon.DateTime.fromISO(rt.updated_at).toISODate();
-                    const bar = {
+                    const bar   = {
                         time:   today,
                         open:   parseFloat(rt.open_price),
                         high:   parseFloat(rt.high_price),
@@ -1462,23 +1557,14 @@
             }
         }
 
-        // ── X-axis date label formatter ───────────────────────────────
-        const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        function fmtDate(iso) {
-            const p = (iso || '').split('-');
-            if (p.length < 3) return iso;
-            return `${parseInt(p[2],10)} ${MONTHS[parseInt(p[1],10)-1]}`;
-        }
-
         // ════════════════════════════════════════════════════════════
-        // renderChart — Dashboard Candlestick (ECharts)
+        // renderChart — Dashboard page (Candlestick + Volume + SMA)
         // ════════════════════════════════════════════════════════════
         async function renderChart() {
             const chartEl = document.getElementById('mainChart');
             if (!APP.currentStock || !chartEl) return;
 
-            // Destroy previous ECharts instance
-            if (APP.eChart) { APP.eChart.dispose(); APP.eChart = null; }
+            if (APP.lwcChart) { APP.lwcChart.remove(); APP.lwcChart = null; }
 
             const symbol      = APP.currentStock.symbol.trim().toUpperCase();
             const displayName = getFullCompanyName(symbol).replace(' PUBLIC COMPANY LIMITED', '');
@@ -1513,139 +1599,85 @@
                         <span class="inline-block w-7 h-0.5" style="background:#f59e0b"></span>SMA 50
                     </span>
                 </div>
-                <div id="ec_main_${symbol}" style="height:460px;width:100%"></div>
+                <div id="lw_main_${symbol}" class="relative rounded-xl overflow-hidden border border-slate-100" style="height:460px"></div>
             `;
 
             const candles = await fetchOHLCV(symbol, 12);
             if (!candles.length) return;
 
-            const sma20Data = calcSMA(candles, 20);
-            const sma50Data = calcSMA(candles, 50);
+            const el    = document.getElementById(`lw_main_${symbol}`);
+            const chart = LW.createChart(el, lwOpts(460));
+            APP.lwcChart = chart;
 
-            const dates      = candles.map(c => c.time);
-            const ohlcValues = candles.map(c => [c.open, c.close, c.low, c.high]);
-            const volValues  = candles.map(c => ({
-                value: c.volume,
-                itemStyle: { color: c.close >= c.open ? C.upVol : C.downVol },
-            }));
-
-            // Align SMA series to full dates array (null for early dates)
-            const smaMap20 = Object.fromEntries(sma20Data.map(s => [s.time, s.value]));
-            const smaMap50 = Object.fromEntries(sma50Data.map(s => [s.time, s.value]));
-            const sma20Al  = dates.map(d => smaMap20[d] ?? null);
-            const sma50Al  = dates.map(d => smaMap50[d] ?? null);
-
-            const el    = document.getElementById(`ec_main_${symbol}`);
-            const chart = echarts.init(el, null, { renderer: 'canvas' });
-            APP.eChart = chart;
-
-            chart.setOption({
-                backgroundColor: '#ffffff',
-                animation: false,
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: { type: 'cross', crossStyle: { color: '#94a3b8' } },
-                    backgroundColor: 'rgba(15,23,42,0.92)',
-                    borderColor: 'rgba(255,255,255,0.09)',
-                    padding: [10, 14],
-                    textStyle: { color: '#e2e8f0', fontFamily: 'Inter', fontSize: 11 },
-                    formatter(params) {
-                        const date = params[0]?.name || '';
-                        const cdl  = params.find(p => p.seriesName === 'OHLC');
-                        const vol  = params.find(p => p.seriesName === 'Vol');
-                        if (!cdl) return '';
-                        const [o, c, l, h] = cdl.value;
-                        const col = c >= o ? C.up : C.down;
-                        const arrow = c >= o ? '▲' : '▼';
-                        return `<div style="font-size:10px;font-weight:800;color:#94a3b8;letter-spacing:.1em;margin-bottom:6px;text-transform:uppercase">${date} · ${symbol}</div>
-                            <div style="display:grid;grid-template-columns:24px 1fr;gap:3px 8px">
-                                <span style="color:#64748b;font-weight:600">O</span><span style="color:${col};font-weight:700">฿${(+o).toFixed(2)}</span>
-                                <span style="color:#64748b;font-weight:600">H</span><span style="color:#34d399;font-weight:700">฿${(+h).toFixed(2)}</span>
-                                <span style="color:#64748b;font-weight:600">L</span><span style="color:#f87171;font-weight:700">฿${(+l).toFixed(2)}</span>
-                                <span style="color:#64748b;font-weight:600">C</span><span style="color:${col};font-weight:700">${arrow} ฿${(+c).toFixed(2)}</span>
-                                ${vol ? `<span style="color:#64748b;font-weight:600">V</span><span style="color:#a78bfa;font-weight:700">${fmtVol(vol.value)}</span>` : ''}
-                            </div>`;
-                    },
-                },
-                axisPointer: { link: [{ xAxisIndex: 'all' }] },
-                dataZoom: [
-                    { type: 'inside', xAxisIndex: [0, 1], start: 70, end: 100 },
-                    {
-                        type: 'slider', xAxisIndex: [0, 1], start: 70, end: 100,
-                        bottom: 0, height: 22,
-                        borderColor: '#e2e8f0', fillerColor: 'rgba(220,38,38,0.09)',
-                        handleStyle: { color: '#dc2626', borderWidth: 0 },
-                        textStyle: { color: '#94a3b8', fontSize: 10 },
-                    },
-                ],
-                grid: [
-                    { left: 12, right: 64, top: 12, bottom: 80 },          // candlestick
-                    { left: 12, right: 64, bottom: 55, height: '18%' },    // volume
-                ],
-                xAxis: [
-                    {
-                        type: 'category', data: dates, gridIndex: 0,
-                        boundaryGap: false, scale: true,
-                        axisLine: { lineStyle: { color: '#e2e8f0' } },
-                        axisTick: { show: false },
-                        splitLine: { show: false },
-                        axisLabel: { color: '#94a3b8', fontSize: 10, fontFamily: 'Inter', formatter: fmtDate },
-                    },
-                    {
-                        type: 'category', data: dates, gridIndex: 1,
-                        boundaryGap: false, scale: true,
-                        axisLine: { show: false }, axisTick: { show: false },
-                        axisLabel: { show: false }, splitLine: { show: false },
-                    },
-                ],
-                yAxis: [
-                    {
-                        scale: true, gridIndex: 0, position: 'right',
-                        splitLine: { lineStyle: { color: C.grid } },
-                        axisLabel: { color: '#94a3b8', fontSize: 10, fontFamily: 'Inter', formatter: v => '฿' + (+v).toFixed(0) },
-                    },
-                    {
-                        scale: true, gridIndex: 1, position: 'right',
-                        splitNumber: 2, axisLabel: { show: false }, splitLine: { show: false },
-                    },
-                ],
-                series: [
-                    {
-                        name: 'OHLC', type: 'candlestick',
-                        xAxisIndex: 0, yAxisIndex: 0,
-                        data: ohlcValues,
-                        itemStyle: {
-                            color: C.up, color0: C.down,
-                            borderColor: C.up, borderColor0: C.down,
-                        },
-                        barMaxWidth: 14,
-                    },
-                    {
-                        name: 'Vol', type: 'bar',
-                        xAxisIndex: 1, yAxisIndex: 1,
-                        data: volValues, barMaxWidth: 12,
-                        emphasis: { itemStyle: { opacity: 0.9 } },
-                    },
-                    {
-                        name: 'SMA 20', type: 'line',
-                        xAxisIndex: 0, yAxisIndex: 0,
-                        data: sma20Al, smooth: false, showSymbol: false,
-                        lineStyle: { color: C.sma20, width: 1.5, opacity: 0.9 },
-                        connectNulls: true, z: 4,
-                    },
-                    {
-                        name: 'SMA 50', type: 'line',
-                        xAxisIndex: 0, yAxisIndex: 0,
-                        data: sma50Al, smooth: false, showSymbol: false,
-                        lineStyle: { color: C.sma50, width: 1.5, opacity: 0.9 },
-                        connectNulls: true, z: 4,
-                    },
-                ],
+            // Candlestick
+            const candleSeries = chart.addCandlestickSeries({
+                upColor: C.up, downColor: C.down,
+                borderUpColor: C.up, borderDownColor: C.down,
+                wickUpColor: C.up, wickDownColor: C.down,
             });
+            candleSeries.setData(candles);
 
-            // Auto-resize on container change
-            const ro = new ResizeObserver(() => chart.resize());
-            ro.observe(el);
+            // Volume (bottom 22%)
+            const volSeries = chart.addHistogramSeries({
+                priceScaleId: 'vol',
+                priceFormat:  { type: 'volume' },
+            });
+            chart.priceScale('vol').applyOptions({
+                scaleMargins: { top: 0.80, bottom: 0 },
+            });
+            volSeries.setData(candles.map(c => ({
+                time:  c.time,
+                value: c.volume,
+                color: c.close >= c.open ? C.upVol : C.downVol,
+            })));
+
+            // SMA 20
+            const sma20 = chart.addLineSeries({
+                color: C.sma20, lineWidth: 1.5,
+                priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
+            });
+            sma20.setData(calcSMA(candles, 20));
+
+            // SMA 50
+            const sma50 = chart.addLineSeries({
+                color: C.sma50, lineWidth: 1.5,
+                priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
+            });
+            sma50.setData(calcSMA(candles, 50));
+
+            // Show last 3 months
+            const last3m = luxon.DateTime.fromISO(candles[candles.length - 1].time).minus({ months: 3 }).toISODate();
+            chart.timeScale().setVisibleRange({ from: last3m, to: candles[candles.length - 1].time });
+
+            // Custom Tooltip
+            const tip = makeTooltip(el);
+            chart.subscribeCrosshairMove(p => {
+                if (!p.time || !p.point || p.point.x < 0 || p.point.y < 0) {
+                    tip.style.display = 'none'; return;
+                }
+                const c   = p.seriesData.get(candleSeries);
+                const vol = p.seriesData.get(volSeries);
+                if (!c) { tip.style.display = 'none'; return; }
+
+                const up   = c.close >= c.open;
+                const col  = up ? C.up : C.down;
+                const dt   = luxon.DateTime.fromISO(p.time).toFormat('dd MMM yyyy');
+
+                tip.innerHTML = `
+                    <div style="color:#94a3b8;font-size:10px;font-weight:800;letter-spacing:.1em;margin-bottom:7px;text-transform:uppercase">${dt} · ${symbol}</div>
+                    <div style="display:grid;grid-template-columns:30px 1fr;gap:3px 8px">
+                        ${tipRow('O', '฿' + c.open.toFixed(2), col)}
+                        ${tipRow('H', '฿' + c.high.toFixed(2), '#34d399')}
+                        ${tipRow('L', '฿' + c.low.toFixed(2),  '#f87171')}
+                        ${tipRow('C', (up ? '▲ ' : '▼ ') + '฿' + c.close.toFixed(2), col)}
+                        ${vol ? tipRow('V', fmtVol(vol.value), '#a78bfa') : ''}
+                    </div>
+                `;
+                const { width } = el.getBoundingClientRect();
+                tip.style.left  = p.point.x > width / 2 ? '12px' : 'auto';
+                tip.style.right = p.point.x > width / 2 ? 'auto' : '12px';
+                tip.style.display = 'block';
+            });
         }
 
         // ── Sidebar stock click — updates Dashboard + pre-loads Predict ──
@@ -2098,292 +2130,183 @@
             updatePredictUI(sym, APP.predictHorizon || '7D');
         }
 
-        // ─── fetchHistoricalForPredict ────────────────────────────────
-        async function fetchHistoricalForPredict(symbol) {
-            return fetchOHLCV(symbol.trim().toUpperCase(), 24); // ย้อนหลัง 2 ปี (24 เดือน)
+        // ─── fetchHistoricalForPredict ─────────────────────────────────
+        // reuse fetchOHLCV ที่ define ไว้แล้ว — แค่จำกัด months ให้สั้นลง
+        async function fetchHistoricalForPredict(symbol, days = 500) {
+            // ปรับให้ดึงย้อนหลังประมาณ 24 เดือนเพื่อให้ครอบคลุม 2 ปี
+            const months = 24; 
+            const all = await fetchOHLCV(symbol.trim().toUpperCase(), months);
+            return all; 
         }
 
-        // ════════════════════════════════════════════════════════════
-        // renderPredictKpiCards — Model Accuracy KPI Cards (ECharts page)
-        // Uses RPC get_model_accuracy(target_symbol) → [{window,mape,samples}]
-        // ════════════════════════════════════════════════════════════
-        async function renderPredictKpiCards(symbol) {
-            const container = document.getElementById('predictAccuracyCards');
-            if (!container) return;
+       async function renderPredictChart(symbol, allPredData, isPending = false) {
+        const container = document.getElementById('predictCanvas');
+        if (!container) return;
 
-            // Show skeleton while loading
-            container.classList.remove('hidden');
-            container.innerHTML = [1,2,3].map(() => `
-                <div class="kpi-acc-card animate-pulse">
-                    <div class="kpi-accent" style="background:#e2e8f0"></div>
-                    <div class="h-3 bg-slate-100 rounded w-24 mb-3 mt-1"></div>
-                    <div class="h-8 bg-slate-100 rounded w-16 mb-2"></div>
-                    <div class="h-2 bg-slate-100 rounded w-32"></div>
-                    <div class="kpi-bar-bg mt-3"><div class="kpi-bar-fg" style="width:0%;background:#e2e8f0"></div></div>
-                </div>`).join('');
+        if (APP.predictLwcChart) { APP.predictLwcChart.remove(); APP.predictLwcChart = null; }
+        container.innerHTML = '';
 
-            try {
-                const { data: kpiRows, error } = await APP.supabaseClient
-                    .rpc('get_model_accuracy', { target_symbol: symbol });
-
-                if (error) throw error;
-
-                // Expect rows: [{window_label, mape_mean, samples}]
-                // Fallback: compute locally from stock_predictions_v3 if RPC not available
-                const windows = [
-                    { label: 'Accuracy  1–7 Days',   maxDay: 7,  accent: '#6366f1', bar: '#818cf8' },
-                    { label: 'Accuracy 8–15 Days',   maxDay: 15, accent: '#0ea5e9', bar: '#38bdf8' },
-                    { label: 'Accuracy 16–30 Days',  maxDay: 30, accent: '#10b981', bar: '#34d399' },
-                ];
-
-                // Map RPC result by window label or use a fallback zero
-                const resultMap = {};
-                (kpiRows || []).forEach(r => { resultMap[r.window_label || r.window] = r; });
-
-                container.innerHTML = windows.map(w => {
-                    const row    = kpiRows && kpiRows.length
-                        ? (kpiRows.find(r => r.max_day_index === w.maxDay) || kpiRows[windows.indexOf(w)])
-                        : null;
-                    const mape    = row?.mape_mean  != null ? parseFloat(row.mape_mean).toFixed(2)  : '—';
-                    const samples = row?.samples     != null ? row.samples : '—';
-                    const mapeNum = parseFloat(mape) || 0;
-                    // Bar width: 0–100% mapped as mape 0–10% → 0–100%
-                    const barW  = Math.min(mapeNum / 10 * 100, 100).toFixed(1);
-                    // Color label: green <3%, amber <6%, red ≥6%
-                    const lbl   = mapeNum === 0 ? '#94a3b8'
-                                : mapeNum < 3  ? '#059669'
-                                : mapeNum < 6  ? '#d97706'
-                                : '#dc2626';
-                    const grade = mapeNum === 0 ? '—'
-                                : mapeNum < 3  ? 'Excellent'
-                                : mapeNum < 6  ? 'Good'
-                                : mapeNum < 10 ? 'Fair'
-                                : 'Weak';
-
-                    return `
-                    <div class="kpi-acc-card">
-                        <div class="kpi-accent" style="background:${w.accent}"></div>
-                        <div class="kpi-window">${w.label}</div>
-                        <div class="kpi-mape" style="color:${lbl}">${mape === '—' ? '—' : mape + '%'}</div>
-                        <div class="kpi-label" style="color:${lbl}">${grade} · MAPE</div>
-                        <div class="kpi-samples">${samples} evaluated rows</div>
-                        <div class="kpi-bar-bg">
-                            <div class="kpi-bar-fg" style="width:${barW}%;background:${w.bar}"></div>
-                        </div>
-                    </div>`;
-                }).join('');
-
-            } catch (err) {
-                console.warn('⚠️ get_model_accuracy RPC failed — hiding KPI cards:', err.message);
-                container.classList.add('hidden');
-            }
+        // 1. ดึงข้อมูลราคาจริงย้อนหลัง 2 ปี (24 เดือน)
+        const rawHistory = await fetchHistoricalForPredict(symbol, 500); // ประมาณ 500 วันทำการ = 2 ปี
+        if (!rawHistory || !rawHistory.length) {
+            container.innerHTML = `<div class="flex items-center justify-center h-full text-slate-400 font-bold uppercase tracking-widest text-[11px]">ไม่พบข้อมูลราคาประวัติศาสตร์สำหรับ ${symbol}</div>`;
+            return;
         }
 
-        // ════════════════════════════════════════════════════════════
-        // renderPredictChart — ECharts Forecast Fan Chart
-        // Series layout:
-        //   [0] Actual (solid slate line, 2 years)
-        //   [1] CI Upper bound (transparent line, stacked fill anchor)
-        //   [2] CI Band fill (lower bound, areaStyle above = the shaded band)
-        //   [3] AI Forecast (dashed indigo line)
-        // ════════════════════════════════════════════════════════════
-        async function renderPredictChart(symbol, allPredData) {
-            const el = document.getElementById('predictEChart');
-            if (!el) return;
+        const historyData = rawHistory.map(d => ({ time: d.time, value: d.close }));
+        
+        // 2. เตรียมข้อมูลพยากรณ์ (Predict) - เริ่มตั้งแต่วันแรกที่มีการพยากรณ์ใน DB
+        const sortedPred = [...(allPredData || [])].sort((a, b) => a.prediction_date.localeCompare(b.prediction_date));
+        
+        const forecastLine = sortedPred.map(d => ({ 
+            time: d.prediction_date, 
+            value: parseFloat(d.predicted_price) 
+        }));
 
-            // Destroy existing ECharts instance cleanly
-            if (APP.predictEChart) { APP.predictEChart.dispose(); APP.predictEChart = null; }
-            el.innerHTML = '';
+        const confidenceArea = sortedPred.map(d => ({
+            time: d.prediction_date,
+            low: parseFloat(d.lower_bound),
+            high: parseFloat(d.upper_bound)
+        }));
 
-            // ── 1. Fetch 2-year historical prices ─────────────────────
-            const rawHistory = await fetchHistoricalForPredict(symbol);
-            if (!rawHistory || !rawHistory.length) {
-                el.innerHTML = `<div class="flex items-center justify-center h-full text-slate-400 font-bold uppercase tracking-widest text-[11px]">ไม่พบข้อมูลราคาประวัติศาสตร์สำหรับ ${symbol}</div>`;
-                return;
-            }
+        // 3. สร้าง Chart พร้อมตั้งค่าพื้นฐาน
+        const chart = LightweightCharts.createChart(container, {
+            ...lwOpts(380),
+            rightPriceScale: { 
+                borderColor: '#e2e8f0', 
+                scaleMargins: { top: 0.1, bottom: 0.2 },
+                autoScale: true 
+            },
+        });
+        APP.predictLwcChart = chart;
 
-            // ── 2. Prepare sorted prediction data ─────────────────────
-            const sortedPred = [...(allPredData || [])]
-                .sort((a, b) => a.prediction_date.localeCompare(b.prediction_date));
+        // --- ส่วนการวาดเส้น (Layering) ---
 
-            // ── 3. Bridge: last historical point → first forecast point ──
-            // Ensures the lines connect seamlessly with no gap
-            const lastHist = rawHistory[rawHistory.length - 1];
-            const bridgePoint = {
-                prediction_date: lastHist.time,
-                predicted_price: lastHist.close,
-                lower_bound:     lastHist.close,
-                upper_bound:     lastHist.close,
-            };
-            // Only prepend bridge if it's not already covered
-            const needsBridge = !sortedPred.length || sortedPred[0].prediction_date > lastHist.time;
-            const forecastWithBridge = needsBridge ? [bridgePoint, ...sortedPred] : sortedPred;
-
-            // ── 4. Build unified x-axis dates ─────────────────────────
-            const histDates = rawHistory.map(d => d.time);
-            const predDates = forecastWithBridge.map(d => d.prediction_date);
-            // Merge & deduplicate, preserving chronological order
-            const allDates  = [...new Set([...histDates, ...predDates])].sort();
-
-            // ── 5. Build series value arrays (null for absent dates) ───
-            const histMap = Object.fromEntries(rawHistory.map(d => [d.time, d.close]));
-            const predMap = Object.fromEntries(forecastWithBridge.map(d => [d.prediction_date, parseFloat(d.predicted_price)]));
-            const loMap   = Object.fromEntries(forecastWithBridge.map(d => [d.prediction_date, parseFloat(d.lower_bound)]));
-            const hiMap   = Object.fromEntries(forecastWithBridge.map(d => [d.prediction_date, parseFloat(d.upper_bound)]));
-
-            const actualVals   = allDates.map(d => histMap[d]  ?? null);
-            const forecastVals = allDates.map(d => predMap[d]  ?? null);
-            const lowerVals    = allDates.map(d => loMap[d]    ?? null);
-            const upperVals    = allDates.map(d => hiMap[d]    ?? null);
-
-            // ── 6. Stacked CI band: upper = upperBound, lower fills between ─
-            // ECharts stack trick: series[1]=upper (invisible), series[2]=lower
-            // areaStyle on series[2] fills the gap between them
-            const ciUpperVals = allDates.map(d => hiMap[d] ?? null);
-            // The "fill height" for the lower series = upper - lower
-            const ciFillVals  = allDates.map(d => {
-                const lo = loMap[d], hi = hiMap[d];
-                if (lo == null || hi == null) return null;
-                return hi - lo;  // stacked on top of lowerVals
+        // ── [FEATURE 2] Pending Validation: ซ่อนเส้นพยากรณ์สำหรับ 15D/30D ──
+        if (!isPending) {
+            // A. วาดแถบ Confidence Band (ใช้ Area Series)
+            const areaSeries = chart.addAreaSeries({
+                topColor: 'rgba(99, 102, 241, 0.2)',
+                bottomColor: 'rgba(99, 102, 241, 0.05)',
+                lineColor: 'transparent',
+                lastValueVisible: false,
+                priceLineVisible: false,
             });
+            areaSeries.setData(forecastLine);
 
-            // ── 7. Init ECharts ────────────────────────────────────────
-            const chart = echarts.init(el, null, { renderer: 'canvas' });
-            APP.predictEChart = chart;
-
-            // DataZoom: default to show last 45 hist days + all forecast
-            const focusFrom  = luxon.DateTime.fromISO(lastHist.time).minus({ days: 45 }).toISODate();
-            const startPct   = Math.max(0, ((allDates.indexOf(focusFrom) || 0) / allDates.length) * 100);
-
-            chart.setOption({
-                backgroundColor: '#ffffff',
-                animation: true,
-                animationDuration: 600,
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: { type: 'cross', snap: true },
-                    backgroundColor: 'rgba(15,23,42,0.92)',
-                    borderColor: 'rgba(255,255,255,0.09)',
-                    padding: [10, 14],
-                    textStyle: { color: '#e2e8f0', fontFamily: 'Inter', fontSize: 11 },
-                    formatter(params) {
-                        const date  = params[0]?.name || '';
-                        const act   = params.find(p => p.seriesName === 'Actual');
-                        const fore  = params.find(p => p.seriesName === 'AI Forecast');
-                        const ciLo  = params.find(p => p.seriesName === 'CI Lower');
-                        const ciHi  = params.find(p => p.seriesName === 'CI Upper');
-                        let html = `<div style="color:#94a3b8;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px">${fmtDate(date)} · ${symbol}</div>`;
-                        html += `<div style="display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:11px">`;
-                        if (act?.value  != null) html += `<span style="color:#64748b;font-weight:600">Actual</span><span style="color:#0f172a;font-weight:800">฿${(+act.value).toFixed(2)}</span>`;
-                        if (fore?.value != null) html += `<span style="color:#64748b;font-weight:600">Forecast</span><span style="color:#6366f1;font-weight:800">฿${(+fore.value).toFixed(2)}</span>`;
-                        if (ciLo && ciHi && ciLo.value != null && ciHi.value != null) {
-                            const lo = (+ciLo.value).toFixed(2);
-                            const hi = (+ciHi.value).toFixed(2);
-                            html += `<span style="color:#64748b;font-weight:600">80% CI</span><span style="color:#94a3b8;font-weight:700">฿${lo} – ฿${hi}</span>`;
-                        }
-                        html += '</div>';
-                        return html;
-                    },
-                },
-                grid: { left: 12, right: 68, top: 16, bottom: 64 },
-                dataZoom: [
-                    { type: 'inside', start: startPct, end: 100, minValueSpan: 7 },
-                    {
-                        type: 'slider', start: startPct, end: 100, bottom: 4, height: 22,
-                        borderColor: '#e2e8f0', fillerColor: 'rgba(99,102,241,0.12)',
-                        handleStyle: { color: '#6366f1', borderWidth: 0 },
-                        textStyle: { color: '#94a3b8', fontSize: 10, fontFamily: 'Inter' },
-                        labelFormatter: (_, val) => fmtDate(val),
-                    },
-                ],
-                xAxis: {
-                    type: 'category', data: allDates, boundaryGap: false,
-                    axisLine: { lineStyle: { color: '#e2e8f0' } },
-                    axisTick: { show: false },
-                    splitLine: { show: false },
-                    axisLabel: { color: '#94a3b8', fontSize: 10, fontFamily: 'Inter', formatter: fmtDate, rotate: 0 },
-                },
-                yAxis: {
-                    type: 'value', scale: true, position: 'right',
-                    splitLine: { lineStyle: { color: '#f1f5f9' } },
-                    axisLabel: { color: '#94a3b8', fontSize: 10, fontFamily: 'Inter', formatter: v => '฿' + (+v).toFixed(0) },
-                },
-                // Mark the boundary between past (actual) and future (forecast)
-                markLine: lastHist ? {
-                    silent: true,
-                    symbol: ['none','none'],
-                    lineStyle: { type: 'dashed', color: '#cbd5e1', width: 1.5 },
-                    data: [{ xAxis: lastHist.time, label: { formatter: 'Today', color: '#94a3b8', fontSize: 9, fontWeight: 700 } }],
-                } : undefined,
-                series: [
-                    // ── Series 0: Actual price (solid, dark slate) ────────────
-                    {
-                        name: 'Actual',
-                        type: 'line',
-                        data: actualVals,
-                        showSymbol: false,
-                        smooth: false,
-                        connectNulls: false,
-                        lineStyle: { color: '#0f172a', width: 2 },
-                        itemStyle: { color: '#0f172a' },
-                        z: 10,
-                    },
-                    // ── Series 1: CI Upper bound (invisible anchor for stack) ─
-                    {
-                        name: 'CI Upper',
-                        type: 'line',
-                        data: ciUpperVals,
-                        showSymbol: false,
-                        smooth: false,
-                        connectNulls: false,
-                        lineStyle: { color: 'transparent', width: 0 },
-                        itemStyle: { color: 'transparent' },
-                        stack: 'ciband',
-                        areaStyle: { color: 'transparent' },
-                        z: 3,
-                        tooltip: { show: true },
-                    },
-                    // ── Series 2: CI Band fill (lower bound, fills up to upper) ─
-                    {
-                        name: 'CI Lower',
-                        type: 'line',
-                        data: lowerVals,
-                        showSymbol: false,
-                        smooth: false,
-                        connectNulls: false,
-                        lineStyle: { color: 'transparent', width: 0 },
-                        itemStyle: { color: 'transparent' },
-                        stack: 'ciband',
-                        // areaStyle fills from lowerVals UP to ciUpperVals
-                        areaStyle: {
-                            color: 'rgba(99,102,241,0.13)',
-                            origin: 'auto',
-                        },
-                        z: 3,
-                        tooltip: { show: true },
-                    },
-                    // ── Series 3: AI Forecast line (dashed indigo) ────────────
-                    {
-                        name: 'AI Forecast',
-                        type: 'line',
-                        data: forecastVals,
-                        showSymbol: true,
-                        symbolSize: 4,
-                        symbol: 'circle',
-                        smooth: false,
-                        connectNulls: false,
-                        lineStyle: { color: '#6366f1', width: 2.5, type: 'dashed' },
-                        itemStyle: { color: '#6366f1' },
-                        z: 8,
-                    },
-                ],
+            // B. เส้นราคาพยากรณ์ (Indigo Dashed Line)
+            const forecastSeries = chart.addLineSeries({
+                color: '#6366f1',
+                lineWidth: 2,
+                lineStyle: LightweightCharts.LineStyle.Dashed,
+                lastValueVisible: false,
+                priceLineVisible: false,
             });
-
-            // Responsive resize observer
-            const ro = new ResizeObserver(() => chart.resize());
-            ro.observe(el);
+            forecastSeries.setData(forecastLine);
         }
 
+        // C. เส้นราคาจริง (Deep Slate Solid Line) - ย้อนหลัง 2 ปี — แสดงเสมอ
+        const actualSeries = chart.addLineSeries({
+            color: '#0f172a',
+            lineWidth: 2,
+            lastValueVisible: false,
+            priceLineVisible: false,
+        });
+        actualSeries.setData(historyData);
+
+        // 4. จัดการการมองเห็น (Visible Range) 
+        if (forecastLine.length > 0) {
+            const firstPredictDate = forecastLine[0].time;
+            const lastPredictDate = forecastLine[forecastLine.length - 1].time;
+            const focusStartDate = luxon.DateTime.fromISO(firstPredictDate).minus({ days: 45 }).toISODate();
+            
+            chart.timeScale().setVisibleRange({ 
+                from: focusStartDate, 
+                to: lastPredictDate 
+            });
+        }
+
+        // ── [FEATURE 2] Pending Validation Overlay ────────────────────
+        if (isPending) {
+            const h = APP.predictHorizon || '15D';
+            const overlay = document.createElement('div');
+            overlay.id = 'forecastPendingOverlay';
+            overlay.style.cssText = [
+                'position:absolute', 'inset:0',
+                'background:rgba(248,250,252,0.93)',
+                'backdrop-filter:blur(5px)',
+                '-webkit-backdrop-filter:blur(5px)',
+                'display:flex', 'flex-direction:column',
+                'align-items:center', 'justify-content:center',
+                'z-index:50', 'border-radius:12px',
+                'gap:16px', 'padding:32px',
+                'pointer-events:none'
+            ].join(';');
+            overlay.innerHTML = `
+                <div style="width:52px;height:52px;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="24" height="24" fill="none" stroke="#475569" stroke-width="2.5" viewBox="0 0 24 24">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0110 0v4"></path>
+                    </svg>
+                </div>
+                <div style="text-align:center;max-width:340px">
+                    <p style="font-size:11px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:.18em;margin-bottom:10px">
+                        Pending Validation
+                    </p>
+                    <p style="font-size:13px;font-weight:600;color:#334155;line-height:1.75;margin-bottom:12px">
+                        รอเก็บข้อมูลราคาจริง <strong style="color:#dc2626;font-weight:900">7 วัน</strong> เพื่อวัดผลความแม่นยำของโมเดล<br>
+                        ก่อนปลดล็อกการแสดงผลพยากรณ์ <strong style="color:#6366f1;font-weight:900">${h} Horizon</strong>
+                    </p>
+                    <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:999px">
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="#64748b">
+                            <circle cx="5" cy="5" r="4.5" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+                            <circle cx="5" cy="5" r="1.5" fill="#94a3b8"/>
+                        </svg>
+                        <span style="font-size:9px;font-weight:900;color:#64748b;text-transform:uppercase;letter-spacing:.18em">
+                            Chronos Validation Protocol · ${h}
+                        </span>
+                    </div>
+                </div>
+            `;
+            container.appendChild(overlay);
+            return; // ไม่แนบ tooltip เมื่ออยู่ใน pending state
+        }
+
+        // 5. Tooltip (ปรับปรุงให้แสดงข้อมูลครบถ้วน)
+        const tip = makeTooltip(container);
+        // ดึง forecastSeries reference สำหรับ tooltip (rebuild ถ้า !isPending)
+        const _forecastSeries = chart.series ? chart.series[1] : null; // indigo dashed line
+        chart.subscribeCrosshairMove(p => {
+            if (!p.time || !p.point || p.point.x < 0) { tip.style.display = 'none'; return; }
+            
+            const actualVal = p.seriesData.get(actualSeries);
+            // forecastSeries อาจเป็น undefined ถ้า isPending (ไม่ได้สร้าง) แต่ถึงทาง return early แล้ว
+            let foreVal = null;
+            p.seriesData.forEach((val, series) => {
+                if (series !== actualSeries) foreVal = val;
+            });
+            const dt = luxon.DateTime.fromISO(p.time).toFormat('dd MMM yyyy');
+
+            let rows = '';
+            if (actualVal) rows += tipRow('ACTUAL PRICE', '฿' + actualVal.value.toFixed(2), '#94a3b8');
+            if (foreVal) {
+                rows += tipRow('AI FORECAST', '฿' + foreVal.value.toFixed(2), '#6366f1');
+                const raw = sortedPred.find(d => d.prediction_date === p.time);
+                if (raw) {
+                    rows += tipRow('80% CI BAND', `฿${parseFloat(raw.lower_bound).toFixed(2)} - ${parseFloat(raw.upper_bound).toFixed(2)}`, '#94a3b8');
+                }
+            }
+
+            tip.innerHTML = `
+                <div style="color:#64748b;font-size:10px;font-weight:800;text-transform:uppercase;margin-bottom:5px">${dt}</div>
+                <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 10px">${rows}</div>
+            `;
+            tip.style.display = 'block';
+            const { width } = container.getBoundingClientRect();
+            tip.style.left = p.point.x > width / 2 ? '15px' : 'auto';
+            tip.style.right = p.point.x > width / 2 ? 'auto' : '15px';
+        });
+    }
         // ══════════════════════════════════════════════════════════════
         // renderPredictTable — Bloomberg-style Forecast Data Table
         // ══════════════════════════════════════════════════════════════
@@ -2510,13 +2433,16 @@
         }
 
         // ══════════════════════════════════════════════════════════════
-        // updatePredictUI — master update function (ECharts Edition)
+        // updatePredictUI — master update function (Fan Chart Edition)
         //
         // Data Pipeline:
-        //   stock_predictions_v3  → latest base_date → day_index ≤ 15
-        //   get_model_accuracy()  → KPI accuracy cards
-        //   stock_realtime        → currentPrice / changePercent
-        //   model_insights        → optional live AI insight cards
+        //   stock_predictions_v3  → allPredData (ALL rows for horizon, no date filter)
+        //   stock_realtime        → currentPrice / changePercent (via APP.stocks)
+        //   model_insights        → insightRows (optional live insights from DB)
+        //
+        // Fan Chart Rule: ส่ง allPredData ทั้งหมดให้ renderPredictChart
+        //   - actual_price overlay เฉพาะวันที่ผ่านแล้ว (field != null)
+        //   - predicted_price + CI band ตลอดทั้ง horizon (past + future)
         // ══════════════════════════════════════════════════════════════
         async function updatePredictUI(symbol, horizon) {
             if (!symbol) return;
@@ -2544,63 +2470,45 @@
             try {
                 const todayISO = luxon.DateTime.now().setZone('Asia/Bangkok').toISODate();
 
-                // ── 1. Fetch KPI Accuracy Cards (RPC) ────────────────────
-                // Fire concurrently — don't await here, let it render independently
-                renderPredictKpiCards(cleanSymbol);
-
-                // ── 2. Find latest base_date for this symbol ──────────────
-                const { data: baseDateRows, error: bdErr } = await APP.supabaseClient
+                // ── 1. Fetch ALL prediction rows (no date filter — Fan Chart needs all) ──
+                const { data: allPredData, error: predErr } = await APP.supabaseClient
                     .from('stock_predictions_v3')
-                    .select('base_date')
+                    .select('prediction_date, predicted_price, lower_bound, upper_bound, actual_price, error_percent, day_index, model_name, created_at')
                     .eq('symbol', cleanSymbol)
-                    .order('base_date', { ascending: false })
-                    .limit(1);
-                if (bdErr) throw bdErr;
+                    .eq('horizon_type', cleanHorizon)
+                    .order('prediction_date', { ascending: true });
+                if (predErr) throw predErr;
 
-                const latestBaseDate = baseDateRows?.[0]?.base_date || null;
-
-                // ── 3. Fetch forecast rows (latest base_date, day_index ≤ 15) ─
-                let allPredData = [];
-                if (latestBaseDate) {
-                    const { data: predRows, error: predErr } = await APP.supabaseClient
-                        .from('stock_predictions_v3')
-                        .select('prediction_date, predicted_price, lower_bound, upper_bound, actual_price, error_percent, day_index, base_date, model_name, created_at')
-                        .eq('symbol', cleanSymbol)
-                        .eq('base_date', latestBaseDate)
-                        .lte('day_index', 15)
-                        .order('day_index', { ascending: true });
-                    if (predErr) throw predErr;
-                    allPredData = predRows || [];
-                }
-
-                // ── 4. Fetch live AI insights ─────────────────────────────
+                // ── 2. Fetch live AI insights ─────────────────────────────
                 const { data: insightRows } = await APP.supabaseClient
                     .from('model_insights')
                     .select('insight_type, insight_text, created_at')
                     .eq('symbol', cleanSymbol)
+                    .eq('horizon_type', cleanHorizon)
                     .order('created_at', { ascending: false })
                     .limit(8);
 
-                // ── 5. No data guard ──────────────────────────────────────
+                // ── 3. No data guard ──────────────────────────────────────
                 if (!allPredData || !allPredData.length) {
                     if (insightsBody) insightsBody.innerHTML = `
                         <div class="sm:col-span-2 p-5 border-l-4 border-rose-500 bg-rose-50 rounded-r-lg">
                             <div class="text-[9px] font-black uppercase tracking-widest text-rose-600 mb-1">Data Unavailable</div>
-                            <p class="text-[12px] text-slate-700">ยังไม่มีข้อมูลพยากรณ์สำหรับ <strong>${cleanSymbol}</strong> — กรุณารัน model_forecast_v3.py ก่อน</p>
+                            <p class="text-[12px] text-slate-700">ยังไม่มีข้อมูลพยากรณ์สำหรับ ${cleanSymbol} (${cleanHorizon}) — กรุณารัน model_forecast_v3.py ก่อน</p>
                         </div>`;
                     if (insightBadge) insightBadge.textContent = 'NO DATA';
                     return;
                 }
 
-                // ── 6. Partition: future vs evaluated ────────────────────
+                // ── 4. Partition: future-only (for stats) vs evaluated (for MAPE) ─
                 const futurePred    = allPredData.filter(d => d.prediction_date > todayISO);
                 const evaluatedPred = allPredData.filter(d => d.error_percent != null);
 
-                // ── 7. Computed statistics ────────────────────────────────
+                // ── 5. Computed statistics ────────────────────────────────
                 const currentStockObj = APP.stocks.find(s => s.symbol === cleanSymbol);
                 const currentPrice    = currentStockObj?.price || 0;
                 const changePercent   = currentStockObj?.changePercent || 0;
 
+                // Target = last row in horizon (future if available, else last overall)
                 const lastPred    = futurePred.length
                     ? futurePred[futurePred.length - 1]
                     : allPredData[allPredData.length - 1];
@@ -2660,12 +2568,14 @@
 
                 setEl('predictHeroBandLow',  `Low:  ฿${parseFloat(lastPred.lower_bound).toFixed(2)}`);
                 setEl('predictHeroBandHigh', `High: ฿${parseFloat(lastPred.upper_bound).toFixed(2)}`);
-                setEl('predictChartSubtitle', `${cleanSymbol} · base_date ${latestBaseDate} · ${allPredData.length} rows · ${futurePred.length} days ahead`);
+                setEl('predictChartSubtitle', `${cleanSymbol} · ${cleanHorizon} Horizon · ${allPredData.length} Rows · ${futurePred.length} Days Ahead`);
 
-                // ── 8. Render ECharts Fan Chart ───────────────────────────
-                await renderPredictChart(cleanSymbol, allPredData);
+                // ── 7. Render Fan Chart (ALL data: past + future) ─────────
+                // [FEATURE 2] ส่ง isPending = true สำหรับ 15D/30D เพื่อซ่อนเส้นพยากรณ์
+                const isPending = ['15D', '30D'].includes(cleanHorizon);
+                await renderPredictChart(cleanSymbol, allPredData, isPending);
 
-                // ── 9. Render Forecast Data Table ─────────────────────────
+                // ── 8. Render Forecast Data Table ─────────────────────────
                 renderPredictTable(allPredData);
 
                 // ── 9. Institutional AI Insights (no emojis) ─────────────
