@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
     <style>
        *, ::before, ::after { 
             margin: 0; 
@@ -112,9 +112,10 @@
         /* ── Insight card — Institutional Style (no emoji, border-l-4) ── */
         .insight-card {
             border-left: 4px solid #2563eb;
-            padding: 10px 14px;
+            padding: 12px 16px;
             background: #f8fafc;
-            border-radius: 0 8px 8px 0;
+            border-radius: 0 14px 14px 0;
+            font-family: 'Inter', sans-serif !important;
         }
         .insight-card-label {
             font-size: 9px; font-weight: 900;
@@ -139,47 +140,33 @@
         #predictTableContainer tr.future-row { background: #eff6ff; }
         #predictTableContainer tr.future-row:hover { background: #dbeafe; }
 
-        /* ── Predict KPI Cards ── */
-        @keyframes slideUpFadeIn {
-            from { opacity: 0; transform: translateY(28px); }
+        /* ── Predict Page: KPI Cards & Animations ── */
+        @keyframes predictFadeUp {
+            from { opacity: 0; transform: translateY(18px); }
             to   { opacity: 1; transform: translateY(0); }
         }
-        .predict-kpi-card {
-            background: #fff;
-            border-radius: 32px;
-            padding: 26px 28px 22px;
-            border: 1.5px solid #f1f5f9;
-            box-shadow: 0 2px 10px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.03);
-            transition: box-shadow 0.22s, transform 0.22s;
-            animation: slideUpFadeIn 0.6s ease-out both;
-        }
-        .predict-kpi-card:hover {
-            box-shadow: 0 10px 36px rgba(15,23,42,0.10), 0 2px 6px rgba(15,23,42,0.04);
-            transform: translateY(-2px);
-        }
-        .predict-kpi-card:nth-child(2) { animation-delay: 0.08s; }
-        .predict-kpi-card:nth-child(3) { animation-delay: 0.16s; }
+        .predict-fade-in { animation: predictFadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
-        /* ── Predict Chart Card ── */
-        .predict-chart-card {
-            background: #fff;
-            border-radius: 40px;
-            border: 1.5px solid #f1f5f9;
-            box-shadow: 0 2px 10px rgba(15,23,42,0.04);
-            overflow: hidden;
-            animation: slideUpFadeIn 0.7s ease-out both;
-            animation-delay: 0.05s;
+        /* Rounded insight-card variant */
+        .insight-card-rounded {
+            border-left: 4px solid #2563eb;
+            padding: 12px 16px;
+            background: #f8fafc;
+            border-radius: 0 14px 14px 0;
+            font-family: 'Inter', sans-serif !important;
         }
 
-        /* ── R&D Section Cards ── */
-        .predict-rd-card {
-            background: #fff;
-            border-radius: 32px;
-            border: 1.5px solid #f1f5f9;
-            box-shadow: 0 2px 10px rgba(15,23,42,0.04);
-            animation: slideUpFadeIn 0.7s ease-out both;
+        /* KPI value large number */
+        .predict-kpi-val {
+            font-size: 2.2rem;
+            font-weight: 900;
+            line-height: 1;
+            font-family: 'Inter', sans-serif !important;
+            letter-spacing: -0.03em;
         }
-        .predict-rd-card:nth-child(2) { animation-delay: 0.1s; }
+
+        /* Decay progress bars */
+        .decay-bar { transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
 
         /* ══════════════════════════════════════════════
            RESPONSIVE — Mobile Drawer Sidebar
@@ -237,10 +224,10 @@
             #predictMetricsStrip { grid-template-columns: 1fr 1fr !important; }
 
             /* Predict canvas shorter on mobile */
-            #predictCanvas { height: 260px !important; }
+            #predictCanvas { height: 280px !important; }
 
-            /* Predict KPI cards — stack on mobile */
-            #predictKPIRow { grid-template-columns: 1fr !important; }
+            /* KPI cards single col on mobile (already col-1 by default) */
+            .predict-kpi-val { font-size: 1.8rem !important; }
 
             /* Timeframe pills — compact on mobile */
             .tf-pill { padding: 4px 8px !important; font-size: 8px !important; }
@@ -504,8 +491,8 @@
 
                 <div id="page-predict" class="page-content p-4 md:p-8 space-y-5 md:space-y-6">
 
-                    <!-- ── Header: Search + Horizon + Hero Metrics ──────────── -->
-                    <div class="bg-white p-6 rounded-[32px] border border-slate-200 shadow-sm animate-in">
+                    <!-- ── Control Header Card ─────────────────────────────── -->
+                    <div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm predict-fade-in" style="animation-delay:0s">
                         <div class="flex items-center justify-between gap-4 flex-wrap">
                             <div class="flex items-center gap-3">
                                 <div class="p-3 bg-red-600 rounded-2xl text-white shadow-lg shadow-red-600/20">
@@ -526,7 +513,7 @@
                                             <path d="m21 21-4.35-4.35"></path>
                                         </svg>
                                     </div>
-                                    <input id="predictSearchInput" type="text" placeholder="Search symbol..." autocomplete="off"
+                                    <input id="predictSearchInput" type="text" placeholder="Search..." autocomplete="off"
                                         class="w-full bg-slate-50 border-2 border-slate-200 focus:bg-white focus:border-red-600 rounded-full pl-12 pr-6 py-3 text-[13px] font-black focus:ring-4 focus:ring-red-600/10 outline-none transition-all tracking-[0.1em] uppercase placeholder:text-slate-400 placeholder:normal-case"/>
                                     <div id="predictStockDropdown" class="ac-drop custom-scrollbar"></div>
                                 </div>
@@ -537,8 +524,7 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Hero Metrics Strip -->
+                        <!-- Symbol metrics strip -->
                         <div id="predictMetricsStrip" class="mt-5 pt-5 border-t border-slate-100 grid grid-cols-4 gap-4 hidden">
                             <div class="flex items-center gap-2.5">
                                 <div>
@@ -567,107 +553,114 @@
                         </div>
                     </div>
 
-                    <!-- ── KPI Cards Row (3 Cards) ─────────────────────────── -->
-                    <div id="predictKPIRow" class="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5 hidden">
+                    <!-- ── 3 KPI Performance Cards ─────────────────────────── -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 predict-fade-in" style="animation-delay:0.08s">
 
                         <!-- Card 1: Win Rate T+1 -->
-                        <div class="predict-kpi-card">
-                            <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.22em] mb-4 flex items-center gap-2">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
-                                Win Rate · T+1
+                        <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm p-6 flex flex-col gap-3">
+                            <div class="flex items-center justify-between">
+                                <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.2em]">Win Rate T+1</div>
+                                <div class="w-9 h-9 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
+                                    <svg class="w-4.5 h-4.5 text-emerald-600" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24" style="width:18px;height:18px">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </div>
                             </div>
-                            <div id="kpiWinRateVal" class="text-[44px] font-black leading-none tracking-tight text-slate-900 mb-1">—</div>
-                            <div class="text-[10px] font-bold text-slate-400 mb-4">Directional Accuracy · D+1</div>
-                            <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden mb-2">
-                                <div id="kpiWinRateBar" class="h-full rounded-full bg-emerald-500 transition-all duration-700" style="width:0%"></div>
+                            <div id="predictWinRateValue" class="predict-kpi-val text-slate-300">—</div>
+                            <div class="flex flex-col gap-1.5">
+                                <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                    <div id="predictWinRateBarFill" class="decay-bar h-full rounded-full" style="width:0%;background:#10b981"></div>
+                                </div>
+                                <div id="predictWinRateSubtext" class="text-[10px] font-semibold text-slate-400">Awaiting data</div>
                             </div>
-                            <div id="kpiWinRateSub" class="text-[10px] font-black text-slate-400 uppercase tracking-wider">— evaluated days</div>
                         </div>
 
                         <!-- Card 2: Model Accuracy MAPE -->
-                        <div class="predict-kpi-card">
-                            <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.22em] mb-4 flex items-center gap-2">
-                                <span class="w-1.5 h-1.5 rounded-full bg-violet-400 inline-block"></span>
-                                Model Accuracy · MAPE
+                        <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm p-6 flex flex-col gap-3">
+                            <div class="flex items-center justify-between">
+                                <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.2em]">Model Accuracy</div>
+                                <div class="w-9 h-9 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center">
+                                    <svg fill="none" stroke="#2563eb" stroke-width="2.5" viewBox="0 0 24 24" style="width:18px;height:18px">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+                                    </svg>
+                                </div>
                             </div>
-                            <div id="kpiMAPEVal" class="text-[44px] font-black leading-none tracking-tight text-slate-900 mb-1">—</div>
-                            <div class="text-[10px] font-bold text-slate-400 mb-4">Mean Absolute Percentage Error</div>
-                            <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden mb-2">
-                                <div id="kpiMAPEBarFill" class="h-full rounded-full bg-violet-500 transition-all duration-700" style="width:0%"></div>
+                            <div id="predictMapeValue" class="predict-kpi-val text-slate-300">—</div>
+                            <div class="flex flex-col gap-1">
+                                <div id="predictMapeLabel" class="text-[10px] font-semibold text-slate-400">Avg MAPE (evaluated days)</div>
+                                <div id="predictMapeQuality" class="text-[9px] font-black uppercase tracking-widest text-slate-300">—</div>
                             </div>
-                            <div id="kpiMAPELabel" class="text-[10px] font-black text-slate-400 uppercase tracking-wider">— evaluated days</div>
                         </div>
 
                         <!-- Card 3: AI Sentiment Score -->
-                        <div class="predict-kpi-card">
-                            <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.22em] mb-4 flex items-center gap-2">
-                                <span class="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block"></span>
-                                AI Sentiment Score
+                        <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm p-6 flex flex-col gap-3">
+                            <div class="flex items-center justify-between">
+                                <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.2em]">AI Sentiment</div>
+                                <div id="predictSentimentIconBox" class="w-9 h-9 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center transition-all duration-300">
+                                    <svg fill="none" stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24" id="predictSentimentSvg" style="width:18px;height:18px">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
+                                    </svg>
+                                </div>
                             </div>
-                            <div id="kpiSentimentVal" class="text-[44px] font-black leading-none tracking-tight text-slate-900 mb-1">—</div>
-                            <div id="kpiSentimentLabel" class="text-[10px] font-bold text-slate-400 mb-4">Expected Return · Horizon</div>
-                            <div id="kpiSentimentBadge" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest bg-slate-100 text-slate-500">
-                                <span id="kpiSentimentDot" class="w-1.5 h-1.5 rounded-full bg-slate-400 inline-block"></span>
-                                <span id="kpiSentimentText">Awaiting data</span>
+                            <div id="predictSentimentValue" class="predict-kpi-val text-slate-300" style="font-size:1.5rem">—</div>
+                            <div class="flex flex-col gap-1">
+                                <div id="predictSentimentReturn" class="text-[10px] font-semibold text-slate-400">— vs current price</div>
+                                <div id="predictSentimentSignal" class="text-[9px] font-black uppercase tracking-widest text-slate-300">—</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- ── Main Chart Card (ECharts) ──────────────────────── -->
-                    <div class="predict-chart-card">
+                    <!-- ── ECharts Chart Card ──────────────────────────────── -->
+                    <div class="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden predict-fade-in" style="animation-delay:0.16s">
                         <div class="px-7 pt-6 pb-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
                             <div>
                                 <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">Price Projection Chart</h3>
-                                <p id="predictChartSubtitle" class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">AI Forecast · ECharts</p>
+                                <p id="predictChartSubtitle" class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">AI Forecast</p>
                             </div>
                             <div class="flex flex-wrap gap-4 text-[9px] font-black uppercase tracking-wider text-slate-500">
                                 <span class="flex items-center gap-1.5">
-                                    <span class="inline-block w-6 h-[2px] rounded" style="background:#0f172a"></span>Actual
+                                    <span class="inline-block w-5 h-[2px] rounded-full" style="background:#0f172a"></span>Actual
                                 </span>
                                 <span class="flex items-center gap-1.5">
-                                    <span class="inline-block w-6 h-[2px] border-t-2 border-dashed" style="border-color:#3b82f6"></span>Forecast P50
+                                    <span class="inline-block w-5 h-[2px] rounded-full" style="background:#3b82f6;border-top:2px dashed #3b82f6;height:0"></span>AI Forecast
                                 </span>
                                 <span class="flex items-center gap-1.5">
-                                    <span class="inline-block w-6 h-4 rounded" style="background:rgba(59,130,246,0.13);border:1px solid rgba(59,130,246,0.3)"></span>80% CI Band
+                                    <span class="inline-block w-5 h-3 rounded" style="background:rgba(59,130,246,0.12);border:1.5px solid rgba(59,130,246,0.3)"></span>80% CI Band
                                 </span>
                                 <span class="flex items-center gap-1.5">
-                                    <span class="inline-block w-6 h-[2px] border-t-2 border-dashed" style="border-color:#f59e0b"></span>Prev Close
+                                    <span class="inline-block w-5 h-0" style="border-top:2px dashed #f59e0b"></span>Prev Close
                                 </span>
                             </div>
                         </div>
-                        <div class="p-6">
-                            <div id="predictCanvas" class="relative rounded-2xl overflow-hidden" style="height:400px"></div>
+                        <div class="p-4 md:p-5">
+                            <div id="predictCanvas" class="relative rounded-2xl overflow-hidden" style="height:420px"></div>
                         </div>
                     </div>
 
-                    <!-- ── R&D Insights Row ───────────────────────────────── -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                    <!-- ── R&D Insights Row ────────────────────────────────── -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-                        <!-- Model Decay Research Table -->
-                        <div class="predict-rd-card p-6">
-                            <div class="flex items-center gap-3 mb-5">
-                                <div class="w-9 h-9 rounded-xl bg-violet-50 border border-violet-100 flex items-center justify-center shrink-0">
-                                    <svg class="w-4.5 h-4.5 text-violet-600" style="width:18px;height:18px" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                                    </svg>
-                                </div>
+                        <!-- Model Decay Analysis Table -->
+                        <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm p-6 predict-fade-in" style="animation-delay:0.24s">
+                            <div class="flex items-center justify-between mb-5">
                                 <div>
-                                    <div class="text-[11px] font-black text-slate-900 uppercase tracking-[.15em]">Model Decay Research</div>
-                                    <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Win Rate by Window · R&D</div>
+                                    <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.2em] mb-1">R&D Research</div>
+                                    <div class="text-sm font-black text-slate-900 uppercase tracking-tight">Model Decay Analysis</div>
                                 </div>
+                                <span class="text-[9px] font-black text-slate-400 bg-slate-100 px-3 py-1.5 rounded-xl uppercase tracking-wider border border-slate-200">Win Rate</span>
                             </div>
-                            <div id="modelDecayTable">
-                                <div class="text-[11px] font-bold text-slate-300 text-center py-6 uppercase tracking-widest">Select a security to view model decay</div>
+                            <div id="predictDecayTable" class="space-y-1">
+                                <div class="text-[11px] text-slate-300 font-bold uppercase tracking-widest text-center py-6">Select a security</div>
                             </div>
                         </div>
 
                         <!-- AI Strategic Insights -->
-                        <div class="predict-rd-card overflow-hidden">
+                        <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden predict-fade-in" style="animation-delay:0.28s">
                             <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center shrink-0">
+                                    <div class="w-9 h-9 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center">
                                         <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.25 15L18 16.125 16.875 15 18 13.875 18.25 15zM18.25 6L18 7.125 16.875 6 18 4.875 18.25 6z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.25 15L18 16.125 16.875 15 18 13.875 18.25 15zM18.25 6L18 7.125 16.875 6 18 4.875 18.25 6z" />
                                         </svg>
                                     </div>
                                     <div>
@@ -677,9 +670,9 @@
                                 </div>
                                 <span id="insightStatusBadge" class="text-[9px] font-black text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-slate-200">Awaiting Data</span>
                             </div>
-                            <div id="predictInsightsBody" class="p-5 grid grid-cols-1 gap-3 bg-white max-h-[360px] overflow-y-auto custom-scrollbar">
+                            <div id="predictInsightsBody" class="p-5 grid grid-cols-1 gap-3 bg-white" style="max-height:280px;overflow-y:auto">
                                 <div class="text-center py-8">
-                                    <div class="inline-flex items-center justify-center w-11 h-11 rounded-full bg-slate-50 mb-3">
+                                    <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-50 mb-3">
                                         <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                                         </svg>
@@ -687,17 +680,17 @@
                                     <p class="text-slate-500 text-[11px] font-semibold uppercase tracking-widest">Select a security to initialize AI analysis</p>
                                 </div>
                             </div>
-                            <div class="px-5 py-3 border-t border-slate-100 bg-slate-50/30 flex items-center gap-2">
-                                <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <div class="px-6 py-3 border-t border-slate-100 bg-slate-50/30 flex items-center gap-2">
+                                <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                                 </svg>
-                                <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wide">Statistical analysis for institutional information purposes only.</p>
+                                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wide">Disclaimer: Statistical analysis for institutional information purposes only.</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- ── Forecast Data Table ────────────────────────────── -->
-                    <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden" style="animation: slideUpFadeIn 0.7s ease-out both; animation-delay:0.2s">
+                    <!-- ── Forecast Data Table ─────────────────────────────── -->
+                    <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden predict-fade-in" style="animation-delay:0.32s">
                         <div class="px-7 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
                             <div>
                                 <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">Forecast Data Table</h3>
@@ -705,7 +698,7 @@
                             </div>
                             <span id="predictTableBadge" class="text-[9px] font-black text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-slate-200">—</span>
                         </div>
-                        <div id="predictTableContainer" class="overflow-x-auto custom-scrollbar" style="max-height:360px">
+                        <div id="predictTableContainer" class="overflow-x-auto custom-scrollbar" style="max-height:380px">
                             <div class="flex items-center justify-center py-10 text-slate-400 text-[11px] font-bold uppercase tracking-widest">Select a security to load forecast table</div>
                         </div>
                     </div>
@@ -2710,240 +2703,239 @@
         const container = document.getElementById('predictCanvas');
         if (!container) return;
 
-        // ── Destroy previous ECharts instance ────────────────────
-        if (APP.predictEChart) { APP.predictEChart.dispose(); APP.predictEChart = null; }
+        // ── Dispose existing ECharts instance ─────────────────────────
+        if (APP.predictLwcChart) {
+            try {
+                if (APP.predictLwcChart._resizeHandler) {
+                    window.removeEventListener('resize', APP.predictLwcChart._resizeHandler);
+                }
+                APP.predictLwcChart.dispose();
+            } catch(e) {}
+            APP.predictLwcChart = null;
+        }
         container.innerHTML = '';
 
+        // ── Responsive height ──────────────────────────────────────────
         const isMobile = window.innerWidth < 768;
-        const PRED_H   = isMobile ? 260 : 400;
+        const PRED_H   = isMobile ? 280 : 420;
         container.style.height = PRED_H + 'px';
 
-        // ── isPending overlay (15D/30D validation lock) ───────────
+        // ── 1. Fetch historical price ──────────────────────────────────
+        const rawHistory = await fetchHistoricalForPredict(symbol, 500);
+        if (!rawHistory || !rawHistory.length) {
+            container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-family:'Inter',sans-serif">ไม่พบข้อมูลราคา ${symbol}</div>`;
+            return;
+        }
+
+        const historyData   = rawHistory.map(d => [d.time, parseFloat(d.close)]);
+        const sortedPred    = [...(allPredData || [])].sort((a,b) => a.prediction_date.localeCompare(b.prediction_date));
+        const forecastLine  = sortedPred.map(d => [d.prediction_date, parseFloat(d.predicted_price)]);
+        const lowerBound    = sortedPred.map(d => [d.prediction_date, parseFloat(d.lower_bound)]);
+        const upperMinusLow = sortedPred.map(d => [d.prediction_date, parseFloat(d.upper_bound) - parseFloat(d.lower_bound)]);
+
+        // previous_close MarkLine (from day_index=1 if available)
+        const pcRow    = allPredData.find(d => d.day_index === 1 && d.previous_close != null);
+        const prevClose = pcRow ? parseFloat(pcRow.previous_close) : null;
+
+        // ── 2. Pending Validation overlay ─────────────────────────────
         if (isPending) {
             const h = APP.predictHorizon || '15D';
+            // Still show historical chart behind the overlay
+            const chart = echarts.init(container);
+            APP.predictLwcChart = chart;
+            chart.setOption({
+                backgroundColor: 'transparent',
+                animation: false,
+                grid: { top:20, right:60, bottom:40, left:60 },
+                xAxis: { type:'category', data: historyData.map(d=>d[0]), boundaryGap:false, axisLine:{lineStyle:{color:'#e2e8f0'}}, axisLabel:{show:false}, splitLine:{show:false} },
+                yAxis: { type:'value', scale:true, axisLabel:{fontFamily:'Inter',fontSize:9,color:'#94a3b8',formatter:v=>'฿'+v.toFixed(0)}, splitLine:{lineStyle:{color:'#f8fafc'}} },
+                series: [{ type:'line', data: historyData, lineStyle:{color:'#0f172a',width:2}, symbol:'none', smooth:false }],
+                dataZoom: [{ type:'inside', start:75, end:100 }],
+            });
+
             const overlay = document.createElement('div');
-            overlay.style.cssText = [
-                'position:absolute','inset:0','background:rgba(248,250,252,0.95)',
-                'backdrop-filter:blur(6px)','-webkit-backdrop-filter:blur(6px)',
-                'display:flex','flex-direction:column','align-items:center',
-                'justify-content:center','z-index:50','border-radius:16px',
-                'gap:16px','padding:32px','pointer-events:none'
-            ].join(';');
+            overlay.style.cssText = 'position:absolute;inset:0;background:rgba(248,250,252,0.93);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:50;border-radius:16px;gap:16px;padding:32px;pointer-events:none';
             overlay.innerHTML = `
                 <div style="width:52px;height:52px;background:#f1f5f9;border:2px solid #e2e8f0;border-radius:14px;display:flex;align-items:center;justify-content:center">
-                    <svg width="24" height="24" fill="none" stroke="#475569" stroke-width="2.5" viewBox="0 0 24 24">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0110 0v4"></path>
-                    </svg>
+                    <svg width="24" height="24" fill="none" stroke="#475569" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0110 0v4"></path></svg>
                 </div>
                 <div style="text-align:center;max-width:340px">
-                    <p style="font-size:11px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:.18em;margin-bottom:10px">Pending Validation</p>
-                    <p style="font-size:13px;font-weight:600;color:#334155;line-height:1.75;margin-bottom:12px">
-                        รอเก็บข้อมูลราคาจริง <strong style="color:#dc2626;font-weight:900">7 วัน</strong> เพื่อวัดผลความแม่นยำของโมเดล<br>
-                        ก่อนปลดล็อกการแสดงผลพยากรณ์ <strong style="color:#3b82f6;font-weight:900">${h} Horizon</strong>
-                    </p>
-                    <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:999px">
-                        <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4.5" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/><circle cx="5" cy="5" r="1.5" fill="#94a3b8"/></svg>
-                        <span style="font-size:9px;font-weight:900;color:#64748b;text-transform:uppercase;letter-spacing:.18em">Chronos Validation Protocol · ${h}</span>
+                    <p style="font-size:11px;font-weight:900;color:#0f172a;text-transform:uppercase;letter-spacing:.18em;margin-bottom:10px;font-family:'Inter',sans-serif">Pending Validation</p>
+                    <p style="font-size:13px;font-weight:600;color:#334155;line-height:1.75;font-family:'Inter',sans-serif">รอเก็บข้อมูลราคาจริง <strong style="color:#dc2626;font-weight:900">7 วัน</strong> เพื่อวัดผลความแม่นยำของโมเดล<br>ก่อนปลดล็อกการแสดงผลพยากรณ์ <strong style="color:#6366f1;font-weight:900">${h} Horizon</strong></p>
+                    <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:999px;margin-top:12px">
+                        <span style="font-size:9px;font-weight:900;color:#64748b;text-transform:uppercase;letter-spacing:.18em;font-family:'Inter',sans-serif">Chronos Validation Protocol · ${h}</span>
                     </div>
                 </div>`;
             container.appendChild(overlay);
             return;
         }
 
-        // ── 1. Fetch historical data ───────────────────────────────
-        const rawHistory = await fetchHistoricalForPredict(symbol, 500);
-        if (!rawHistory || !rawHistory.length) {
-            container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em">ไม่พบข้อมูลราคาประวัติศาสตร์สำหรับ ${symbol}</div>`;
-            return;
-        }
+        // ── 3. Build all x-axis dates ──────────────────────────────────
+        const allDates = [...new Set([
+            ...historyData.map(d=>d[0]),
+            ...sortedPred.map(d=>d.prediction_date)
+        ])].sort();
 
-        // ── 2. Prepare series data ─────────────────────────────────
-        const sortedPred = [...(allPredData || [])].sort((a, b) => a.prediction_date.localeCompare(b.prediction_date));
+        // Pad lowerBound & upperMinusLow data to full x-axis
+        const lbMap  = Object.fromEntries(lowerBound.map(d=>[d[0],d[1]]));
+        const umlMap = Object.fromEntries(upperMinusLow.map(d=>[d[0],d[1]]));
+        const fcMap  = Object.fromEntries(forecastLine.map(d=>[d[0],d[1]]));
+        const hiMap  = Object.fromEntries(historyData.map(d=>[d[0],d[1]]));
 
-        const actualDates   = rawHistory.map(d => d.time);
-        const actualValues  = rawHistory.map(d => d.close);
+        const lbData  = allDates.map(d => lbMap[d]  !== undefined ? lbMap[d]  : null);
+        const umlData = allDates.map(d => umlMap[d] !== undefined ? umlMap[d] : null);
+        const fcData  = allDates.map(d => fcMap[d]  !== undefined ? fcMap[d]  : null);
+        const hiData  = allDates.map(d => hiMap[d]  !== undefined ? hiMap[d]  : null);
 
-        const forecastDates = sortedPred.map(d => d.prediction_date);
-        const forecastVals  = sortedPred.map(d => parseFloat(d.predicted_price));
-        const lowerVals     = sortedPred.map(d => parseFloat(d.lower_bound));
-        const upperVals     = sortedPred.map(d => parseFloat(d.upper_bound));
-        const bandVals      = sortedPred.map(d => parseFloat(d.upper_bound) - parseFloat(d.lower_bound));
+        // Determine visible zoom range (focus: 60 days before first pred)
+        const firstPredDate = forecastLine.length > 0 ? forecastLine[0][0] : allDates[Math.floor(allDates.length*0.6)];
+        const zoomStart = (() => {
+            const targetDate = luxon.DateTime.fromISO(firstPredDate).minus({ days: 60 }).toISODate();
+            const idx = allDates.findIndex(d => d >= targetDate);
+            return idx > 0 ? Math.floor((idx / allDates.length) * 100) : 62;
+        })();
 
-        // Previous close: last known actual price
-        const prevClose = rawHistory[rawHistory.length - 1]?.close || null;
-
-        // Build unified x-axis (sorted unique dates)
-        const allDates = [...new Set([...actualDates, ...forecastDates])].sort();
-
-        // Focus range: 60 days before first prediction → end
-        const firstPredDate = forecastDates[0] || allDates[allDates.length - 1];
-        const focusStart    = luxon.DateTime.fromISO(firstPredDate).minus({ days: 60 }).toISODate();
-        const focusStartIdx = Math.max(0, allDates.findIndex(d => d >= focusStart));
-        const focusEnd      = allDates.length - 1;
-
-        // Map series to allDates index
-        const mapToAll = (dates, vals) => allDates.map(d => {
-            const i = dates.indexOf(d);
-            return i >= 0 ? vals[i] : null;
-        });
-
-        // ── 3. Tooltip lookup map (for CI band display) ───────────
-        const ciMap = {};
-        sortedPred.forEach(d => { ciMap[d.prediction_date] = { low: parseFloat(d.lower_bound), high: parseFloat(d.upper_bound) }; });
-
-        // ── 4. Init ECharts ───────────────────────────────────────
+        // ── 4. ECharts option ─────────────────────────────────────────
         const chart = echarts.init(container, null, { renderer: 'canvas' });
-        APP.predictEChart = chart;
+        APP.predictLwcChart = chart;
 
         const option = {
-            animation: true,
-            animationDuration: 900,
-            animationEasing: 'cubicOut',
             backgroundColor: 'transparent',
-            grid: { left: 14, right: 58, top: 16, bottom: 38, containLabel: false },
+            animation: true,
+            animationDuration: 600,
+            animationEasing: 'cubicOut',
+            grid: { top: 18, right: 68, bottom: 40, left: 68 },
             tooltip: {
                 trigger: 'axis',
-                axisPointer: { type: 'cross', crossStyle: { color: '#94a3b8' }, lineStyle: { color: '#e2e8f0', width: 1 } },
-                backgroundColor: 'rgba(255,255,255,0.97)',
-                borderColor: '#e2e8f0', borderWidth: 1, borderRadius: 12,
+                backgroundColor: '#ffffff',
+                borderColor: '#e2e8f0',
+                borderWidth: 1,
                 padding: [10, 14],
-                textStyle: { fontFamily: 'Inter, sans-serif', fontSize: 11, color: '#334155' },
+                textStyle: { fontFamily: "'Inter', sans-serif", fontSize: 11, color: '#1e293b', fontWeight: 600 },
                 formatter(params) {
                     const date = params[0]?.axisValue || '';
-                    const ci   = ciMap[date];
-                    let html   = `<div style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.15em;margin-bottom:7px">${luxon.DateTime.fromISO(date).toFormat('dd MMM yyyy')}</div>`;
+                    let html = `<div style="font-size:9px;font-weight:900;color:#94a3b8;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;font-family:'Inter',sans-serif">${date}</div>`;
+                    const shown = new Set();
                     params.forEach(p => {
                         if (['CI Lower','CI Band'].includes(p.seriesName)) return;
-                        if (p.value == null) return;
-                        const dotClr = p.color?.colorStops ? p.color.colorStops[0]?.color : (typeof p.color === 'string' ? p.color : '#94a3b8');
-                        html += `<div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:3px">
-                            <div style="display:flex;align-items:center;gap:5px">
-                                <span style="width:8px;height:8px;border-radius:50%;background:${dotClr};display:inline-block;flex-shrink:0"></span>
-                                <span style="color:#94a3b8;font-size:10px;font-weight:700">${p.seriesName}</span>
-                            </div>
+                        if (p.value == null || shown.has(p.seriesName)) return;
+                        shown.add(p.seriesName);
+                        html += `<div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;font-family:'Inter',sans-serif">
+                            <span style="width:8px;height:8px;border-radius:50%;background:${p.color};flex-shrink:0;display:inline-block"></span>
+                            <span style="font-size:10px;font-weight:700;color:#64748b;min-width:72px">${p.seriesName}</span>
                             <span style="font-size:11px;font-weight:900;color:#0f172a">฿${parseFloat(p.value).toFixed(2)}</span>
                         </div>`;
-                        if (p.seriesName === 'AI Forecast (P50)' && ci) {
-                            html += `<div style="margin-left:13px;color:#94a3b8;font-size:10px;font-weight:700;margin-top:2px">
-                                80% CI: ฿${ci.low.toFixed(2)} – ฿${ci.high.toFixed(2)}
-                            </div>`;
-                        }
                     });
+                    // Show CI range if on forecast date
+                    const predRow = sortedPred.find(d => d.prediction_date === date);
+                    if (predRow) {
+                        html += `<div style="display:flex;align-items:center;gap:7px;margin-top:2px;font-family:'Inter',sans-serif">
+                            <span style="width:8px;height:8px;border-radius:2px;background:rgba(59,130,246,0.2);border:1px solid rgba(59,130,246,0.4);flex-shrink:0;display:inline-block"></span>
+                            <span style="font-size:10px;font-weight:700;color:#64748b;min-width:72px">80% CI</span>
+                            <span style="font-size:10px;font-weight:800;color:#3b82f6">฿${parseFloat(predRow.lower_bound).toFixed(2)} – ฿${parseFloat(predRow.upper_bound).toFixed(2)}</span>
+                        </div>`;
+                    }
                     return html;
-                }
+                },
+                axisPointer: { type: 'cross', crossStyle: { color: '#94a3b8', width: 1 }, label: { backgroundColor: '#0f172a', fontFamily: "'Inter', sans-serif", fontSize: 10, fontWeight: 700 } },
             },
             xAxis: {
                 type: 'category',
                 data: allDates,
                 boundaryGap: false,
-                axisLine: { lineStyle: { color: '#e2e8f0' } },
+                axisLine: { lineStyle: { color: '#e2e8f0', width: 1 } },
                 axisTick: { show: false },
-                axisLabel: {
-                    fontSize: 9, color: '#94a3b8', fontWeight: 700,
-                    fontFamily: 'Inter, sans-serif',
-                    formatter: v => luxon.DateTime.fromISO(v).toFormat('dd MMM'),
-                    interval: Math.max(1, Math.floor(allDates.length / 9))
-                }
+                axisLabel: { fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#94a3b8', fontWeight: 700,
+                    formatter: v => luxon.DateTime.fromISO(v).toFormat('MMM dd'), interval: 'auto' },
+                splitLine: { show: false },
             },
             yAxis: {
                 type: 'value',
-                position: 'right',
-                axisLine: { show: false }, axisTick: { show: false },
-                splitLine: { lineStyle: { color: '#f1f5f9', type: 'dashed' } },
-                axisLabel: {
-                    fontSize: 9, color: '#94a3b8', fontWeight: 700,
-                    fontFamily: 'Inter, sans-serif',
-                    formatter: v => '฿' + v.toFixed(0)
-                }
+                scale: true,
+                axisLine: { show: false },
+                axisTick: { show: false },
+                axisLabel: { fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#94a3b8', fontWeight: 700, formatter: v => '฿' + v.toFixed(0) },
+                splitLine: { lineStyle: { color: '#f1f5f9', type: 'solid', width: 1 } },
             },
-            dataZoom: [{
-                type: 'inside',
-                startValue: focusStartIdx,
-                endValue: focusEnd,
-                zoomOnMouseWheel: true,
-                moveOnMouseMove: false
-            }],
+            dataZoom: [
+                { type: 'inside', start: zoomStart, end: 100, minValueSpan: 7 },
+                { type: 'slider', start: zoomStart, end: 100, height: 20, bottom: 4, borderColor: '#e2e8f0',
+                  fillerColor: 'rgba(59,130,246,0.08)', handleStyle: { color: '#3b82f6', borderColor: '#3b82f6' },
+                  textStyle: { fontFamily: "'Inter', sans-serif", fontSize: 9, color: '#94a3b8' },
+                  dataBackground: { lineStyle: { color: '#e2e8f0' }, areaStyle: { color: '#f8fafc' } } },
+            ],
             series: [
-                // ① Actual price line (dark slate)
-                {
-                    name: 'Actual Price',
-                    type: 'line',
-                    data: mapToAll(actualDates, actualValues),
-                    lineStyle: { color: '#0f172a', width: 2 },
-                    itemStyle: { color: '#0f172a' },
-                    symbol: 'none',
-                    connectNulls: false,
-                    z: 5
-                },
-                // ② CI lower base (transparent — stacking anchor)
+                // CI Lower (transparent stack base)
                 {
                     name: 'CI Lower',
                     type: 'line',
-                    data: mapToAll(forecastDates, lowerVals),
-                    lineStyle: { color: 'transparent', width: 0 },
-                    itemStyle: { opacity: 0 },
+                    data: lbData,
+                    lineStyle: { opacity: 0, width: 0 },
+                    areaStyle: { color: 'transparent' },
+                    stack: 'ciband',
                     symbol: 'none',
-                    areaStyle: { color: 'transparent', opacity: 0 },
-                    stack: 'confidence_band',
-                    connectNulls: true,
-                    z: 1,
+                    emphasis: { disabled: true },
                     silent: true,
-                    showSymbol: false,
-                    tooltip: { show: false }
+                    z: 1,
                 },
-                // ③ CI band fill (upper − lower, stacked on lower)
+                // CI Band (upper-lower fill, stacked on top of lower)
                 {
                     name: 'CI Band',
                     type: 'line',
-                    data: mapToAll(forecastDates, bandVals),
-                    lineStyle: { color: 'transparent', width: 0 },
-                    itemStyle: { opacity: 0 },
-                    symbol: 'none',
+                    data: umlData,
+                    lineStyle: { opacity: 0, width: 0 },
                     areaStyle: {
-                        color: {
-                            type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
-                            colorStops: [
-                                { offset: 0, color: 'rgba(59,130,246,0.16)' },
-                                { offset: 1, color: 'rgba(59,130,246,0.04)' }
-                            ]
-                        },
-                        opacity: 1
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(59,130,246,0.14)' },
+                            { offset: 1, color: 'rgba(59,130,246,0.04)' },
+                        ]),
                     },
-                    stack: 'confidence_band',
-                    connectNulls: true,
-                    z: 2,
+                    stack: 'ciband',
+                    symbol: 'none',
+                    emphasis: { disabled: true },
                     silent: true,
-                    showSymbol: false,
-                    tooltip: { show: false }
+                    z: 1,
                 },
-                // ④ AI Forecast P50 line (blue dashed, with shadow)
+                // Historical actual price
                 {
-                    name: 'AI Forecast (P50)',
+                    name: 'Actual Price',
                     type: 'line',
-                    data: mapToAll(forecastDates, forecastVals),
-                    lineStyle: {
-                        color: '#3b82f6', width: 2.5, type: 'dashed',
-                        shadowColor: 'rgba(59,130,246,0.25)',
-                        shadowBlur: 8, shadowOffsetY: 2
-                    },
-                    itemStyle: { color: '#3b82f6', borderWidth: 2, borderColor: '#fff' },
-                    symbol: 'circle', symbolSize: 5,
-                    connectNulls: false,
-                    z: 6,
-                    markLine: prevClose ? {
+                    data: hiData,
+                    lineStyle: { color: '#0f172a', width: 2 },
+                    itemStyle: { color: '#0f172a' },
+                    symbol: 'none',
+                    smooth: false,
+                    z: 3,
+                    emphasis: { disabled: true },
+                },
+                // AI Forecast line (blue dashed)
+                {
+                    name: 'AI Forecast',
+                    type: 'line',
+                    data: fcData,
+                    lineStyle: { color: '#3b82f6', width: 2.5, type: 'dashed' },
+                    itemStyle: { color: '#3b82f6' },
+                    symbol: 'circle',
+                    symbolSize: 5,
+                    showSymbol: false,
+                    emphasis: { scale: true, symbolSize: 7 },
+                    z: 4,
+                    markLine: prevClose != null ? {
                         silent: true,
-                        symbol: ['none', 'none'],
-                        lineStyle: { color: '#f59e0b', type: 'dashed', width: 1.5, opacity: 0.85 },
+                        symbol: ['none','none'],
+                        animation: false,
+                        data: [{ yAxis: prevClose, name: 'Prev Close' }],
+                        lineStyle: { color: '#f59e0b', type: 'dashed', width: 1.5, opacity: 0.8 },
                         label: {
-                            formatter: `Prev Close  ฿${prevClose.toFixed(2)}`,
-                            fontSize: 9, fontWeight: 800, color: '#f59e0b',
-                            position: 'end', fontFamily: 'Inter, sans-serif'
+                            show: true, position: 'end',
+                            formatter: '฿' + prevClose.toFixed(2),
+                            fontSize: 9, fontFamily: "'Inter', sans-serif", fontWeight: 700, color: '#d97706',
+                            backgroundColor: '#fffbeb', borderColor: '#fde68a', borderWidth: 1,
+                            borderRadius: 4, padding: [2,5],
                         },
-                        data: [{ yAxis: prevClose }]
-                    } : undefined
-                }
-            ]
+                    } : undefined,
+                },
+            ],
         };
 
         chart.setOption(option);
@@ -2951,150 +2943,9 @@
         // Responsive resize
         const resizeHandler = () => chart.resize();
         window.addEventListener('resize', resizeHandler);
-        // Store cleanup ref
-        APP._predictChartResizeHandler = resizeHandler;
+        // Cleanup on re-render (store reference to remove later if needed)
+        chart._resizeHandler = resizeHandler;
     }
-        // ══════════════════════════════════════════════════════════════
-        // renderPredictKPICards — 3 animated KPI cards (Win Rate, MAPE, Sentiment)
-        // ══════════════════════════════════════════════════════════════
-        function renderPredictKPICards(allPredData, avgMAPE, isUp, expectedRet, cleanHorizon) {
-            const row = document.getElementById('predictKPIRow');
-            if (!row) return;
-            row.classList.remove('hidden');
-
-            const evaluated = (allPredData || []).filter(d => d.error_percent != null);
-            const wins      = evaluated.filter(d => Math.abs(parseFloat(d.error_percent)) <= 5);
-            const winRate   = evaluated.length > 0 ? (wins.length / evaluated.length * 100) : null;
-
-            // ─ Card 1: Win Rate ────────────────────────────────────
-            const kpiWin = document.getElementById('kpiWinRateVal');
-            const kpiWinBar = document.getElementById('kpiWinRateBar');
-            const kpiWinSub = document.getElementById('kpiWinRateSub');
-            if (kpiWin) {
-                if (winRate !== null) {
-                    const wr = winRate.toFixed(0);
-                    const clr = winRate >= 60 ? '#10b981' : winRate >= 40 ? '#f59e0b' : '#f43f5e';
-                    kpiWin.textContent = wr + '%';
-                    kpiWin.style.color = clr;
-                    if (kpiWinBar) { kpiWinBar.style.width = wr + '%'; kpiWinBar.style.background = clr; }
-                    if (kpiWinSub) kpiWinSub.textContent = `${evaluated.length} evaluated day${evaluated.length !== 1 ? 's' : ''} · within ±5% threshold`;
-                } else {
-                    kpiWin.textContent = 'N/A';
-                    kpiWin.style.color = '#94a3b8';
-                    if (kpiWinSub) kpiWinSub.textContent = 'No evaluated data yet';
-                }
-            }
-
-            // ─ Card 2: MAPE ────────────────────────────────────────
-            const kpiMAPE = document.getElementById('kpiMAPEVal');
-            const kpiMAPEBar = document.getElementById('kpiMAPEBarFill');
-            const kpiMAPELbl = document.getElementById('kpiMAPELabel');
-            if (kpiMAPE) {
-                if (avgMAPE !== null) {
-                    const clr = avgMAPE < 3 ? '#10b981' : avgMAPE < 8 ? '#f59e0b' : '#f43f5e';
-                    kpiMAPE.textContent = avgMAPE.toFixed(2) + '%';
-                    kpiMAPE.style.color = clr;
-                    // Progress bar: lower MAPE = wider green bar (invert scale, max 20%)
-                    const pct = Math.max(0, 100 - Math.min(avgMAPE, 20) / 20 * 100);
-                    if (kpiMAPEBar) { kpiMAPEBar.style.width = pct + '%'; kpiMAPEBar.style.background = clr; }
-                    const qual = avgMAPE < 3 ? 'Excellent · Short-term trading' : avgMAPE < 8 ? 'Good · Trend assessment' : 'Fair · Use as reference only';
-                    if (kpiMAPELbl) kpiMAPELbl.textContent = `${evaluated.length} day${evaluated.length !== 1 ? 's' : ''} evaluated · ${qual}`;
-                } else {
-                    kpiMAPE.textContent = 'N/A';
-                    kpiMAPE.style.color = '#94a3b8';
-                    if (kpiMAPELbl) kpiMAPELbl.textContent = 'No evaluated data yet';
-                }
-            }
-
-            // ─ Card 3: Sentiment ───────────────────────────────────
-            const kpiSent    = document.getElementById('kpiSentimentVal');
-            const kpiSentLbl = document.getElementById('kpiSentimentLabel');
-            const kpiSentDot = document.getElementById('kpiSentimentDot');
-            const kpiSentTxt = document.getElementById('kpiSentimentText');
-            if (kpiSent) {
-                const sentiment = expectedRet > 3 ? 'BULLISH' : expectedRet < -3 ? 'BEARISH' : 'NEUTRAL';
-                const sentClr   = expectedRet > 3 ? '#10b981' : expectedRet < -3 ? '#f43f5e' : '#64748b';
-                const sentBg    = expectedRet > 3 ? '#f0fdf4' : expectedRet < -3 ? '#fff1f2' : '#f8fafc';
-                const sentBorder= expectedRet > 3 ? '#bbf7d0' : expectedRet < -3 ? '#fecdd3' : '#e2e8f0';
-                kpiSent.textContent = (expectedRet >= 0 ? '+' : '') + expectedRet.toFixed(2) + '%';
-                kpiSent.style.color = sentClr;
-                if (kpiSentLbl) kpiSentLbl.textContent = `Expected Return · ${cleanHorizon} Horizon`;
-                if (kpiSentDot) kpiSentDot.style.background = sentClr;
-                if (kpiSentTxt) kpiSentTxt.textContent = sentiment;
-                const badge = document.getElementById('kpiSentimentBadge');
-                if (badge) {
-                    badge.style.background = sentBg;
-                    badge.style.color = sentClr;
-                    badge.style.border = `1px solid ${sentBorder}`;
-                }
-            }
-        }
-
-        // ══════════════════════════════════════════════════════════════
-        // renderModelDecayTable — Win Rate by Window (R&D Insights)
-        // ══════════════════════════════════════════════════════════════
-        function renderModelDecayTable(allPredData) {
-            const container = document.getElementById('modelDecayTable');
-            if (!container) return;
-
-            const evaluated = (allPredData || [])
-                .filter(d => d.error_percent != null)
-                .sort((a, b) => a.prediction_date.localeCompare(b.prediction_date));
-
-            if (!evaluated.length) {
-                container.innerHTML = `<div style="text-align:center;padding:24px 0;color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em">ยังไม่มีข้อมูลประเมินผล</div>`;
-                return;
-            }
-
-            const windows = [
-                { label: '1D',  days: 1,  desc: 'Day 1' },
-                { label: '7D',  days: 7,  desc: 'Week' },
-                { label: '15D', days: 15, desc: '2 Weeks' },
-                { label: '30D', days: 30, desc: 'Month' },
-            ];
-
-            const rows = windows.map(w => {
-                const subset = evaluated.slice(0, w.days);
-                if (!subset.length) return null;
-                const wins    = subset.filter(d => Math.abs(parseFloat(d.error_percent)) <= 5);
-                const wr      = Math.round(wins.length / subset.length * 100);
-                const mape    = (subset.reduce((s, d) => s + Math.abs(parseFloat(d.error_percent)), 0) / subset.length).toFixed(2);
-                const clr     = wr >= 60 ? '#10b981' : wr >= 40 ? '#f59e0b' : '#f43f5e';
-                const bgClr   = wr >= 60 ? '#f0fdf4' : wr >= 40 ? '#fffbeb' : '#fff1f2';
-                const nLabel  = subset.length < w.days ? `${subset.length}/${w.days}` : `${subset.length}`;
-                return `
-                <div class="decay-row">
-                    <div style="display:flex;align-items:center;gap:10px;flex:1">
-                        <span style="font-size:10px;font-weight:900;color:#94a3b8;letter-spacing:.15em;text-transform:uppercase;min-width:28px">${w.label}</span>
-                        <div style="flex:1;height:6px;background:#f1f5f9;border-radius:99px;overflow:hidden;max-width:100px">
-                            <div style="height:100%;border-radius:99px;background:${clr};width:${wr}%;transition:width 0.7s ease"></div>
-                        </div>
-                        <span style="font-size:9px;font-weight:700;color:#cbd5e1">${nLabel} days</span>
-                    </div>
-                    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
-                        <span style="font-size:10px;font-weight:700;color:#94a3b8">MAPE ${mape}%</span>
-                        <span style="padding:2px 8px;border-radius:7px;font-size:10px;font-weight:900;background:${bgClr};color:${clr}">${wr}%</span>
-                    </div>
-                </div>`;
-            }).filter(Boolean).join('');
-
-            // Summary row
-            const allWins  = evaluated.filter(d => Math.abs(parseFloat(d.error_percent)) <= 5);
-            const overallWR = Math.round(allWins.length / evaluated.length * 100);
-            const overallClr = overallWR >= 60 ? '#10b981' : overallWR >= 40 ? '#f59e0b' : '#f43f5e';
-
-            container.innerHTML = `
-            <div style="margin-bottom:12px">
-                <div style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.18em;margin-bottom:4px">Performance by Rolling Window</div>
-                <div style="font-size:9px;font-weight:700;color:#cbd5e1">Win = forecast within ±5% of actual price</div>
-            </div>
-            ${rows}
-            <div style="margin-top:14px;padding:10px 12px;background:#f8fafc;border-radius:12px;display:flex;align-items:center;justify-content:space-between">
-                <span style="font-size:10px;font-weight:900;color:#64748b;text-transform:uppercase;letter-spacing:.12em">Overall · ${evaluated.length} days</span>
-                <span style="font-size:14px;font-weight:900;color:${overallClr}">${overallWR}%</span>
-            </div>`;
-        }
-
         // ══════════════════════════════════════════════════════════════
         // renderPredictTable — Bloomberg-style Forecast Data Table
         // ══════════════════════════════════════════════════════════════
@@ -3221,6 +3072,66 @@
         }
 
         // ══════════════════════════════════════════════════════════════
+        // renderDecayTable — Model Decay Win Rate by Window
+        // ══════════════════════════════════════════════════════════════
+        function renderDecayTable(allPredData) {
+            const container = document.getElementById('predictDecayTable');
+            if (!container) return;
+
+            const windows = [
+                { shortLabel: '1D',  label: 'Next Day (T+1)',  maxIdx: 1,  colors: { bar: '#10b981', bg: '#ecfdf5', text: '#059669', mid: '#10b981', low: '#f43f5e' } },
+                { shortLabel: '7D',  label: '7-Day Window',    maxIdx: 7,  colors: { bar: '#3b82f6', bg: '#eff6ff', text: '#2563eb', mid: '#3b82f6', low: '#f43f5e' } },
+                { shortLabel: '15D', label: '15-Day Window',   maxIdx: 15, colors: { bar: '#8b5cf6', bg: '#f5f3ff', text: '#7c3aed', mid: '#8b5cf6', low: '#f43f5e' } },
+                { shortLabel: '30D', label: '30-Day Window',   maxIdx: 30, colors: { bar: '#f59e0b', bg: '#fffbeb', text: '#d97706', mid: '#f59e0b', low: '#f43f5e' } },
+            ];
+
+            const rows = windows.map(w => {
+                const evaluated = (allPredData || []).filter(d =>
+                    d.day_index != null && parseInt(d.day_index) <= w.maxIdx &&
+                    d.actual_price != null && d.previous_close != null
+                );
+
+                if (!evaluated.length) {
+                    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f8fafc;font-family:'Inter',sans-serif">
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <span style="font-size:11px;font-weight:900;color:#1e293b;min-width:32px;font-family:'Inter',sans-serif">${w.shortLabel}</span>
+                            <span style="font-size:10px;font-weight:600;color:#94a3b8;font-family:'Inter',sans-serif">${w.label}</span>
+                        </div>
+                        <span style="font-size:10px;font-weight:700;color:#cbd5e1;font-family:'Inter',sans-serif">— no data</span>
+                    </div>`;
+                }
+
+                const wins = evaluated.filter(d => {
+                    const predDir = parseFloat(d.predicted_price) > parseFloat(d.previous_close);
+                    const actDir  = parseFloat(d.actual_price)    > parseFloat(d.previous_close);
+                    return predDir === actDir;
+                }).length;
+
+                const winRate  = (wins / evaluated.length) * 100;
+                const isGood   = winRate >= 60;
+                const isMid    = winRate >= 50;
+                const barColor = isGood ? w.colors.bar : isMid ? '#f59e0b' : '#f43f5e';
+                const textColor = isGood ? w.colors.text : isMid ? '#d97706' : '#f43f5e';
+
+                return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f8fafc;font-family:'Inter',sans-serif">
+                    <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
+                        <span style="font-size:11px;font-weight:900;color:#1e293b;min-width:32px;font-family:'Inter',sans-serif">${w.shortLabel}</span>
+                        <span style="font-size:10px;font-weight:600;color:#64748b;font-family:'Inter',sans-serif">${w.label}</span>
+                        <span style="font-size:9px;font-weight:700;color:#94a3b8;font-family:'Inter',sans-serif">${evaluated.length} samples</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+                        <div style="width:72px;height:5px;background:#f1f5f9;border-radius:999px;overflow:hidden">
+                            <div class="decay-bar" style="height:100%;border-radius:999px;background:${barColor};width:${winRate.toFixed(1)}%"></div>
+                        </div>
+                        <span style="font-size:12px;font-weight:900;color:${textColor};min-width:40px;text-align:right;font-family:'Inter',sans-serif">${winRate.toFixed(1)}%</span>
+                    </div>
+                </div>`;
+            });
+
+            container.innerHTML = rows.join('');
+        }
+
+        // ══════════════════════════════════════════════════════════════
         // updatePredictUI — master update function (Fan Chart Edition)
         //
         // Data Pipeline:
@@ -3261,7 +3172,7 @@
                 // ── 1. Fetch ALL prediction rows (no date filter — Fan Chart needs all) ──
                 const { data: allPredData, error: predErr } = await APP.supabaseClient
                     .from('stock_predictions_v3')
-                    .select('prediction_date, predicted_price, lower_bound, upper_bound, actual_price, error_percent, day_index, model_name, created_at')
+                    .select('prediction_date, predicted_price, lower_bound, upper_bound, actual_price, error_percent, day_index, model_name, previous_close, created_at')
                     .eq('symbol', cleanSymbol)
                     .eq('horizon_type', cleanHorizon)
                     .order('prediction_date', { ascending: true });
@@ -3358,21 +3269,94 @@
                 setEl('predictHeroBandHigh', `High: ฿${parseFloat(lastPred.upper_bound).toFixed(2)}`);
                 setEl('predictChartSubtitle', `${cleanSymbol} · ${cleanHorizon} Horizon · ${allPredData.length} Rows · ${futurePred.length} Days Ahead`);
 
+                // ── 6b. Populate 3 KPI Performance Cards ─────────────────
+                // KPI 1: Win Rate T+1
+                const t1Data = allPredData.filter(d =>
+                    parseInt(d.day_index) === 1 &&
+                    d.actual_price != null && d.previous_close != null
+                );
+                let t1WinRate = null;
+                if (t1Data.length > 0) {
+                    const wins = t1Data.filter(d => {
+                        const predDir = parseFloat(d.predicted_price) > parseFloat(d.previous_close);
+                        const actDir  = parseFloat(d.actual_price)    > parseFloat(d.previous_close);
+                        return predDir === actDir;
+                    }).length;
+                    t1WinRate = (wins / t1Data.length) * 100;
+                }
+                const wrValEl  = document.getElementById('predictWinRateValue');
+                const wrSubEl  = document.getElementById('predictWinRateSubtext');
+                const wrBarEl  = document.getElementById('predictWinRateBarFill');
+                if (wrValEl) {
+                    if (t1WinRate !== null) {
+                        wrValEl.textContent = t1WinRate.toFixed(1) + '%';
+                        wrValEl.style.color = t1WinRate >= 60 ? '#10b981' : t1WinRate >= 50 ? '#d97706' : '#f43f5e';
+                    } else {
+                        wrValEl.textContent = '—';
+                        wrValEl.style.color = '#cbd5e1';
+                    }
+                }
+                if (wrSubEl) wrSubEl.textContent = t1Data.length > 0 ? `${t1Data.length} evaluated · ${t1WinRate !== null ? (t1WinRate >= 60 ? 'HIGH ACCURACY ✓' : t1WinRate >= 50 ? 'MODERATE' : 'BELOW 50%') : 'no data'}` : 'Awaiting evaluated predictions';
+                if (wrBarEl) { wrBarEl.style.width = (t1WinRate || 0) + '%'; wrBarEl.style.background = t1WinRate !== null ? (t1WinRate >= 60 ? '#10b981' : t1WinRate >= 50 ? '#d97706' : '#f43f5e') : '#e2e8f0'; }
+
+                // KPI 2: Model Accuracy (MAPE)
+                const mapeValEl  = document.getElementById('predictMapeValue');
+                const mapeLblEl  = document.getElementById('predictMapeLabel');
+                const mapeQualEl = document.getElementById('predictMapeQuality');
+                if (mapeValEl) {
+                    if (avgMAPE !== null) {
+                        mapeValEl.textContent = avgMAPE.toFixed(2) + '%';
+                        mapeValEl.style.color = avgMAPE < 3 ? '#10b981' : avgMAPE < 8 ? '#d97706' : '#f43f5e';
+                    } else {
+                        mapeValEl.textContent = '—';
+                        mapeValEl.style.color = '#cbd5e1';
+                    }
+                }
+                if (mapeLblEl) mapeLblEl.textContent = evaluatedPred.length > 0 ? `จาก ${evaluatedPred.length} วันที่ประเมินแล้ว` : 'Avg MAPE (evaluated days)';
+                if (mapeQualEl) {
+                    const q = avgMAPE == null ? '—' : avgMAPE < 3 ? 'HIGH ACCURACY' : avgMAPE < 8 ? 'MODERATE' : 'LOW ACCURACY';
+                    mapeQualEl.textContent = q;
+                    mapeQualEl.style.color = avgMAPE == null ? '#cbd5e1' : avgMAPE < 3 ? '#10b981' : avgMAPE < 8 ? '#d97706' : '#f43f5e';
+                }
+
+                // KPI 3: AI Sentiment
+                const sentValEl  = document.getElementById('predictSentimentValue');
+                const sentRetEl  = document.getElementById('predictSentimentReturn');
+                const sentSigEl  = document.getElementById('predictSentimentSignal');
+                const sentIconEl = document.getElementById('predictSentimentIconBox');
+                const sentSvgEl  = document.getElementById('predictSentimentSvg');
+                if (sentValEl) {
+                    sentValEl.textContent  = isUp ? 'BULLISH' : 'BEARISH';
+                    sentValEl.style.color  = isUp ? '#10b981' : '#f43f5e';
+                }
+                if (sentRetEl) {
+                    sentRetEl.textContent = `${isUp?'+':''}${expectedRet.toFixed(2)}% expected return`;
+                    sentRetEl.style.color = isUp ? '#10b981' : '#f43f5e';
+                }
+                if (sentSigEl) {
+                    sentSigEl.textContent  = signalText + ' · ' + cleanHorizon + ' Horizon';
+                    sentSigEl.style.cssText = `font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:${signalFg};font-family:'Inter',sans-serif`;
+                }
+                if (sentIconEl) {
+                    sentIconEl.style.background  = isUp ? '#ecfdf5' : '#fff1f2';
+                    sentIconEl.style.borderColor = isUp ? '#a7f3d0' : '#fecdd3';
+                }
+                if (sentSvgEl) {
+                    sentSvgEl.setAttribute('stroke', isUp ? '#059669' : '#f43f5e');
+                }
+
+                // ── 6c. Render Model Decay Table ──────────────────────────
+                renderDecayTable(allPredData);
+
                 // ── 7. Render Fan Chart (ALL data: past + future) ─────────
                 // [FEATURE 2] ส่ง isPending = true สำหรับ 15D/30D เพื่อซ่อนเส้นพยากรณ์
                 const isPending = ['15D', '30D'].includes(cleanHorizon);
                 await renderPredictChart(cleanSymbol, allPredData, isPending);
 
-                // ── 8. Render KPI Cards ────────────────────────────────────
-                renderPredictKPICards(allPredData, avgMAPE, isUp, expectedRet, cleanHorizon);
-
-                // ── 9. Render Forecast Data Table ──────────────────────────
+                // ── 8. Render Forecast Data Table ─────────────────────────
                 renderPredictTable(allPredData);
 
-                // ── 10. Render Model Decay Table ───────────────────────────
-                renderModelDecayTable(allPredData);
-
-                // ── 11. Institutional AI Insights (no emojis) ─────────────
+                // ── 9. Institutional AI Insights (no emojis) ─────────────
                 if (insightBadge) insightBadge.textContent = insightRows?.length ? 'LIVE' : 'COMPUTED';
 
                 // Color/border map for institutional cards
@@ -3389,14 +3373,14 @@
                     const cfg = cardCfg[typeKey] || cardCfg.default;
                     return `<div class="insight-card" style="border-color:${cfg.border}">
                         <div class="insight-card-label" style="color:${cfg.labelColor}">${labelOverride || cfg.label}</div>
-                        <p class="insight-card-body">${bodyHtml}</p>
+                        <p class="insight-card-body" style="font-family:'Inter',sans-serif !important">${bodyHtml}</p>
                         ${ts ? `<div class="insight-card-ts">${ts}</div>` : ''}
                     </div>`;
                 };
 
                 if (insightsBody) {
                     if (insightRows && insightRows.length > 0) {
-                        insightsBody.className = 'p-5 grid grid-cols-1 gap-3 bg-white max-h-[360px] overflow-y-auto custom-scrollbar';
+                        insightsBody.className = 'p-5 grid grid-cols-1 gap-3 bg-white';
                         insightsBody.innerHTML = insightRows.map(row => {
                             const typ = (row.insight_type || 'default').toLowerCase();
                             const ts  = row.created_at
@@ -3429,7 +3413,7 @@
                                 `MAPE ย้อนหลัง (${evaluatedPred.length} วัน): <strong>฿${avgMAPE.toFixed(2)}%</strong> · ${horizonRec}`) : null,
                         ].filter(Boolean).join('');
 
-                        insightsBody.className = 'p-5 grid grid-cols-1 gap-3 bg-white max-h-[360px] overflow-y-auto custom-scrollbar';
+                        insightsBody.className = 'p-5 grid grid-cols-1 gap-3 bg-white';
                         insightsBody.innerHTML = cards;
                     }
                 }
