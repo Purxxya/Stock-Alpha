@@ -2991,7 +2991,10 @@
         chart._resizeHandler = resizeHandler;
     }
         // ══════════════════════════════════════════════════════════════
-        // renderPredictTable — Bloomberg-style Forecast Data Table
+        // renderPredictTable — T+1 Rolling History Table
+        // New architecture: each row = one daily T+1 prediction (day_index=1).
+        // Past rows have actual_price + error_percent + is_win filled in.
+        // The newest row (prediction_date > today) is the upcoming T+1 forecast.
         // ══════════════════════════════════════════════════════════════
         function renderPredictTable(data) {
         const container = document.getElementById('predictTableContainer');
@@ -3002,17 +3005,11 @@
             return;
         }
 
-        // 1. กำหนดจำนวนวันที่ต้องการแสดงผลจาก Horizon
-        const horizonMapping = { '7D': 7, '15D': 15, '30D': 30 };
-        const maxDays = horizonMapping[APP.predictHorizon] || 7;
-
         const todayISO = luxon.DateTime.now().setZone('Asia/Bangkok').toISODate();
 
-        // 2. จัดเรียงและตัดข้อมูลให้เหลือเท่ากับจำนวน Horizon ที่เลือก (7, 15, 30)
-        // โดยเริ่มนับจากข้อมูลตัวแรกที่ระบบพยากรณ์ออกมา
-        const sorted = [...data]
-            .sort((a, b) => a.prediction_date.localeCompare(b.prediction_date))
-            .slice(0, maxDays); // บังคับให้เหลือแค่ 7, 15 หรือ 30 แถวเท่านั้น
+        // All rows are day_index=1 (T+1), sorted ascending by prediction_date
+        const sorted = [...data].sort((a, b) =>
+            (a.prediction_date || '').localeCompare(b.prediction_date || ''));
 
         const errClass = (ep) => {
             if (ep == null) return 'text-slate-400';
@@ -3023,42 +3020,50 @@
         };
 
         const rows = sorted.map((d, i) => {
-            const isPast   = d.prediction_date <= todayISO;
-            const dateStr  = luxon.DateTime.fromISO(d.prediction_date).toFormat('dd MMM yyyy');
-            // ใช้ i+1 เพื่อให้ลำดับในตารางรัน 1 ถึง 7 (หรือ 15, 30) อย่างถูกต้อง
-            const dayIdx   = `D+${i + 1}`; 
-            const pred     = parseFloat(d.predicted_price);
-            const lower    = parseFloat(d.lower_bound);
-            const upper    = parseFloat(d.upper_bound);
-            const actual   = d.actual_price != null ? parseFloat(d.actual_price) : null;
-            const ep       = d.error_percent != null ? parseFloat(d.error_percent) : null;
-            
-            const epStr    = ep != null ? `${ep >= 0 ? '+' : ''}${ep.toFixed(2)}%` : '—';
-            const actualStr = actual != null ? `฿${actual.toFixed(2)}` : '—';
-            const rowCls   = !isPast ? 'future-row' : '';
-            const dateCls  = !isPast ? 'text-blue-700 font-black' : 'text-slate-600';
+            const isFuture  = d.prediction_date > todayISO;
+            const dateStr   = luxon.DateTime.fromISO(d.prediction_date).toFormat('dd MMM yyyy');
+            const dayLabel  = isFuture ? 'Upcoming ▶' : `Run ${i + 1}`;
+            const pred      = parseFloat(d.predicted_price);
+            const lower     = parseFloat(d.lower_bound);
+            const upper     = parseFloat(d.upper_bound);
+            const prevClose = d.previous_close != null ? parseFloat(d.previous_close) : null;
+            const actual    = d.actual_price  != null ? parseFloat(d.actual_price)    : null;
+            const ep        = d.error_percent != null ? parseFloat(d.error_percent)   : null;
+            const isWin     = d.is_win;
+
+            const epStr      = ep != null ? `${ep.toFixed(2)}%` : '—';
+            const actualStr  = actual   != null ? `฿${actual.toFixed(2)}`   : '—';
+            const prevStr    = prevClose != null ? `฿${prevClose.toFixed(2)}` : '—';
+
+            // Win/Loss badge
+            let winBadge = '';
+            if      (isWin === true)  winBadge = `<span style="font-size:9px;font-weight:900;color:#059669"> WIN ✓</span>`;
+            else if (isWin === false) winBadge = `<span style="font-size:9px;font-weight:900;color:#f43f5e"> LOSS ✗</span>`;
+
+            const rowCls  = isFuture ? 'future-row' : '';
+            const dateCls = isFuture ? 'text-blue-700 font-black' : 'text-slate-600';
 
             return `<tr class="border-b border-slate-50 hover:bg-amber-50/40 transition-colors ${rowCls}">
                 <td class="px-4 py-2.5 whitespace-nowrap font-mono text-[11px] ${dateCls}">${dateStr}</td>
-                <td class="px-4 py-2.5 text-center font-mono text-[10px] text-slate-400">${dayIdx}</td>
+                <td class="px-4 py-2.5 text-center font-mono text-[10px] text-slate-400">${dayLabel}</td>
+                <td class="px-4 py-2.5 text-right font-mono text-[11px] text-slate-400 hidden sm:table-cell">${prevStr}</td>
                 <td class="px-4 py-2.5 text-right font-mono text-[11px] text-slate-800">${actualStr}</td>
                 <td class="px-4 py-2.5 text-right font-mono text-[11px] text-indigo-700 font-bold">฿${pred.toFixed(2)}</td>
-                <td class="px-4 py-2.5 text-right font-mono text-[11px] text-slate-400 hidden sm:table-cell">฿${lower.toFixed(2)}</td>
-                <td class="px-4 py-2.5 text-right font-mono text-[11px] text-slate-400 hidden sm:table-cell">฿${upper.toFixed(2)}</td>
-                <td class="px-4 py-2.5 text-right font-mono text-[11px] ${errClass(ep)}">${epStr}</td>
+                <td class="px-4 py-2.5 text-right font-mono text-[11px] text-slate-400 hidden sm:table-cell">฿${lower.toFixed(2)} – ฿${upper.toFixed(2)}</td>
+                <td class="px-4 py-2.5 text-right font-mono text-[11px] ${errClass(ep)}">${epStr}${winBadge}</td>
             </tr>`;
         }).join('');
 
         container.innerHTML = `<table class="w-full min-w-[560px]">
             <thead class="border-b-2 border-slate-200" style="position:sticky;top:0;z-index:10;background:#f8fafc">
                 <tr class="text-[10px] font-black text-slate-400 uppercase tracking-[.18em]">
-                    <th class="px-4 py-3 text-left">Date</th>
-                    <th class="px-4 py-3 text-center">Day</th>
+                    <th class="px-4 py-3 text-left">Pred. Date</th>
+                    <th class="px-4 py-3 text-center">Run</th>
+                    <th class="px-4 py-3 text-right hidden sm:table-cell">Prev Close</th>
                     <th class="px-4 py-3 text-right">Actual</th>
-                    <th class="px-4 py-3 text-right">Forecast</th>
-                    <th class="px-4 py-3 text-right hidden sm:table-cell">Lower 80%</th>
-                    <th class="px-4 py-3 text-right hidden sm:table-cell">Upper 80%</th>
-                    <th class="px-4 py-3 text-right">Error %</th>
+                    <th class="px-4 py-3 text-right">T+1 Forecast</th>
+                    <th class="px-4 py-3 text-right hidden sm:table-cell">80% CI Band</th>
+                    <th class="px-4 py-3 text-right">APE / Result</th>
                 </tr>
             </thead>
             <tbody>${rows}</tbody>
@@ -3068,7 +3073,9 @@
         const badge    = document.getElementById('predictTableBadge');
         const evCount  = sorted.filter(d => d.error_percent != null).length;
         const futCount = sorted.filter(d => d.prediction_date > todayISO).length;
-        if (badge) badge.textContent = `${sorted.length} DAYS · ${evCount} EVALUATED · ${futCount} AHEAD`;
+        const winCount = sorted.filter(d => d.is_win === true).length;
+        const winPct   = evCount > 0 ? ((winCount / evCount) * 100).toFixed(1) + '%' : '—';
+        if (badge) badge.textContent = `${sorted.length} T+1 RUNS · ${evCount} EVALUATED · Win: ${winPct} · ${futCount > 0 ? '1 UPCOMING' : 'NO UPCOMING'}`;
     }
 
         // ══════════════════════════════════════════════════════════════
@@ -3213,21 +3220,37 @@
             try {
                 const todayISO = luxon.DateTime.now().setZone('Asia/Bangkok').toISODate();
 
-                // ── 1. Fetch ALL prediction rows (no date filter — Fan Chart needs all) ──
+                // ── Horizon → number of T+1 rolling rows to display ───────
+                // DB Schema (new): horizon_type REMOVED. Only day_index=1 rows exist.
+                // 7D/15D/30D pills now control how many days of rolling history to show.
+                const horizonDaysMap = { '7D': 7, '15D': 15, '30D': 30 };
+                const horizonDays   = horizonDaysMap[cleanHorizon] || 7;
+
+                // ── 1. Fetch rolling T+1 prediction rows (day_index=1 only) ─
+                // horizon_type was removed from DB — filter by day_index=1 instead.
+                // Order by base_date DESC to get the most recent forecast runs,
+                // limit to horizonDays so each pill shows the right rolling window.
                 const { data: allPredData, error: predErr } = await APP.supabaseClient
                     .from('stock_predictions_v3')
-                    .select('prediction_date, predicted_price, lower_bound, upper_bound, actual_price, error_percent, day_index, model_name, previous_close, created_at')
+                    .select('prediction_date, predicted_price, lower_bound, upper_bound, actual_price, error_percent, day_index, model_name, previous_close, created_at, base_date')
                     .eq('symbol', cleanSymbol)
-                    .eq('horizon_type', cleanHorizon)
-                    .order('prediction_date', { ascending: true });
+                    .eq('day_index', 1)
+                    .order('base_date', { ascending: false })
+                    .limit(horizonDays);
                 if (predErr) throw predErr;
 
+                // Re-sort ascending for chart / table rendering
+                if (allPredData) {
+                    allPredData.sort((a, b) =>
+                        (a.prediction_date || '').localeCompare(b.prediction_date || ''));
+                }
+
                 // ── 2. Fetch live AI insights ─────────────────────────────
+                // horizon_type removed — fetch latest insights for the symbol only
                 const { data: insightRows } = await APP.supabaseClient
                     .from('model_insights')
                     .select('insight_type, insight_text, created_at')
                     .eq('symbol', cleanSymbol)
-                    .eq('horizon_type', cleanHorizon)
                     .order('created_at', { ascending: false })
                     .limit(8);
 
@@ -3236,13 +3259,17 @@
                     if (insightsBody) insightsBody.innerHTML = `
                         <div class="sm:col-span-2 p-5 border-l-4 border-rose-500 bg-rose-50 rounded-r-lg">
                             <div class="text-[9px] font-black uppercase tracking-widest text-rose-600 mb-1">Data Unavailable</div>
-                            <p class="text-[12px] text-slate-700">ยังไม่มีข้อมูลพยากรณ์สำหรับ ${cleanSymbol} (${cleanHorizon}) — กรุณารัน model_forecast_v3.py ก่อน</p>
+                            <p class="text-[12px] text-slate-700">ยังไม่มีข้อมูลพยากรณ์ T+1 สำหรับ ${cleanSymbol} — กรุณารัน model_forecast_v3.py ก่อน<br>
+                            <span class="text-slate-400 text-[11px]">(ระบบใช้ day_index=1 rolling forecast แทน horizon_type เดิม)</span></p>
                         </div>`;
                     if (insightBadge) insightBadge.textContent = 'NO DATA';
                     return;
                 }
 
-                // ── 4. Partition: future-only (for stats) vs evaluated (for MAPE) ─
+                // ── 4. Partition: upcoming T+1 (prediction_date > today) vs evaluated history ─
+                // New architecture: all rows are day_index=1 T+1 forecasts.
+                // "futurePred" = the single upcoming prediction (prediction_date > today)
+                // "evaluatedPred" = past rows that have actual_price filled in
                 const futurePred    = allPredData.filter(d => d.prediction_date > todayISO);
                 const evaluatedPred = allPredData.filter(d => d.error_percent != null);
 
@@ -3311,7 +3338,7 @@
 
                 setEl('predictHeroBandLow',  `Low:  ฿${parseFloat(lastPred.lower_bound).toFixed(2)}`);
                 setEl('predictHeroBandHigh', `High: ฿${parseFloat(lastPred.upper_bound).toFixed(2)}`);
-                setEl('predictChartSubtitle', `${cleanSymbol} · ${cleanHorizon} Horizon · ${allPredData.length} Rows · ${futurePred.length} Days Ahead`);
+                setEl('predictChartSubtitle', `${cleanSymbol} · T+1 Rolling ${cleanHorizon} Window · ${allPredData.length} Predictions · ${evaluatedPred.length} Evaluated · ${futurePred.length > 0 ? '1 Upcoming' : 'No Upcoming'}`);
 
                 // ── 6b. Populate 3 KPI Performance Cards ─────────────────
                 // KPI 1: Win Rate T+1
@@ -3433,9 +3460,11 @@
                 // ── 6c. Render Model Decay Table ──────────────────────────
                 renderDecayTable(allPredData);
 
-                // ── 7. Render Fan Chart (ALL data: past + future) ─────────
-                // [FEATURE 2] ส่ง isPending = true สำหรับ 15D/30D เพื่อซ่อนเส้นพยากรณ์
-                const isPending = ['15D', '30D'].includes(cleanHorizon);
+                // ── 7. Render Fan Chart (ALL data: past + upcoming T+1) ───
+                // isPending = true only when zero evaluated rows exist yet
+                // (early data-collection period — NOT based on horizon pill name)
+                // The old ['15D','30D'] trigger was tied to the removed horizon_type concept.
+                const isPending = evaluatedPred.length === 0 && futurePred.length === 0;
                 await renderPredictChart(cleanSymbol, allPredData, isPending);
 
                 // ── 8. Render Forecast Data Table ─────────────────────────
