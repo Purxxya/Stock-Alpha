@@ -2728,13 +2728,19 @@
         }
 
         const historyData   = rawHistory.map(d => [d.time, parseFloat(d.close)]);
-        const sortedPred    = [...(allPredData || [])].sort((a,b) => a.prediction_date.localeCompare(b.prediction_date));
+
+        // ── Defensive: guard against null/undefined allPredData ──────────────
+        const safePredData  = Array.isArray(allPredData) ? allPredData : [];
+        const sortedPred    = [...safePredData].sort((a,b) => a.prediction_date.localeCompare(b.prediction_date));
+
+        // Build forecast series — safe even with 0 rows or very sparse data
         const forecastLine  = sortedPred.map(d => [d.prediction_date, parseFloat(d.predicted_price)]);
-        const lowerBound    = sortedPred.map(d => [d.prediction_date, parseFloat(d.lower_bound)]);
-        const upperMinusLow = sortedPred.map(d => [d.prediction_date, parseFloat(d.upper_bound) - parseFloat(d.lower_bound)]);
+        const lowerBound    = sortedPred.map(d => [d.prediction_date, parseFloat(d.lower_bound   || 0)]);
+        const upperMinusLow = sortedPred.map(d => [d.prediction_date, Math.max(0,
+            parseFloat(d.upper_bound || 0) - parseFloat(d.lower_bound || 0))]);
 
         // previous_close MarkLine (from day_index=1 if available)
-        const pcRow    = allPredData.find(d => d.day_index === 1 && d.previous_close != null);
+        const pcRow     = safePredData.find(d => d.day_index === 1 && d.previous_close != null);
         const prevClose = pcRow ? parseFloat(pcRow.previous_close) : null;
 
         // ── 2. Pending Validation overlay ─────────────────────────────
@@ -2771,9 +2777,13 @@
         }
 
         // ── 3. Build all x-axis dates ──────────────────────────────────
+        // If there are no forecast rows yet (early collection period), we still
+        // render the historical chart plus an informational overlay — no errors.
+        const hasForecastData = forecastLine.length > 0;
+
         const allDates = [...new Set([
             ...historyData.map(d=>d[0]),
-            ...sortedPred.map(d=>d.prediction_date)
+            ...(hasForecastData ? sortedPred.map(d=>d.prediction_date) : [])
         ])].sort();
 
         // Pad lowerBound & upperMinusLow data to full x-axis
@@ -2787,8 +2797,10 @@
         const fcData  = allDates.map(d => fcMap[d]  !== undefined ? fcMap[d]  : null);
         const hiData  = allDates.map(d => hiMap[d]  !== undefined ? hiMap[d]  : null);
 
-        // Determine visible zoom range (focus: 60 days before first pred)
-        const firstPredDate = forecastLine.length > 0 ? forecastLine[0][0] : allDates[Math.floor(allDates.length*0.6)];
+        // Determine visible zoom range (focus: 60 days before first pred, or last 40% of history)
+        const firstPredDate = hasForecastData
+            ? forecastLine[0][0]
+            : allDates[Math.floor(allDates.length * 0.6)];
         const zoomStart = (() => {
             const targetDate = luxon.DateTime.fromISO(firstPredDate).minus({ days: 60 }).toISODate();
             const idx = allDates.findIndex(d => d >= targetDate);
@@ -2940,7 +2952,39 @@
 
         chart.setOption(option);
 
-        // Responsive resize
+        // ── If no forecast rows yet, show a subtle informational banner ──────
+        // The historical price chart is still fully visible underneath.
+        if (!hasForecastData) {
+            const noFcOverlay = document.createElement('div');
+            noFcOverlay.style.cssText = [
+                'position:absolute',
+                'bottom:52px',          // sits above the dataZoom slider
+                'left:50%',
+                'transform:translateX(-50%)',
+                'background:rgba(248,250,252,0.90)',
+                'backdrop-filter:blur(4px)',
+                '-webkit-backdrop-filter:blur(4px)',
+                'border:1.5px dashed #e2e8f0',
+                'border-radius:12px',
+                'padding:7px 18px',
+                'display:flex',
+                'align-items:center',
+                'gap:8px',
+                'pointer-events:none',
+                'z-index:20',
+                'white-space:nowrap',
+            ].join(';');
+            noFcOverlay.innerHTML = `
+                <svg width="14" height="14" fill="none" stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".5" fill="#94a3b8"/>
+                </svg>
+                <span style="font-size:10px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.14em;font-family:'Inter',sans-serif">
+                    Forecast Pending · Collecting Prediction Data...
+                </span>`;
+            container.appendChild(noFcOverlay);
+        }
+
+
         const resizeHandler = () => chart.resize();
         window.addEventListener('resize', resizeHandler);
         // Cleanup on re-render (store reference to remove later if needed)
@@ -3275,8 +3319,15 @@
                     parseInt(d.day_index) === 1 &&
                     d.actual_price != null && d.previous_close != null
                 );
-                let t1WinRate = null;
-                if (t1Data.length > 0) {
+
+                // ── Early-stage guard: require at least 7 evaluated T+1 days ──────────
+                // During the first 1-2 weeks the database will have fewer than 7 samples,
+                // so we show a "Collecting Data..." state instead of a misleading percentage.
+                const T1_MIN_SAMPLES  = 7;
+                const t1HasEnoughData = t1Data.length >= T1_MIN_SAMPLES;
+                let   t1WinRate       = null;
+
+                if (t1HasEnoughData) {
                     const wins = t1Data.filter(d => {
                         const predDir = parseFloat(d.predicted_price) > parseFloat(d.previous_close);
                         const actDir  = parseFloat(d.actual_price)    > parseFloat(d.previous_close);
@@ -3284,20 +3335,54 @@
                     }).length;
                     t1WinRate = (wins / t1Data.length) * 100;
                 }
+
                 const wrValEl  = document.getElementById('predictWinRateValue');
                 const wrSubEl  = document.getElementById('predictWinRateSubtext');
                 const wrBarEl  = document.getElementById('predictWinRateBarFill');
+
                 if (wrValEl) {
-                    if (t1WinRate !== null) {
+                    if (t1HasEnoughData && t1WinRate !== null) {
+                        // ✅ Enough data — show real Win Rate with color coding
                         wrValEl.textContent = t1WinRate.toFixed(1) + '%';
                         wrValEl.style.color = t1WinRate >= 60 ? '#10b981' : t1WinRate >= 50 ? '#d97706' : '#f43f5e';
+                        wrValEl.style.fontSize = ''; // restore .predict-kpi-val default
                     } else {
-                        wrValEl.textContent = '—';
-                        wrValEl.style.color = '#cbd5e1';
+                        // ⏳ Early-stage — not enough evaluated days yet
+                        wrValEl.textContent = 'Collecting Data...';
+                        wrValEl.style.color = '#94a3b8'; // neutral slate
+                        wrValEl.style.fontSize = '1.05rem'; // scale down to fit longer text
                     }
                 }
-                if (wrSubEl) wrSubEl.textContent = t1Data.length > 0 ? `${t1Data.length} evaluated · ${t1WinRate !== null ? (t1WinRate >= 60 ? 'HIGH ACCURACY ✓' : t1WinRate >= 50 ? 'MODERATE' : 'BELOW 50%') : 'no data'}` : 'Awaiting evaluated predictions';
-                if (wrBarEl) { wrBarEl.style.width = (t1WinRate || 0) + '%'; wrBarEl.style.background = t1WinRate !== null ? (t1WinRate >= 60 ? '#10b981' : t1WinRate >= 50 ? '#d97706' : '#f43f5e') : '#e2e8f0'; }
+
+                if (wrSubEl) {
+                    if (t1HasEnoughData && t1WinRate !== null) {
+                        // Normal label with accuracy rating
+                        const ratingLabel = t1WinRate >= 60 ? 'HIGH ACCURACY ✓' : t1WinRate >= 50 ? 'MODERATE' : 'BELOW 50%';
+                        wrSubEl.textContent = `${t1Data.length} evaluated · ${ratingLabel}`;
+                        wrSubEl.style.color = '';
+                    } else if (t1Data.length > 0) {
+                        // Partial progress (1–6 days collected)
+                        wrSubEl.textContent = `Gathering T+1 data for accuracy evaluation... ${t1Data.length}/${T1_MIN_SAMPLES} days`;
+                        wrSubEl.style.color = '#94a3b8';
+                    } else {
+                        // Zero data yet
+                        wrSubEl.textContent = 'Gathering T+1 data for accuracy evaluation...';
+                        wrSubEl.style.color = '#94a3b8';
+                    }
+                }
+
+                if (wrBarEl) {
+                    if (t1HasEnoughData && t1WinRate !== null) {
+                        // Show Win Rate fill with performance color
+                        wrBarEl.style.width      = t1WinRate + '%';
+                        wrBarEl.style.background = t1WinRate >= 60 ? '#10b981' : t1WinRate >= 50 ? '#d97706' : '#f43f5e';
+                    } else {
+                        // Show neutral progress toward minimum sample threshold
+                        const progressPct        = t1Data.length > 0 ? Math.min((t1Data.length / T1_MIN_SAMPLES) * 100, 99) : 0;
+                        wrBarEl.style.width      = progressPct + '%';
+                        wrBarEl.style.background = '#94a3b8'; // slate — no performance signal yet
+                    }
+                }
 
                 // KPI 2: Model Accuracy (MAPE)
                 const mapeValEl  = document.getElementById('predictMapeValue');
