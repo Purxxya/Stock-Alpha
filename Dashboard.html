@@ -168,6 +168,21 @@
         /* Decay progress bars */
         .decay-bar { transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
 
+        /* ── Drift Chart Card ── */
+        #driftCanvas { height: 280px; }
+        @media (max-width: 767px) { #driftCanvas { height: 220px !important; } }
+
+        /* Model Drift Alert Badge */
+        @keyframes driftPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.75; transform: scale(1.03); }
+        }
+        #driftAlertBadge {
+            display: none;
+            animation: driftPulse 2s ease-in-out infinite;
+        }
+        #driftAlertBadge.visible { display: flex; }
+
         /* ══════════════════════════════════════════════
            RESPONSIVE — Mobile Drawer Sidebar
         ══════════════════════════════════════════════ */
@@ -634,6 +649,58 @@
                         </div>
                         <div class="p-4 md:p-5">
                             <div id="predictCanvas" class="relative rounded-2xl overflow-hidden" style="height:420px"></div>
+                        </div>
+                    </div>
+
+                    <!-- ── Forward Test (Rolling T+7) — Model Drift Chart ──── -->
+                    <div class="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden predict-fade-in" style="animation-delay:0.20s">
+                        <div class="px-7 pt-6 pb-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
+                            <div>
+                                <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">Forward Test (Rolling T+7)</h3>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">Model Drift Monitor · Actual vs Predicted</p>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-4">
+                                <!-- Drift Alert Badge -->
+                                <div id="driftAlertBadge"
+                                     class="items-center gap-2 px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-wider
+                                            bg-amber-50 border border-amber-300 text-amber-700">
+                                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                    </svg>
+                                    <span id="driftAlertText">&#x26A0;&#xFE0F; Model Drift Detected (&gt;5% Error)</span>
+                                </div>
+                                <!-- Legend -->
+                                <div class="flex flex-wrap gap-4 text-[9px] font-black uppercase tracking-wider text-slate-500">
+                                    <span class="flex items-center gap-1.5">
+                                        <span class="inline-block w-5 h-[2.5px] rounded-full" style="background:#2563EB"></span>Actual Price
+                                    </span>
+                                    <span class="flex items-center gap-1.5">
+                                        <span class="inline-block w-5 h-[2.5px] rounded-full" style="background:#F97316"></span>T+7 Prediction
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 md:p-5">
+                            <div id="driftCanvas" class="relative rounded-2xl overflow-hidden" style="height:280px"></div>
+                        </div>
+                        <!-- Footer stat row -->
+                        <div class="px-7 pb-5 flex flex-wrap gap-6">
+                            <div>
+                                <div class="text-[8px] font-black text-slate-400 uppercase tracking-[.15em] mb-1">Latest Error</div>
+                                <div id="driftLatestError" class="text-sm font-black text-slate-300">—</div>
+                            </div>
+                            <div>
+                                <div class="text-[8px] font-black text-slate-400 uppercase tracking-[.15em] mb-1">Avg Error (T+7)</div>
+                                <div id="driftAvgError" class="text-sm font-black text-slate-300">—</div>
+                            </div>
+                            <div>
+                                <div class="text-[8px] font-black text-slate-400 uppercase tracking-[.15em] mb-1">Matched Points</div>
+                                <div id="driftMatchedPts" class="text-sm font-black text-slate-300">—</div>
+                            </div>
+                            <div>
+                                <div class="text-[8px] font-black text-slate-400 uppercase tracking-[.15em] mb-1">Drift Status</div>
+                                <div id="driftStatus" class="text-[9px] font-black uppercase tracking-widest text-slate-300">—</div>
+                            </div>
                         </div>
                     </div>
 
@@ -2688,6 +2755,8 @@
             const dd = document.getElementById('predictStockDropdown');
             if (dd) dd.classList.remove('open');
             updatePredictUI(sym, APP.predictHorizon || '7D');
+            // ── Render Drift Chart (Forward Test T+7) ─────────────────
+            renderDriftChart(sym);
         }
 
         // ─── fetchHistoricalForPredict ─────────────────────────────────
@@ -3184,6 +3253,227 @@
 
     
         // ══════════════════════════════════════════════════════════════
+        // FORWARD TEST — renderDriftChart(symbol)
+        // Queries: stock_historical_data (actual) + predictions_log (T+7)
+        // Renders two lines via Lightweight Charts + detects Model Drift
+        // ══════════════════════════════════════════════════════════════
+        async function renderDriftChart(symbol) {
+            if (!symbol || !APP.supabaseClient) return;
+            const cleanSym = symbol.trim().toUpperCase();
+            const container = document.getElementById('driftCanvas');
+            if (!container) return;
+
+            // ── Show loading state ─────────────────────────────────────
+            container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;
+                height:100%;gap:10px;color:#94a3b8;font-size:11px;font-weight:700;
+                text-transform:uppercase;letter-spacing:.1em;font-family:'Inter',sans-serif">
+                <div style="width:16px;height:16px;border:2px solid #cbd5e1;border-top-color:#2563eb;
+                     border-radius:50%;animation:spin 0.8s linear infinite"></div>
+                Loading Drift Chart...
+            </div>`;
+
+            // ── Destroy old LWC instance if any ───────────────────────
+            if (APP.driftLwcChart) {
+                try {
+                    if (APP.driftLwcChart._resizeHandler)
+                        window.removeEventListener('resize', APP.driftLwcChart._resizeHandler);
+                    APP.driftLwcChart.remove();
+                } catch(e) {}
+                APP.driftLwcChart = null;
+            }
+
+            try {
+                // ── 1. Fetch Actual Price from stock_historical_data ──────
+                const { data: histRows, error: histErr } = await APP.supabaseClient
+                    .from('stock_historical_data')
+                    .select('date, close_price')
+                    .eq('symbol', cleanSym)
+                    .order('date', { ascending: true })
+                    .limit(500);
+                if (histErr) throw histErr;
+
+                // ── 2. Fetch T+7 Predictions from predictions_log ─────────
+                const { data: predRows, error: predErr } = await APP.supabaseClient
+                    .from('predictions_log')
+                    .select('target_date, predicted_price')
+                    .eq('symbol', cleanSym)
+                    .eq('horizon_days', 7)
+                    .not('predicted_price', 'is', null)
+                    .order('target_date', { ascending: true })
+                    .limit(500);
+                if (predErr) throw predErr;
+
+                // ── Guard: both datasets must exist ───────────────────────
+                if (!histRows?.length && !predRows?.length) {
+                    container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;
+                        height:100%;color:#94a3b8;font-size:11px;font-weight:700;
+                        text-transform:uppercase;letter-spacing:.1em;font-family:'Inter',sans-serif">
+                        ไม่พบข้อมูล Forward Test สำหรับ ${cleanSym}
+                    </div>`;
+                    return;
+                }
+
+                // ── 3. Prepare series data for Lightweight Charts ─────────
+                //    LWC requires: { time: 'YYYY-MM-DD', value: number }
+                const actualSeries = (histRows || [])
+                    .filter(d => d.date && d.close_price != null)
+                    .map(d => ({ time: d.date, value: parseFloat(d.close_price) }));
+
+                const predSeries = (predRows || [])
+                    .filter(d => d.target_date && d.predicted_price != null)
+                    .map(d => ({ time: d.target_date, value: parseFloat(d.predicted_price) }));
+
+                // ── 4. Compute Drift Metrics ──────────────────────────────
+                //    Match predicted target_date → actual close on same date
+                const actualMap = Object.fromEntries(actualSeries.map(d => [d.time, d.value]));
+                const matchedPoints = predSeries.filter(d => actualMap[d.time] != null);
+
+                let latestError = null;
+                let avgError    = null;
+                let driftDetected = false;
+
+                if (matchedPoints.length > 0) {
+                    const errors = matchedPoints.map(d => {
+                        const actual = actualMap[d.time];
+                        return Math.abs((d.value - actual) / actual) * 100;
+                    });
+                    avgError    = errors.reduce((s, e) => s + e, 0) / errors.length;
+                    latestError = errors[errors.length - 1]; // most recent matched
+                    driftDetected = latestError > 5;
+                }
+
+                // ── 5. Update footer KPI stats ────────────────────────────
+                const setDriftEl = (id, text, color) => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    el.textContent = text;
+                    if (color) el.style.color = color;
+                };
+
+                setDriftEl('driftLatestError',
+                    latestError != null ? latestError.toFixed(2) + '%' : '—',
+                    latestError == null ? '#cbd5e1'
+                        : latestError > 5 ? '#f59e0b'
+                        : '#10b981');
+
+                setDriftEl('driftAvgError',
+                    avgError != null ? avgError.toFixed(2) + '%' : '—',
+                    avgError == null ? '#cbd5e1'
+                        : avgError > 5 ? '#f59e0b'
+                        : '#10b981');
+
+                setDriftEl('driftMatchedPts',
+                    matchedPoints.length > 0
+                        ? matchedPoints.length + ' / ' + predSeries.length
+                        : '—',
+                    '#64748b');
+
+                setDriftEl('driftStatus',
+                    driftDetected ? 'DRIFT DETECTED' : matchedPoints.length > 0 ? 'STABLE' : 'PENDING DATA',
+                    driftDetected ? '#f59e0b' : matchedPoints.length > 0 ? '#10b981' : '#94a3b8');
+
+                // ── 6. Model Drift Alert Badge ────────────────────────────
+                const badge    = document.getElementById('driftAlertBadge');
+                const badgeTxt = document.getElementById('driftAlertText');
+                if (badge) {
+                    if (driftDetected && latestError != null) {
+                        badge.classList.add('visible');
+                        if (badgeTxt) badgeTxt.textContent =
+                            `\u26A0\uFE0F Model Drift Detected (${latestError.toFixed(1)}% Error)`;
+                    } else {
+                        badge.classList.remove('visible');
+                    }
+                }
+
+                // ── 7. Render Lightweight Charts ──────────────────────────
+                container.innerHTML = ''; // clear loader
+                const isMobile = window.innerWidth < 768;
+                container.style.height = isMobile ? '220px' : '280px';
+
+                const chart = LightweightCharts.createChart(container, {
+                    width:  container.clientWidth,
+                    height: isMobile ? 220 : 280,
+                    layout: {
+                        background:  { type: 'solid', color: 'transparent' },
+                        textColor:   '#94a3b8',
+                        fontFamily:  "'Inter', sans-serif",
+                        fontSize:    10,
+                    },
+                    grid: {
+                        vertLines: { color: '#f1f5f9' },
+                        horzLines: { color: '#f1f5f9' },
+                    },
+                    crosshair:   { mode: LightweightCharts.CrosshairMode.Normal },
+                    rightPriceScale: {
+                        borderColor: '#e2e8f0',
+                        scaleMargins: { top: 0.08, bottom: 0.08 },
+                    },
+                    timeScale: {
+                        borderColor:    '#e2e8f0',
+                        timeVisible:    true,
+                        secondsVisible: false,
+                        tickMarkFormatter: (time) => {
+                            const d = new Date(time * 1000);
+                            const months = ['Jan','Feb','Mar','Apr','May','Jun',
+                                            'Jul','Aug','Sep','Oct','Nov','Dec'];
+                            return months[d.getUTCMonth()] + ' ' + d.getUTCFullYear().toString().slice(2);
+                        },
+                    },
+                    handleScroll: true,
+                    handleScale:  true,
+                });
+                APP.driftLwcChart = chart;
+
+                // Line 1: Actual Price — Blue solid
+                if (actualSeries.length > 0) {
+                    const actualLine = chart.addLineSeries({
+                        color:       '#2563EB',
+                        lineWidth:   2,
+                        lineStyle:   LightweightCharts.LineStyle.Solid,
+                        title:       'Actual',
+                        priceLineVisible: false,
+                        lastValueVisible: true,
+                    });
+                    actualLine.setData(actualSeries);
+                }
+
+                // Line 2: T+7 Prediction — Orange solid
+                if (predSeries.length > 0) {
+                    const predLine = chart.addLineSeries({
+                        color:       '#F97316',
+                        lineWidth:   2,
+                        lineStyle:   LightweightCharts.LineStyle.Solid,
+                        title:       'T+7 Pred',
+                        priceLineVisible: false,
+                        lastValueVisible: true,
+                    });
+                    predLine.setData(predSeries);
+                }
+
+                // Fit visible range to data
+                chart.timeScale().fitContent();
+
+                // Auto-resize handler
+                const resizeHandler = () => {
+                    if (container.clientWidth > 0) {
+                        chart.applyOptions({ width: container.clientWidth });
+                    }
+                };
+                window.addEventListener('resize', resizeHandler);
+                chart._resizeHandler = resizeHandler;
+
+            } catch (err) {
+                console.error('❌ renderDriftChart Error:', err);
+                container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;
+                    height:100%;color:#f43f5e;font-size:11px;font-weight:700;
+                    text-transform:uppercase;letter-spacing:.1em;font-family:'Inter',sans-serif">
+                    Error loading drift data: ${err.message}
+                </div>`;
+            }
+        }
+
+    
+        // ══════════════════════════════════════════════════════════════
         async function updatePredictUI(symbol, horizon) {
             if (!symbol) return;
             const cleanSymbol  = symbol.trim().toUpperCase();
@@ -3558,6 +3848,14 @@
                     console.log('🔄 Auto-Refreshing Market Data...');
                     await loadDashboardData();
                     await renderChart();
+                }
+                // ── Auto-refresh Drift Chart เมื่ออยู่หน้า Predict ────────
+                if (APP.currentPage === 'predict' && APP.predictSymbol) {
+                    const token = localStorage.getItem(TOKEN_KEY);
+                    if (!token) { handleSessionExpired(); return; }
+
+                    console.log('🔄 Auto-Refreshing Drift Chart for', APP.predictSymbol);
+                    await renderDriftChart(APP.predictSymbol);
                 }
             }, 30000);
 
