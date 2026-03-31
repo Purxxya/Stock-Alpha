@@ -553,118 +553,86 @@
                         </div>
                     </div>
 
-                    <!-- ── 3 KPI Performance Cards ─────────────────────────── -->
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 predict-fade-in" style="animation-delay:0.08s">
+                    <!-- ── 2 KPI Performance Cards ─────────────────────────── -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 predict-fade-in" style="animation-delay:0.08s">
 
                         <!-- Card 1: Win Rate T+1 -->
                         <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm p-6 flex flex-col gap-3">
                             <div class="flex items-center justify-between">
-                                <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.2em]">Win Rate</div>
+                                <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.2em]">Win Rate · T+1</div>
                                 <div class="w-9 h-9 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
-                                    <svg class="w-4.5 h-4.5 text-emerald-600" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24" style="width:18px;height:18px">
+                                    <svg fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24" style="width:18px;height:18px">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
                                 </div>
                             </div>
-                            <div id="predictWinRateValue" class="predict-kpi-val text-slate-300">—</div>
+                            <!-- Spinner shown while awaiting data -->
+                            <div id="predictWinRateSpinner" class="flex items-center gap-2.5 py-1">
+                                <div class="w-4 h-4 rounded-full border-2 border-emerald-200 border-t-emerald-500 animate-spin flex-shrink-0"></div>
+                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Awaiting Data...</span>
+                            </div>
+                            <div id="predictWinRateValue" class="predict-kpi-val text-slate-300" style="display:none">—</div>
                             <div class="flex flex-col gap-1.5">
                                 <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                                     <div id="predictWinRateBarFill" class="decay-bar h-full rounded-full" style="width:0%;background:#10b981"></div>
                                 </div>
-                                <div id="predictWinRateSubtext" class="text-[10px] font-semibold text-slate-400">Awaiting data</div>
+                                <div id="predictWinRateSubtext" class="text-[10px] font-semibold text-slate-400">Collecting T+1 evaluation data</div>
                             </div>
                         </div>
 
                         <!-- Card 2: Model Accuracy MAPE -->
                         <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm p-6 flex flex-col gap-3">
                             <div class="flex items-center justify-between">
-                                <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.2em]">Model Accuracy</div>
+                                <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.2em]">Model Accuracy · MAPE</div>
                                 <div class="w-9 h-9 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center">
                                     <svg fill="none" stroke="#2563eb" stroke-width="2.5" viewBox="0 0 24 24" style="width:18px;height:18px">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
                                     </svg>
                                 </div>
                             </div>
-                            <div id="predictMapeValue" class="predict-kpi-val text-slate-300">—</div>
+                            <!-- Spinner shown while calculating -->
+                            <div id="predictMapeSpinner" class="flex items-center gap-2.5 py-1">
+                                <div class="w-4 h-4 rounded-full border-2 border-blue-200 border-t-blue-500 animate-spin flex-shrink-0"></div>
+                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Calculating...</span>
+                            </div>
+                            <div id="predictMapeValue" class="predict-kpi-val text-slate-300" style="display:none">—</div>
                             <div class="flex flex-col gap-1">
                                 <div id="predictMapeLabel" class="text-[10px] font-semibold text-slate-400">Avg MAPE (evaluated days)</div>
                                 <div id="predictMapeQuality" class="text-[9px] font-black uppercase tracking-widest text-slate-300">—</div>
                             </div>
                         </div>
-
-                        <!-- Card 3: AI Sentiment Score -->
-                        <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm p-6 flex flex-col gap-3">
-                            <div class="flex items-center justify-between">
-                                <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.2em]">AI Sentiment</div>
-                                <div id="predictSentimentIconBox" class="w-9 h-9 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center transition-all duration-300">
-                                    <svg fill="none" stroke="#94a3b8" stroke-width="2.5" viewBox="0 0 24 24" id="predictSentimentSvg" style="width:18px;height:18px">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
-                                    </svg>
-                                </div>
-                            </div>
-                            <div id="predictSentimentValue" class="predict-kpi-val text-slate-300" style="font-size:1.5rem">—</div>
-                            <div class="flex flex-col gap-1">
-                                <div id="predictSentimentReturn" class="text-[10px] font-semibold text-slate-400">— vs current price</div>
-                                <div id="predictSentimentSignal" class="text-[9px] font-black uppercase tracking-widest text-slate-300">—</div>
-                            </div>
-                        </div>
                     </div>
 
-                    <!-- ── ECharts Chart Card ──────────────────────────────── -->
-                    <div class="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden predict-fade-in" style="animation-delay:0.16s">
+                    <!-- ── Price Forecast Chart (Lightweight Charts) ──────── -->
+                    <div class="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden predict-fade-in" style="animation-delay:0.16s" id="forecastChartCard">
                         <div class="px-7 pt-6 pb-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
                             <div>
-                                <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">Price Projection Chart</h3>
-                                <p id="predictChartSubtitle" class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">AI Forecast</p>
+                                <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">Price Forecast Chart</h3>
+                                <p id="forecastChartSubtitle" class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">Forward Test · Rolling T+7 · Model Drift Evaluation</p>
                             </div>
-                            <div class="flex flex-wrap gap-4 text-[9px] font-black uppercase tracking-wider text-slate-500">
-                                <span class="flex items-center gap-1.5">
-                                    <span class="inline-block w-5 h-[2px] rounded-full" style="background:#0f172a"></span>Actual
-                                </span>
-                                <span class="flex items-center gap-1.5">
-                                    <span class="inline-block w-5 h-[2px] rounded-full" style="background:#3b82f6;border-top:2px dashed #3b82f6;height:0"></span>AI Forecast
-                                </span>
-                                <span class="flex items-center gap-1.5">
-                                    <span class="inline-block w-5 h-3 rounded" style="background:rgba(59,130,246,0.12);border:1.5px solid rgba(59,130,246,0.3)"></span>Confidence Band
-                                </span>
-                                <span class="flex items-center gap-1.5">
-                                    <span class="inline-block w-5 h-0" style="border-top:2px dashed #f59e0b"></span>Prev Close
-                                </span>
-                            </div>
-                        </div>
-                        <div class="p-4 md:p-5">
-                            <div id="predictCanvas" class="relative rounded-2xl overflow-hidden" style="height:420px"></div>
-                        </div>
-                    </div>
-
-                    <!-- ── Forward Test (Rolling T+7) — Model Drift Chart ────── -->
-                    <div class="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden predict-fade-in" style="animation-delay:0.20s" id="driftChartCard">
-                        <div class="px-7 pt-6 pb-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
-                            <div>
-                                <div class="flex items-center gap-2.5">
-                                    <div class="p-2 rounded-xl bg-orange-50 border border-orange-100">
-                                        <svg class="w-4 h-4" fill="none" stroke="#f97316" stroke-width="2.5" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">Forward Test (Rolling T+7)</h3>
-                                        <p id="driftChartSubtitle" class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">Model Drift Evaluation · Actual vs T+7 Predicted</p>
-                                    </div>
+                            <div class="flex items-center gap-5">
+                                <!-- Drift Alert Badge — hidden by default -->
+                                <div id="forecastDriftBadge" style="display:none"
+                                     class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-orange-200 bg-orange-50">
+                                    <span class="text-[11px]">⚠️</span>
+                                    <span id="forecastDriftBadgeText" class="text-[9px] font-black text-orange-700 uppercase tracking-wider">Model Drift</span>
+                                </div>
+                                <div class="flex items-center gap-5 text-[9px] font-black uppercase tracking-wider text-slate-400">
+                                    <span class="flex items-center gap-2">
+                                        <span class="inline-block w-6 h-[2px] rounded-full bg-[#2563EB]"></span>Actual Price
+                                    </span>
+                                    <span class="flex items-center gap-2">
+                                        <span class="inline-block w-6 h-[2px] rounded-full bg-[#F97316]"></span>T+7 Forecast
+                                    </span>
                                 </div>
                             </div>
-                            <div class="flex flex-wrap gap-4 text-[9px] font-black uppercase tracking-wider text-slate-500">
-                                <span class="flex items-center gap-1.5">
-                                    <span class="inline-block w-5 h-[2.5px] rounded-full" style="background:#2563EB"></span>Actual Price
-                                </span>
-                                <span class="flex items-center gap-1.5">
-                                    <span class="inline-block w-5 h-[2.5px] rounded-full" style="background:#F97316"></span>T+7 Predicted
-                                </span>
-                            </div>
                         </div>
-                        <div class="p-4 md:p-5">
-                            <div id="driftChartCanvas" class="relative rounded-2xl overflow-hidden" style="height:320px">
-                                <div class="flex items-center justify-center h-full text-slate-300 text-[11px] font-bold uppercase tracking-widest">Select a security to load drift chart</div>
+                        <div class="px-2 py-4 md:px-4 md:py-5">
+                            <div id="forecastChartCanvas" style="height:400px;position:relative">
+                                <div class="flex items-center justify-center h-full gap-3">
+                                    <div class="w-5 h-5 rounded-full border-2 border-slate-200 border-t-slate-400 animate-spin"></div>
+                                    <span class="text-[11px] font-bold text-slate-300 uppercase tracking-widest">Select a security</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -686,52 +654,18 @@
                             </div>
                         </div>
 
-                        <!-- AI Strategic Insights -->
+                        <!-- Forecast Data Table (Price Targets) -->
                         <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden predict-fade-in" style="animation-delay:0.28s">
-                            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center">
-                                        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.25 15L18 16.125 16.875 15 18 13.875 18.25 15zM18.25 6L18 7.125 16.875 6 18 4.875 18.25 6z" />
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <div class="text-[11px] font-black text-slate-900 uppercase tracking-[.15em]">AI Strategic Insights</div>
-                                        <div class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">CHRONOS ANALYSIS</div>
-                                    </div>
+                            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3 bg-slate-50/40">
+                                <div>
+                                    <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.2em] mb-0.5">Forecast</div>
+                                    <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">Price Targets</h3>
                                 </div>
-                                <span id="insightStatusBadge" class="text-[9px] font-black text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-slate-200">Awaiting Data</span>
+                                <span id="predictTableBadge" class="text-[9px] font-black text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-slate-200">—</span>
                             </div>
-                            <div id="predictInsightsBody" class="p-5 grid grid-cols-1 gap-3 bg-white" style="max-height:280px;overflow-y:auto">
-                                <div class="text-center py-8">
-                                    <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-50 mb-3">
-                                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                                        </svg>
-                                    </div>
-                                    <p class="text-slate-500 text-[11px] font-semibold uppercase tracking-widest">Select a security to initialize AI analysis</p>
-                                </div>
+                            <div id="predictTableContainer" class="overflow-x-auto custom-scrollbar" style="max-height:320px">
+                                <div class="flex items-center justify-center py-10 text-slate-300 text-[11px] font-bold uppercase tracking-widest">Select a security</div>
                             </div>
-                            <div class="px-6 py-3 border-t border-slate-100 bg-slate-50/30 flex items-center gap-2">
-                                <svg class="w-3 h-3 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                                </svg>
-                                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wide">Disclaimer: Statistical analysis for institutional information purposes only.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ── Forecast Data Table ─────────────────────────────── -->
-                    <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden predict-fade-in" style="animation-delay:0.32s">
-                        <div class="px-7 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
-                            <div>
-                                <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">Forecast Data Table</h3>
-                                <p id="predictTableSubtitle" class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">Daily Prediction</p>
-                            </div>
-                            <span id="predictTableBadge" class="text-[9px] font-black text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-slate-200">—</span>
-                        </div>
-                        <div id="predictTableContainer" class="overflow-x-auto custom-scrollbar" style="max-height:380px">
-                            <div class="flex items-center justify-center py-10 text-slate-400 text-[11px] font-bold uppercase tracking-widest">Select a security to load forecast table</div>
                         </div>
                     </div>
 
@@ -969,7 +903,6 @@
         fallbackSectorName: '',
         lwcChart:        null,   
         predictLwcChart: null,   
-        driftLwcChart:   null,   // ── Forward Test (Rolling T+7) Drift Chart
         chartType: 'candlestick',
         predictData: [],
         predictSymbol: null,
@@ -2721,7 +2654,6 @@
             const dd = document.getElementById('predictStockDropdown');
             if (dd) dd.classList.remove('open');
             updatePredictUI(sym, APP.predictHorizon || '7D');
-            renderDriftChart(sym);  // ── Forward Test (Rolling T+7) ──
         }
 
         // ─── fetchHistoricalForPredict ─────────────────────────────────
@@ -3113,262 +3045,6 @@
     }
 
         // ══════════════════════════════════════════════════════════════
-        // renderDriftChart — Forward Test (Rolling T+7) for Model Drift
-        // ── แสดง Actual Price vs T+7 Predicted ใน Lightweight Charts ──
-        // ── [Bonus] Model Drift Alert ถ้า Error > 5% ──────────────────
-        // ══════════════════════════════════════════════════════════════
-        async function renderDriftChart(symbol) {
-            const container = document.getElementById('driftChartCanvas');
-            if (!container || !APP.supabaseClient) return;
-
-            const cleanSymbol = symbol.trim().toUpperCase();
-
-            // ── Dispose existing LWC instance ─────────────────────────────
-            if (APP.driftLwcChart) {
-                try {
-                    if (APP.driftLwcChart._resizeHandler) {
-                        window.removeEventListener('resize', APP.driftLwcChart._resizeHandler);
-                    }
-                    APP.driftLwcChart.remove();
-                } catch(e) {}
-                APP.driftLwcChart = null;
-            }
-            container.innerHTML = '';
-
-            // ── Remove existing drift alert (ล้างของเก่าก่อน re-render) ──
-            const oldAlert = document.getElementById('driftAlertBanner');
-            if (oldAlert) oldAlert.remove();
-
-            // ── Responsive height ──────────────────────────────────────────
-            const isMobile = window.innerWidth < 768;
-            const DRIFT_H  = isMobile ? 240 : 320;
-            container.style.height = DRIFT_H + 'px';
-
-            // ── Loading spinner ────────────────────────────────────────────
-            container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;gap:10px;font-family:'Inter',sans-serif">
-                <div style="width:18px;height:18px;border:2px solid #f97316;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite"></div>
-                <span style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.12em">Loading Drift Data...</span>
-            </div>`;
-
-            try {
-                // ── 1. Fetch Actual Price จาก stock_historical_data ─────────
-                const from = luxon.DateTime.now().minus({ months: 6 }).toISODate();
-                const { data: histData, error: histErr } = await APP.supabaseClient
-                    .from('stock_historical_data')
-                    .select('date, close_price')
-                    .eq('symbol', cleanSymbol)
-                    .gte('date', from)
-                    .order('date', { ascending: true });
-                if (histErr) throw histErr;
-
-                // ── 2. Fetch T+7 Prediction จาก predictions_log ─────────────
-                const { data: predData, error: predErr } = await APP.supabaseClient
-                    .from('predictions_log')
-                    .select('target_date, predicted_price')
-                    .eq('symbol', cleanSymbol)
-                    .eq('horizon_days', 7)
-                    .not('predicted_price', 'is', null)
-                    .order('target_date', { ascending: true });
-                if (predErr) throw predErr;
-
-                // ── Guard: ถ้าไม่มีข้อมูลเลย แสดง empty state ──────────────
-                if ((!histData || !histData.length) && (!predData || !predData.length)) {
-                    container.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;font-family:'Inter',sans-serif">
-                        <svg width="32" height="32" fill="none" stroke="#cbd5e1" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                        <span style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em">ไม่พบข้อมูล Forward Test สำหรับ ${cleanSymbol}</span>
-                        <span style="font-size:10px;font-weight:600;color:#cbd5e1">ตรวจสอบ table <code>predictions_log</code> (horizon_days=7)</span>
-                    </div>`;
-                    return;
-                }
-
-                // ── 3. เตรียม series data ──────────────────────────────────
-                const actualSeries = (histData || [])
-                    .map(d => ({ time: d.date, value: parseFloat(d.close_price) }))
-                    .filter(d => !isNaN(d.value) && d.value > 0);
-
-                const predSeries = (predData || [])
-                    .map(d => ({ time: d.target_date, value: parseFloat(d.predicted_price) }))
-                    .filter(d => !isNaN(d.value) && d.value > 0);
-
-                // ── Clear loading spinner ──────────────────────────────────
-                container.innerHTML = '';
-
-                // ── 4. สร้าง Lightweight Chart ─────────────────────────────
-                const chart = LW.createChart(container, {
-                    height: DRIFT_H,
-                    autoSize: true,
-                    layout: {
-                        background:  { color: '#ffffff' },
-                        textColor:   '#64748b',
-                        fontFamily:  "'Inter', -apple-system, sans-serif",
-                        fontSize:    11,
-                    },
-                    grid: {
-                        vertLines: { color: '#f1f5f9' },
-                        horzLines: { color: '#f1f5f9' },
-                    },
-                    crosshair: {
-                        mode: LW.CrosshairMode.Normal,
-                        vertLine: { color: '#94a3b8', labelBackgroundColor: '#1e293b' },
-                        horzLine: { color: '#94a3b8', labelBackgroundColor: '#1e293b' },
-                    },
-                    rightPriceScale: {
-                        borderColor:  '#e2e8f0',
-                        scaleMargins: { top: 0.08, bottom: 0.08 },
-                    },
-                    timeScale: {
-                        borderColor:    '#e2e8f0',
-                        timeVisible:    false,
-                        secondsVisible: false,
-                        fixLeftEdge:    true,
-                        fixRightEdge:   true,
-                        tickMarkFormatter: (time) => {
-                            try {
-                                const dt = typeof time === 'string'
-                                    ? luxon.DateTime.fromISO(time)
-                                    : typeof time === 'number'
-                                        ? luxon.DateTime.fromSeconds(time)
-                                        : luxon.DateTime.fromObject(time);
-                                return dt.toFormat('d MMM');
-                            } catch(e) { return String(time); }
-                        },
-                    },
-                    localization: {
-                        timeFormatter: (time) => {
-                            try {
-                                const dt = typeof time === 'string'
-                                    ? luxon.DateTime.fromISO(time)
-                                    : typeof time === 'number'
-                                        ? luxon.DateTime.fromSeconds(time)
-                                        : luxon.DateTime.fromObject(time);
-                                return dt.toFormat('d MMM yyyy');
-                            } catch(e) { return String(time); }
-                        },
-                    },
-                    handleScroll: { mouseWheel: true, pressedMouseMove: true },
-                    handleScale:  { axisPressedMouseMove: true, mouseWheel: true, pinch: true },
-                });
-
-                APP.driftLwcChart = chart;
-
-                // ── 5. เส้น Actual Price (ทึบ สีน้ำเงิน #2563EB) ────────────
-                if (actualSeries.length) {
-                    const actualLine = chart.addLineSeries({
-                        color:                   '#2563EB',
-                        lineWidth:               2,
-                        lineStyle:               LW.LineStyle.Solid,
-                        title:                   'Actual',
-                        priceLineVisible:        false,
-                        lastValueVisible:        true,
-                        crosshairMarkerVisible:  true,
-                        crosshairMarkerRadius:   4,
-                        crosshairMarkerBorderColor: '#2563EB',
-                        crosshairMarkerBackgroundColor: '#2563EB',
-                    });
-                    actualLine.setData(actualSeries);
-                }
-
-                // ── 6. เส้น T+7 Predicted (ทึบ สีส้ม #F97316) ───────────────
-                // plot โดยใช้ target_date เป็น time, predicted_price เป็น value
-                if (predSeries.length) {
-                    const predLine = chart.addLineSeries({
-                        color:                   '#F97316',
-                        lineWidth:               2,
-                        lineStyle:               LW.LineStyle.Solid,
-                        title:                   'T+7 Pred',
-                        priceLineVisible:        false,
-                        lastValueVisible:        true,
-                        crosshairMarkerVisible:  true,
-                        crosshairMarkerRadius:   4,
-                        crosshairMarkerBorderColor: '#F97316',
-                        crosshairMarkerBackgroundColor: '#F97316',
-                    });
-                    predLine.setData(predSeries);
-                }
-
-                chart.timeScale().fitContent();
-
-                // ── 7. [BONUS] Model Drift Detection ──────────────────────
-                // หา actual_price ที่ target_date ตรงกับ predicted point ล่าสุด
-                if (actualSeries.length && predSeries.length) {
-                    const actualMap = Object.fromEntries(actualSeries.map(d => [d.time, d.value]));
-
-                    // หา prediction ล่าสุดที่มี actual_price ตรงกัน
-                    const matched = [...predSeries]
-                        .reverse()
-                        .find(p => actualMap[p.time] != null);
-
-                    if (matched) {
-                        const actual  = actualMap[matched.time];
-                        const pred    = matched.value;
-                        const errPct  = Math.abs((actual - pred) / actual) * 100;
-                        const matchDt = luxon.DateTime.fromISO(matched.time).toFormat('dd MMM yyyy');
-
-                        // อัปเดต subtitle ด้วยค่า error ล่าสุด
-                        const subtitleEl = document.getElementById('driftChartSubtitle');
-                        if (subtitleEl) {
-                            const errColor = errPct > 5 ? '#dc2626' : errPct > 2 ? '#d97706' : '#059669';
-                            subtitleEl.innerHTML = `${cleanSymbol} · Actual vs T+7 Predicted &nbsp;·&nbsp;
-                                <span style="color:${errColor};font-weight:900">Latest Error: ${errPct.toFixed(2)}%</span>
-                                <span style="color:#94a3b8"> (${matchDt})</span>`;
-                        }
-
-                        // แสดง Alert banner ถ้า Error > 5%
-                        if (errPct > 5) {
-                            const alertDiv = document.createElement('div');
-                            alertDiv.id = 'driftAlertBanner';
-                            alertDiv.style.cssText = [
-                                'position:absolute',
-                                'top:10px',
-                                'left:50%',
-                                'transform:translateX(-50%)',
-                                'background:#fff7ed',
-                                'border:1.5px solid #f97316',
-                                'border-radius:10px',
-                                'padding:6px 18px',
-                                'display:flex',
-                                'align-items:center',
-                                'gap:8px',
-                                'z-index:20',
-                                'pointer-events:none',
-                                'white-space:nowrap',
-                                'box-shadow:0 4px 16px rgba(249,115,22,0.20)',
-                            ].join(';');
-                            alertDiv.innerHTML = `
-                                <span style="font-size:14px">⚠️</span>
-                                <span style="font-size:10px;font-weight:900;color:#c2410c;text-transform:uppercase;letter-spacing:.12em;font-family:'Inter',sans-serif">
-                                    Model Drift Detected (&gt;5% Error)
-                                    &nbsp;·&nbsp; ${errPct.toFixed(2)}% on ${matchDt}
-                                </span>`;
-                            container.appendChild(alertDiv);
-                        }
-                    } else {
-                        // ยังไม่มี match → แสดง data count
-                        const subtitleEl = document.getElementById('driftChartSubtitle');
-                        if (subtitleEl) {
-                            subtitleEl.textContent = `${cleanSymbol} · ${actualSeries.length} Actual pts · ${predSeries.length} T+7 Predicted pts · Awaiting overlap`;
-                        }
-                    }
-                }
-
-                // ── Resize handler ─────────────────────────────────────────
-                const resizeHandler = () => {
-                    if (APP.driftLwcChart) {
-                        APP.driftLwcChart.applyOptions({ width: container.clientWidth });
-                    }
-                };
-                window.addEventListener('resize', resizeHandler);
-                chart._resizeHandler = resizeHandler;
-
-            } catch (err) {
-                console.error('❌ renderDriftChart Error:', err);
-                container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#f43f5e;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;text-align:center;padding:16px">
-                    ❌ Error loading drift chart: ${err.message}
-                </div>`;
-            }
-        }
-
-        // ══════════════════════════════════════════════════════════════
         // PREDICT PAGE — Searchable Dropdown
         // ══════════════════════════════════════════════════════════════
         async function initPredictPage() {
@@ -3487,24 +3163,22 @@
                 if (el) el.classList.toggle('active', id === cleanHorizon);
             });
 
-            // Loading state
-            const insightsBody = document.getElementById('predictInsightsBody');
-            const insightBadge = document.getElementById('insightStatusBadge');
-            if (insightsBody) insightsBody.innerHTML = `
-                <div class="sm:col-span-2 flex items-center justify-center py-10 gap-3">
-                    <div class="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
-                    <span class="text-slate-500 text-[11px] font-bold uppercase tracking-widest">Loading analysis...</span>
-                </div>`;
-            if (insightBadge) insightBadge.textContent = 'LOADING';
+            // Loading state — reset spinners on KPI cards
+            const wrSpnElInit   = document.getElementById('predictWinRateSpinner');
+            const wrValElInit   = document.getElementById('predictWinRateValue');
+            const mapeSpnElInit = document.getElementById('predictMapeSpinner');
+            const mapeValElInit = document.getElementById('predictMapeValue');
+            if (wrSpnElInit)   wrSpnElInit.style.display   = 'flex';
+            if (wrValElInit)   wrValElInit.style.display   = 'none';
+            if (mapeSpnElInit) mapeSpnElInit.style.display = 'flex';
+            if (mapeValElInit) mapeValElInit.style.display = 'none';
 
             try {
                 const todayISO = luxon.DateTime.now().setZone('Asia/Bangkok').toISODate();
 
-               
                 const horizonDaysMap = { '7D': 7, '15D': 15, '30D': 30 };
                 const horizonDays   = horizonDaysMap[cleanHorizon] || 7;
 
-                
                 const { data: allPredData, error: predErr } = await APP.supabaseClient
                     .from('stock_predictions_v3')
                     .select('prediction_date, predicted_price, lower_bound, upper_bound, actual_price, error_percent, day_index, model_name, previous_close, created_at, base_date')
@@ -3520,24 +3194,12 @@
                         (a.prediction_date || '').localeCompare(b.prediction_date || ''));
                 }
 
-                // ── 2. Fetch live AI insights ─────────────────────────────
-                // horizon_type removed — fetch latest insights for the symbol only
-                const { data: insightRows } = await APP.supabaseClient
-                    .from('model_insights')
-                    .select('insight_type, insight_text, created_at')
-                    .eq('symbol', cleanSymbol)
-                    .order('created_at', { ascending: false })
-                    .limit(8);
-
-                // ── 3. No data guard ──────────────────────────────────────
+                // ── No data guard ─────────────────────────────────────────
                 if (!allPredData || !allPredData.length) {
-                    if (insightsBody) insightsBody.innerHTML = `
-                        <div class="sm:col-span-2 p-5 border-l-4 border-rose-500 bg-rose-50 rounded-r-lg">
-                            <div class="text-[9px] font-black uppercase tracking-widest text-rose-600 mb-1">Data Unavailable</div>
-                            <p class="text-[12px] text-slate-700">ยังไม่มีข้อมูลพยากรณ์ T+1 สำหรับ ${cleanSymbol} — กรุณารัน model_forecast_v3.py ก่อน<br>
-                            <span class="text-slate-400 text-[11px]">(ระบบใช้ day_index=1 rolling forecast แทน horizon_type เดิม)</span></p>
-                        </div>`;
-                    if (insightBadge) insightBadge.textContent = 'NO DATA';
+                    if (wrSpnElInit)   { wrSpnElInit.style.display = 'none'; }
+                    if (wrValElInit)   { wrValElInit.style.display = ''; wrValElInit.textContent = '—'; wrValElInit.style.color = '#cbd5e1'; }
+                    if (mapeSpnElInit) { mapeSpnElInit.style.display = 'none'; }
+                    if (mapeValElInit) { mapeValElInit.style.display = ''; mapeValElInit.textContent = '—'; mapeValElInit.style.color = '#cbd5e1'; }
                     return;
                 }
 
@@ -3641,48 +3303,40 @@
                 const wrValEl  = document.getElementById('predictWinRateValue');
                 const wrSubEl  = document.getElementById('predictWinRateSubtext');
                 const wrBarEl  = document.getElementById('predictWinRateBarFill');
+                const wrSpnEl  = document.getElementById('predictWinRateSpinner');
 
-                if (wrValEl) {
-                    if (t1HasEnoughData && t1WinRate !== null) {
-                        // ✅ Enough data — show real Win Rate with color coding
-                        wrValEl.textContent = t1WinRate.toFixed(1) + '%';
-                        wrValEl.style.color = t1WinRate >= 60 ? '#10b981' : t1WinRate >= 50 ? '#d97706' : '#f43f5e';
-                        wrValEl.style.fontSize = ''; // restore .predict-kpi-val default
-                    } else {
-                        // ⏳ Early-stage — not enough evaluated days yet
-                        wrValEl.textContent = 'Collecting Data...';
-                        wrValEl.style.color = '#94a3b8'; // neutral slate
-                        wrValEl.style.fontSize = '1.05rem'; // scale down to fit longer text
+                if (t1HasEnoughData && t1WinRate !== null) {
+                    // ✅ Data ready — hide spinner, show value
+                    if (wrSpnEl) wrSpnEl.style.display = 'none';
+                    if (wrValEl) {
+                        wrValEl.style.display  = '';
+                        wrValEl.textContent    = t1WinRate.toFixed(1) + '%';
+                        wrValEl.style.color    = t1WinRate >= 60 ? '#10b981' : t1WinRate >= 50 ? '#d97706' : '#f43f5e';
+                        wrValEl.style.fontSize = '';
                     }
-                }
-
-                if (wrSubEl) {
-                    if (t1HasEnoughData && t1WinRate !== null) {
-                        // Normal label with accuracy rating
+                    if (wrSubEl) {
                         const ratingLabel = t1WinRate >= 60 ? 'HIGH ACCURACY ✓' : t1WinRate >= 50 ? 'MODERATE' : 'BELOW 50%';
                         wrSubEl.textContent = `${t1Data.length} evaluated · ${ratingLabel}`;
                         wrSubEl.style.color = '';
-                    } else if (t1Data.length > 0) {
-                        // Partial progress (1–6 days collected)
-                        wrSubEl.textContent = `Gathering T+1 data for accuracy evaluation... ${t1Data.length}/${T1_MIN_SAMPLES} days`;
-                        wrSubEl.style.color = '#94a3b8';
-                    } else {
-                        // Zero data yet
-                        wrSubEl.textContent = 'Gathering T+1 data for accuracy evaluation...';
-                        wrSubEl.style.color = '#94a3b8';
                     }
-                }
-
-                if (wrBarEl) {
-                    if (t1HasEnoughData && t1WinRate !== null) {
-                        // Show Win Rate fill with performance color
+                    if (wrBarEl) {
                         wrBarEl.style.width      = t1WinRate + '%';
                         wrBarEl.style.background = t1WinRate >= 60 ? '#10b981' : t1WinRate >= 50 ? '#d97706' : '#f43f5e';
-                    } else {
-                        // Show neutral progress toward minimum sample threshold
+                    }
+                } else {
+                    // ⏳ Awaiting data — show spinner
+                    if (wrSpnEl) wrSpnEl.style.display = 'flex';
+                    if (wrValEl) wrValEl.style.display = 'none';
+                    if (wrSubEl) {
+                        wrSubEl.textContent = t1Data.length > 0
+                            ? `Gathering data... ${t1Data.length}/${T1_MIN_SAMPLES} days`
+                            : 'Awaiting T+1 evaluation data';
+                        wrSubEl.style.color = '#94a3b8';
+                    }
+                    if (wrBarEl) {
                         const progressPct        = t1Data.length > 0 ? Math.min((t1Data.length / T1_MIN_SAMPLES) * 100, 99) : 0;
                         wrBarEl.style.width      = progressPct + '%';
-                        wrBarEl.style.background = '#94a3b8'; // slate — no performance signal yet
+                        wrBarEl.style.background = '#94a3b8';
                     }
                 }
 
@@ -3690,129 +3344,347 @@
                 const mapeValEl  = document.getElementById('predictMapeValue');
                 const mapeLblEl  = document.getElementById('predictMapeLabel');
                 const mapeQualEl = document.getElementById('predictMapeQuality');
-                if (mapeValEl) {
-                    if (avgMAPE !== null) {
-                        mapeValEl.textContent = avgMAPE.toFixed(2) + '%';
-                        mapeValEl.style.color = avgMAPE < 3 ? '#10b981' : avgMAPE < 8 ? '#d97706' : '#f43f5e';
-                    } else {
-                        mapeValEl.textContent = '—';
-                        mapeValEl.style.color = '#cbd5e1';
+                const mapeSpnEl  = document.getElementById('predictMapeSpinner');
+                if (avgMAPE !== null) {
+                    // ✅ Data ready — hide spinner, show value
+                    if (mapeSpnEl) mapeSpnEl.style.display = 'none';
+                    if (mapeValEl) {
+                        mapeValEl.style.display = '';
+                        mapeValEl.textContent   = avgMAPE.toFixed(2) + '%';
+                        mapeValEl.style.color   = avgMAPE < 3 ? '#10b981' : avgMAPE < 8 ? '#d97706' : '#f43f5e';
                     }
+                    if (mapeLblEl) mapeLblEl.textContent = `จาก ${evaluatedPred.length} วันที่ประเมินแล้ว`;
+                    if (mapeQualEl) {
+                        const q = avgMAPE < 3 ? 'HIGH ACCURACY' : avgMAPE < 8 ? 'MODERATE' : 'LOW ACCURACY';
+                        mapeQualEl.textContent  = q;
+                        mapeQualEl.style.color  = avgMAPE < 3 ? '#10b981' : avgMAPE < 8 ? '#d97706' : '#f43f5e';
+                    }
+                } else {
+                    // ⏳ Calculating — show spinner
+                    if (mapeSpnEl) mapeSpnEl.style.display = 'flex';
+                    if (mapeValEl) mapeValEl.style.display = 'none';
+                    if (mapeLblEl) mapeLblEl.textContent = 'Avg MAPE (evaluated days)';
+                    if (mapeQualEl) { mapeQualEl.textContent = '—'; mapeQualEl.style.color = '#cbd5e1'; }
                 }
-                if (mapeLblEl) mapeLblEl.textContent = evaluatedPred.length > 0 ? `จาก ${evaluatedPred.length} วันที่ประเมินแล้ว` : 'Avg MAPE (evaluated days)';
-                if (mapeQualEl) {
-                    const q = avgMAPE == null ? '—' : avgMAPE < 3 ? 'HIGH ACCURACY' : avgMAPE < 8 ? 'MODERATE' : 'LOW ACCURACY';
-                    mapeQualEl.textContent = q;
-                    mapeQualEl.style.color = avgMAPE == null ? '#cbd5e1' : avgMAPE < 3 ? '#10b981' : avgMAPE < 8 ? '#d97706' : '#f43f5e';
-                }
-
-                // KPI 3: AI Sentiment
-                const sentValEl  = document.getElementById('predictSentimentValue');
-                const sentRetEl  = document.getElementById('predictSentimentReturn');
-                const sentSigEl  = document.getElementById('predictSentimentSignal');
-                const sentIconEl = document.getElementById('predictSentimentIconBox');
-                const sentSvgEl  = document.getElementById('predictSentimentSvg');
-                if (sentValEl) {
-                    sentValEl.textContent  = isUp ? 'BULLISH' : 'BEARISH';
-                    sentValEl.style.color  = isUp ? '#10b981' : '#f43f5e';
-                }
-                if (sentRetEl) {
-                    sentRetEl.textContent = `${isUp?'+':''}${expectedRet.toFixed(2)}% expected return`;
-                    sentRetEl.style.color = isUp ? '#10b981' : '#f43f5e';
-                }
-                if (sentSigEl) {
-                    sentSigEl.textContent  = signalText + ' · ' + cleanHorizon + ' Horizon';
-                    sentSigEl.style.cssText = `font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:${signalFg};font-family:'Inter',sans-serif`;
-                }
-                if (sentIconEl) {
-                    sentIconEl.style.background  = isUp ? '#ecfdf5' : '#fff1f2';
-                    sentIconEl.style.borderColor = isUp ? '#a7f3d0' : '#fecdd3';
-                }
-                if (sentSvgEl) {
-                    sentSvgEl.setAttribute('stroke', isUp ? '#059669' : '#f43f5e');
-                }
-
                 // ── 6c. Render Model Decay Table ──────────────────────────
                 renderDecayTable(allPredData);
 
-                const isPending = evaluatedPred.length === 0 && futurePred.length === 0;
-                await renderPredictChart(cleanSymbol, allPredData, isPending);
-
-                // ── 8. Render Forecast Data Table ─────────────────────────
+                // ── 7. Render Forecast Data Table ─────────────────────────
                 renderPredictTable(allPredData);
 
-                // ── 9. Institutional AI Insights (no emojis) ─────────────
-                if (insightBadge) insightBadge.textContent = insightRows?.length ? 'LIVE' : 'COMPUTED';
-
-                // Color/border map for institutional cards
-                const cardCfg = {
-                    'signal':   { border:'#2563eb', label:'Trading Signal',      labelColor:'#1d4ed8' },
-                    'trend':    { border:'#059669', label:'Price Trend',          labelColor:'#047857' },
-                    'risk':     { border:'#dc2626', label:'Risk Assessment',      labelColor:'#b91c1c' },
-                    'accuracy': { border:'#7c3aed', label:'Model Accuracy',       labelColor:'#6d28d9' },
-                    'strategy': { border:'#0284c7', label:'Strategy Guidance',    labelColor:'#0369a1' },
-                    'default':  { border:'#64748b', label:'Quantitative Analysis',labelColor:'#475569' },
-                };
-
-                const mkCard = (typeKey, labelOverride, bodyHtml, ts) => {
-                    const cfg = cardCfg[typeKey] || cardCfg.default;
-                    return `<div class="insight-card" style="border-color:${cfg.border}">
-                        <div class="insight-card-label" style="color:${cfg.labelColor}">${labelOverride || cfg.label}</div>
-                        <p class="insight-card-body" style="font-family:'Inter',sans-serif !important">${bodyHtml}</p>
-                        ${ts ? `<div class="insight-card-ts">${ts}</div>` : ''}
-                    </div>`;
-                };
-
-                if (insightsBody) {
-                    if (insightRows && insightRows.length > 0) {
-                        insightsBody.className = 'p-5 grid grid-cols-1 gap-3 bg-white';
-                        insightsBody.innerHTML = insightRows.map(row => {
-                            const typ = (row.insight_type || 'default').toLowerCase();
-                            const ts  = row.created_at
-                                ? luxon.DateTime.fromISO(row.created_at).setZone('Asia/Bangkok').toFormat('dd MMM yyyy HH:mm')
-                                : '';
-                            return mkCard(typ, row.insight_type, row.insight_text, ts);
-                        }).join('');
-                    } else {
-                        // Computed fallback cards from real prediction data
-                        const trend       = isUp ? 'ขาขึ้น (Bullish)' : 'ขาลง (Bearish)';
-                        const trendClr    = isUp ? '#15803d' : '#b91c1c';
-                        const uncertLabel = relBand < 5 ? 'ต่ำมาก — เชื่อถือได้สูง' : relBand < 15 ? 'ปานกลาง' : 'สูง — ระวังความเสี่ยง';
-                        const uncertClr   = relBand < 5 ? '#15803d' : relBand < 15 ? '#d97706' : '#b91c1c';
-                        const horizonRec  = avgMAPE == null ? '—'
-                            : avgMAPE < 3 ? 'เหมาะสำหรับการเทรดระยะสั้น'
-                            : avgMAPE < 8 ? 'เหมาะสำหรับประเมินแนวโน้ม'
-                            : 'ใช้เป็นข้อมูลเสริมประกอบการตัดสินใจเท่านั้น';
-
-                        const firstPred  = futurePred[0] || allPredData[0];
-                        const dateRange  = `${luxon.DateTime.fromISO(firstPred.prediction_date).toFormat('dd MMM')} — ${luxon.DateTime.fromISO(lastPred.prediction_date).toFormat('dd MMM yyyy')}`;
-
-                        const cards = [
-                            mkCard('signal', 'Trading Signal',
-                                `${cleanSymbol} มีสัญญาณ <strong style="color:${signalFg}">${signalText}</strong> · Target Price <strong>฿${targetPrice.toFixed(2)}</strong> (<span style="color:${isUp?'#15803d':'#b91c1c'}">${isUp?'+':''}${expectedRet.toFixed(2)}%</span> จากราคาปัจจุบัน)`),
-                            mkCard('trend', 'Price Trend',
-                                `แนวโน้มราคาในช่วง ${cleanHorizon}: <strong style="color:${trendClr}">${trend}</strong> · ช่วงพยากรณ์: <strong>${dateRange}</strong>`),
-                            mkCard('risk', 'Confidence Band',
-                                `80% CI กว้างเฉลี่ย <strong>฿${avgBand.toFixed(2)}</strong> · ระดับความไม่แน่นอน: <strong style="color:${uncertClr}">${uncertLabel}</strong> · Band Width ${relBand.toFixed(1)}% of median`),
-                            avgMAPE != null ? mkCard('accuracy', 'Model Accuracy',
-                                `MAPE ย้อนหลัง (${evaluatedPred.length} วัน): <strong>฿${avgMAPE.toFixed(2)}%</strong> · ${horizonRec}`) : null,
-                        ].filter(Boolean).join('');
-
-                        insightsBody.className = 'p-5 grid grid-cols-1 gap-3 bg-white';
-                        insightsBody.innerHTML = cards;
-                    }
-                }
+                // ── 8. Render Price Forecast Chart (Forward Test T+7) ─────
+                renderForecastChart(cleanSymbol);
 
             } catch (err) {
                 console.error('❌ updatePredictUI Error:', err);
-                const ib = document.getElementById('predictInsightsBody');
-                if (ib) ib.innerHTML = `
-                    <div class="sm:col-span-2 p-5 border-l-4 border-rose-500 bg-rose-50 rounded-r-lg">
-                        <div class="text-[9px] font-black uppercase tracking-widest text-rose-600 mb-1">Error</div>
-                        <p class="text-[12px] text-slate-700">${err.message}</p>
-                    </div>`;
+                const wrSpnE = document.getElementById('predictWinRateSpinner');
+                if (wrSpnE) wrSpnE.innerHTML = `<span class="text-[10px] text-rose-400 font-bold uppercase tracking-wider">Error loading data</span>`;
             }
         }
+        // ══════════════════════════════════════════════════════════════
+        // renderForecastChart — Price Forecast Chart (LWC)
+        // Forward Test · Rolling T+7 · Actual vs Predicted
+        // Professional Trading Style — no series labels, rich crosshair
+        // ══════════════════════════════════════════════════════════════
+        async function renderForecastChart(symbol) {
+            const container = document.getElementById('forecastChartCanvas');
+            if (!container || !APP.supabaseClient) return;
+            const cleanSymbol = symbol.trim().toUpperCase();
+
+            // ── Dispose previous chart ─────────────────────────────────
+            if (APP._forecastChart) {
+                try {
+                    if (APP._forecastChart._resizeHandler)
+                        window.removeEventListener('resize', APP._forecastChart._resizeHandler);
+                    APP._forecastChart.remove();
+                } catch(e) {}
+                APP._forecastChart = null;
+            }
+            container.innerHTML = '';
+
+            // ── Loading state ──────────────────────────────────────────
+            container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;gap:10px">
+                <div style="width:16px;height:16px;border:2px solid #e2e8f0;border-top-color:#94a3b8;border-radius:50%;animation:spin .8s linear infinite"></div>
+                <span style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.14em;font-family:'Inter',sans-serif">Loading chart data…</span>
+            </div>`;
+
+            try {
+                // ── 1. Fetch Actual Price (stock_historical_data) ──────────
+                const from6m = luxon.DateTime.now().minus({ months: 6 }).toISODate();
+                const { data: histRows, error: hErr } = await APP.supabaseClient
+                    .from('stock_historical_data')
+                    .select('date, close_price')
+                    .eq('symbol', cleanSymbol)
+                    .gte('date', from6m)
+                    .order('date', { ascending: true });
+                if (hErr) throw hErr;
+
+                // ── 2. Fetch T+7 Predicted (predictions_log) ──────────────
+                const { data: predRows, error: pErr } = await APP.supabaseClient
+                    .from('predictions_log')
+                    .select('target_date, predicted_price')
+                    .eq('symbol', cleanSymbol)
+                    .eq('horizon_days', 7)
+                    .not('predicted_price', 'is', null)
+                    .order('target_date', { ascending: true });
+                if (pErr) throw pErr;
+
+                // ── 3. Build series ────────────────────────────────────────
+                const actualSeries = (histRows || [])
+                    .map(d => ({ time: d.date, value: parseFloat(d.close_price) }))
+                    .filter(d => !isNaN(d.value) && d.value > 0);
+
+                const predSeries = (predRows || [])
+                    .map(d => ({ time: d.target_date, value: parseFloat(d.predicted_price) }))
+                    .filter(d => !isNaN(d.value) && d.value > 0);
+
+                container.innerHTML = '';
+
+                // ── 4. Init Lightweight Chart ──────────────────────────────
+                const isMobile = window.innerWidth < 768;
+                const H = isMobile ? 300 : 400;
+                container.style.height = H + 'px';
+
+                const chart = LW.createChart(container, {
+                    height:   H,
+                    autoSize: true,
+                    layout: {
+                        background:  { color: '#ffffff' },
+                        textColor:   '#94a3b8',
+                        fontFamily:  "'Inter', -apple-system, sans-serif",
+                        fontSize:    11,
+                    },
+                    grid: {
+                        vertLines: { color: '#f8fafc' },
+                        horzLines: { color: '#f1f5f9' },
+                    },
+                    crosshair: {
+                        mode: LW.CrosshairMode.Normal,
+                        vertLine: {
+                            color: '#94a3b8', width: 1, style: LW.LineStyle.Dashed,
+                            labelBackgroundColor: '#1e293b',
+                        },
+                        horzLine: {
+                            color: '#94a3b8', width: 1, style: LW.LineStyle.Dashed,
+                            labelBackgroundColor: '#1e293b',
+                        },
+                    },
+                    rightPriceScale: {
+                        borderColor:  '#f1f5f9',
+                        scaleMargins: { top: 0.10, bottom: 0.10 },
+                    },
+                    timeScale: {
+                        borderColor:    '#f1f5f9',
+                        timeVisible:    false,
+                        secondsVisible: false,
+                        fixLeftEdge:    true,
+                        fixRightEdge:   true,
+                        tickMarkFormatter: (time) => {
+                            try {
+                                const dt = typeof time === 'string'
+                                    ? luxon.DateTime.fromISO(time)
+                                    : typeof time === 'number'
+                                        ? luxon.DateTime.fromSeconds(time)
+                                        : luxon.DateTime.fromObject(time);
+                                return dt.toFormat("d MMM ''yy");
+                            } catch(e) { return String(time); }
+                        },
+                    },
+                    localization: {
+                        timeFormatter: (time) => {
+                            try {
+                                const dt = typeof time === 'string'
+                                    ? luxon.DateTime.fromISO(time)
+                                    : typeof time === 'number'
+                                        ? luxon.DateTime.fromSeconds(time)
+                                        : luxon.DateTime.fromObject(time);
+                                return dt.toFormat('dd MMM yyyy');
+                            } catch(e) { return String(time); }
+                        },
+                    },
+                    handleScroll: { mouseWheel: true, pressedMouseMove: true },
+                    handleScale:  { axisPressedMouseMove: true, mouseWheel: true, pinch: true },
+                });
+
+                APP._forecastChart = chart;
+
+                // ── 5. Actual Price series — solid blue #2563EB ────────────
+                let actualLineSeries = null;
+                if (actualSeries.length) {
+                    actualLineSeries = chart.addLineSeries({
+                        color:                  '#2563EB',
+                        lineWidth:              2,
+                        lineStyle:              LW.LineStyle.Solid,
+                        priceLineVisible:       false,
+                        lastValueVisible:       false,   // ← no label on axis
+                        crosshairMarkerVisible: true,
+                        crosshairMarkerRadius:  5,
+                        crosshairMarkerBorderColor:      '#2563EB',
+                        crosshairMarkerBackgroundColor:  '#ffffff',
+                        crosshairMarkerBorderWidth:      2,
+                    });
+                    actualLineSeries.setData(actualSeries);
+                }
+
+                // ── 6. T+7 Forecast series — solid orange #F97316 ──────────
+                let predLineSeries = null;
+                if (predSeries.length) {
+                    predLineSeries = chart.addLineSeries({
+                        color:                  '#F97316',
+                        lineWidth:              2,
+                        lineStyle:              LW.LineStyle.Solid,
+                        priceLineVisible:       false,
+                        lastValueVisible:       false,   // ← no label on axis
+                        crosshairMarkerVisible: true,
+                        crosshairMarkerRadius:  5,
+                        crosshairMarkerBorderColor:      '#F97316',
+                        crosshairMarkerBackgroundColor:  '#ffffff',
+                        crosshairMarkerBorderWidth:      2,
+                    });
+                    predLineSeries.setData(predSeries);
+                }
+
+                chart.timeScale().fitContent();
+
+                // ── 7. Professional Crosshair Tooltip ─────────────────────
+                const tooltip = document.createElement('div');
+                tooltip.style.cssText = [
+                    'position:absolute', 'z-index:100', 'pointer-events:none',
+                    'top:12px', 'left:14px',
+                    'background:rgba(15,23,42,0.88)',
+                    'backdrop-filter:blur(8px)', '-webkit-backdrop-filter:blur(8px)',
+                    'border:1px solid rgba(255,255,255,0.08)',
+                    'border-radius:10px', 'padding:10px 14px',
+                    'box-shadow:0 8px 32px rgba(0,0,0,0.28)',
+                    "font-family:'Inter',sans-serif", 'font-size:11px',
+                    'min-width:188px', 'line-height:1.5',
+                    'display:none',
+                ].join(';');
+                container.appendChild(tooltip);
+
+                // Build lookup maps for fast crosshair value retrieval
+                const actualMap = Object.fromEntries((actualSeries).map(d => [d.time, d.value]));
+                const predMap   = Object.fromEntries((predSeries).map(d => [d.time, d.value]));
+
+                chart.subscribeCrosshairMove(param => {
+                    if (!param.time || !param.point
+                        || param.point.x < 0 || param.point.y < 0) {
+                        tooltip.style.display = 'none';
+                        return;
+                    }
+
+                    // Resolve time string
+                    const timeKey = typeof param.time === 'object'
+                        ? `${param.time.year}-${String(param.time.month).padStart(2,'0')}-${String(param.time.day).padStart(2,'0')}`
+                        : String(param.time);
+
+                    const dtLabel = (() => {
+                        try { return luxon.DateTime.fromISO(timeKey).toFormat('dd MMM yyyy'); }
+                        catch(e) { return timeKey; }
+                    })();
+
+                    const aVal = actualMap[timeKey];
+                    const pVal = predMap[timeKey];
+
+                    if (aVal == null && pVal == null) { tooltip.style.display = 'none'; return; }
+
+                    // Build tooltip rows
+                    let html = `<div style="font-size:9px;font-weight:900;color:#64748b;letter-spacing:.14em;text-transform:uppercase;margin-bottom:7px">${dtLabel}</div>`;
+
+                    if (aVal != null) {
+                        html += `<div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:4px">
+                            <div style="display:flex;align-items:center;gap:6px">
+                                <span style="width:8px;height:8px;border-radius:50%;border:2px solid #2563EB;background:#fff;flex-shrink:0;display:inline-block"></span>
+                                <span style="color:#94a3b8;font-weight:600;font-size:10px">Actual</span>
+                            </div>
+                            <span style="color:#e2e8f0;font-weight:800;font-size:11px">฿${aVal.toFixed(2)}</span>
+                        </div>`;
+                    }
+                    if (pVal != null) {
+                        html += `<div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:4px">
+                            <div style="display:flex;align-items:center;gap:6px">
+                                <span style="width:8px;height:8px;border-radius:50%;border:2px solid #F97316;background:#fff;flex-shrink:0;display:inline-block"></span>
+                                <span style="color:#94a3b8;font-weight:600;font-size:10px">T+7 Forecast</span>
+                            </div>
+                            <span style="color:#F97316;font-weight:800;font-size:11px">฿${pVal.toFixed(2)}</span>
+                        </div>`;
+                    }
+                    // Show error % when both values present on same date
+                    if (aVal != null && pVal != null) {
+                        const errPct = ((pVal - aVal) / aVal) * 100;
+                        const errAbs = Math.abs(errPct);
+                        const errClr = errAbs > 5 ? '#f97316' : errAbs > 2 ? '#fbbf24' : '#34d399';
+                        html += `<div style="margin-top:5px;padding-top:5px;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;gap:14px">
+                            <span style="color:#64748b;font-weight:700;font-size:9px;letter-spacing:.1em;text-transform:uppercase">Error</span>
+                            <span style="color:${errClr};font-weight:900;font-size:10px">${errPct >= 0 ? '+' : ''}${errPct.toFixed(2)}%${errAbs > 5 ? ' ⚠️' : ''}</span>
+                        </div>`;
+                    }
+
+                    tooltip.innerHTML  = html;
+                    tooltip.style.display = 'block';
+
+                    // Flip to right if near left edge
+                    const cx = param.point.x;
+                    const cw = container.clientWidth;
+                    tooltip.style.left  = cx < cw / 2 ? '14px' : 'auto';
+                    tooltip.style.right = cx < cw / 2 ? 'auto' : '14px';
+                });
+
+                // ── 8. Model Drift Detection → update badge & subtitle ────
+                const driftBadge    = document.getElementById('forecastDriftBadge');
+                const driftBadgeTxt = document.getElementById('forecastDriftBadgeText');
+                const subtitle      = document.getElementById('forecastChartSubtitle');
+
+                if (actualSeries.length && predSeries.length) {
+                    const latestMatch = [...predSeries].reverse()
+                        .find(p => actualMap[p.time] != null);
+
+                    if (latestMatch) {
+                        const a = actualMap[latestMatch.time];
+                        const p = latestMatch.value;
+                        const errPct  = Math.abs((p - a) / a) * 100;
+                        const matchDt = luxon.DateTime.fromISO(latestMatch.time).toFormat('dd MMM yyyy');
+                        const errClr  = errPct > 5 ? '#dc2626' : errPct > 2 ? '#d97706' : '#059669';
+
+                        if (subtitle) {
+                            subtitle.innerHTML = `${cleanSymbol} · ${actualSeries.length} actual · ${predSeries.length} T+7 pts &nbsp;·&nbsp; `
+                                + `<span style="color:${errClr};font-weight:900">Latest Δ ${errPct.toFixed(2)}%</span>`
+                                + `<span style="color:#94a3b8"> (${matchDt})</span>`;
+                        }
+
+                        if (errPct > 5) {
+                            if (driftBadge)    driftBadge.style.display = 'flex';
+                            if (driftBadgeTxt) driftBadgeTxt.textContent = `Model Drift · ${errPct.toFixed(1)}% Error`;
+                        } else {
+                            if (driftBadge) driftBadge.style.display = 'none';
+                        }
+                    } else {
+                        if (subtitle) subtitle.textContent =
+                            `${cleanSymbol} · ${actualSeries.length} actual · ${predSeries.length} T+7 pts · Awaiting overlap`;
+                        if (driftBadge) driftBadge.style.display = 'none';
+                    }
+                } else if (!predSeries.length) {
+                    if (subtitle) subtitle.textContent =
+                        `${cleanSymbol} · ${actualSeries.length} actual pts · No T+7 predictions found in predictions_log`;
+                    if (driftBadge) driftBadge.style.display = 'none';
+                }
+
+                // ── Resize handler ─────────────────────────────────────────
+                const onResize = () => {
+                    if (APP._forecastChart)
+                        APP._forecastChart.applyOptions({ width: container.clientWidth });
+                };
+                window.addEventListener('resize', onResize);
+                chart._resizeHandler = onResize;
+
+            } catch (err) {
+                console.error('❌ renderForecastChart:', err);
+                container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#f43f5e;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;padding:20px;text-align:center">
+                    ❌ Error loading chart: ${err.message}
+                </div>`;
+            }
+        }
+
         // ============================================
         // INIT — Auth Guard → Load Data
         // ============================================
@@ -3849,12 +3721,10 @@
                     await renderChart();
                 }
 
-                // ── Auto-refresh Drift Chart (Predict Page) ──────────────
-                // renderDriftChart จะ re-query Supabase ทั้ง stock_historical_data
-                // และ predictions_log ทุก 30 วินาที เพื่อรับข้อมูลใหม่ที่เพิ่มเข้า DB
+                // ── Predict page — re-fetch forecast chart every 30s
                 if (APP.currentPage === 'predict' && APP.predictSymbol) {
-                    console.log('🔄 Auto-Refreshing Drift Chart:', APP.predictSymbol);
-                    await renderDriftChart(APP.predictSymbol);
+                    console.log('🔄 Auto-Refreshing Forecast Chart:', APP.predictSymbol);
+                    await renderForecastChart(APP.predictSymbol);
                 }
             }, 30000);
 
