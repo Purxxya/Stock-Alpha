@@ -168,21 +168,6 @@
         /* Decay progress bars */
         .decay-bar { transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        /* ── Drift Chart Card ── */
-        #driftCanvas { height: 280px; }
-        @media (max-width: 767px) { #driftCanvas { height: 220px !important; } }
-
-        /* Model Drift Alert Badge */
-        @keyframes driftPulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50%       { opacity: 0.75; transform: scale(1.03); }
-        }
-        #driftAlertBadge {
-            display: none;
-            animation: driftPulse 2s ease-in-out infinite;
-        }
-        #driftAlertBadge.visible { display: flex; }
-
         /* ══════════════════════════════════════════════
            RESPONSIVE — Mobile Drawer Sidebar
         ══════════════════════════════════════════════ */
@@ -652,54 +637,34 @@
                         </div>
                     </div>
 
-                    <!-- ── Forward Test (Rolling T+7) — Model Drift Chart ──── -->
-                    <div class="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden predict-fade-in" style="animation-delay:0.20s">
+                    <!-- ── Forward Test (Rolling T+7) — Model Drift Chart ────── -->
+                    <div class="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden predict-fade-in" style="animation-delay:0.20s" id="driftChartCard">
                         <div class="px-7 pt-6 pb-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
                             <div>
-                                <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">Forward Test (Rolling T+7)</h3>
-                                <p class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">Model Drift Monitor · Actual vs Predicted</p>
+                                <div class="flex items-center gap-2.5">
+                                    <div class="p-2 rounded-xl bg-orange-50 border border-orange-100">
+                                        <svg class="w-4 h-4" fill="none" stroke="#f97316" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">Forward Test (Rolling T+7)</h3>
+                                        <p id="driftChartSubtitle" class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">Model Drift Evaluation · Actual vs T+7 Predicted</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="flex flex-wrap items-center gap-4">
-                                <!-- Drift Alert Badge -->
-                                <div id="driftAlertBadge"
-                                     class="items-center gap-2 px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-wider
-                                            bg-amber-50 border border-amber-300 text-amber-700">
-                                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                                    </svg>
-                                    <span id="driftAlertText">&#x26A0;&#xFE0F; Model Drift Detected (&gt;5% Error)</span>
-                                </div>
-                                <!-- Legend -->
-                                <div class="flex flex-wrap gap-4 text-[9px] font-black uppercase tracking-wider text-slate-500">
-                                    <span class="flex items-center gap-1.5">
-                                        <span class="inline-block w-5 h-[2.5px] rounded-full" style="background:#2563EB"></span>Actual Price
-                                    </span>
-                                    <span class="flex items-center gap-1.5">
-                                        <span class="inline-block w-5 h-[2.5px] rounded-full" style="background:#F97316"></span>T+7 Prediction
-                                    </span>
-                                </div>
+                            <div class="flex flex-wrap gap-4 text-[9px] font-black uppercase tracking-wider text-slate-500">
+                                <span class="flex items-center gap-1.5">
+                                    <span class="inline-block w-5 h-[2.5px] rounded-full" style="background:#2563EB"></span>Actual Price
+                                </span>
+                                <span class="flex items-center gap-1.5">
+                                    <span class="inline-block w-5 h-[2.5px] rounded-full" style="background:#F97316"></span>T+7 Predicted
+                                </span>
                             </div>
                         </div>
                         <div class="p-4 md:p-5">
-                            <div id="driftCanvas" class="relative rounded-2xl overflow-hidden" style="height:280px"></div>
-                        </div>
-                        <!-- Footer stat row -->
-                        <div class="px-7 pb-5 flex flex-wrap gap-6">
-                            <div>
-                                <div class="text-[8px] font-black text-slate-400 uppercase tracking-[.15em] mb-1">Latest Error</div>
-                                <div id="driftLatestError" class="text-sm font-black text-slate-300">—</div>
-                            </div>
-                            <div>
-                                <div class="text-[8px] font-black text-slate-400 uppercase tracking-[.15em] mb-1">Avg Error (T+7)</div>
-                                <div id="driftAvgError" class="text-sm font-black text-slate-300">—</div>
-                            </div>
-                            <div>
-                                <div class="text-[8px] font-black text-slate-400 uppercase tracking-[.15em] mb-1">Matched Points</div>
-                                <div id="driftMatchedPts" class="text-sm font-black text-slate-300">—</div>
-                            </div>
-                            <div>
-                                <div class="text-[8px] font-black text-slate-400 uppercase tracking-[.15em] mb-1">Drift Status</div>
-                                <div id="driftStatus" class="text-[9px] font-black uppercase tracking-widest text-slate-300">—</div>
+                            <div id="driftChartCanvas" class="relative rounded-2xl overflow-hidden" style="height:320px">
+                                <div class="flex items-center justify-center h-full text-slate-300 text-[11px] font-bold uppercase tracking-widest">Select a security to load drift chart</div>
                             </div>
                         </div>
                     </div>
@@ -1004,6 +969,7 @@
         fallbackSectorName: '',
         lwcChart:        null,   
         predictLwcChart: null,   
+        driftLwcChart:   null,   // ── Forward Test (Rolling T+7) Drift Chart
         chartType: 'candlestick',
         predictData: [],
         predictSymbol: null,
@@ -2755,8 +2721,7 @@
             const dd = document.getElementById('predictStockDropdown');
             if (dd) dd.classList.remove('open');
             updatePredictUI(sym, APP.predictHorizon || '7D');
-            // ── Render Drift Chart (Forward Test T+7) ─────────────────
-            renderDriftChart(sym);
+            renderDriftChart(sym);  // ── Forward Test (Rolling T+7) ──
         }
 
         // ─── fetchHistoricalForPredict ─────────────────────────────────
@@ -3148,6 +3113,262 @@
     }
 
         // ══════════════════════════════════════════════════════════════
+        // renderDriftChart — Forward Test (Rolling T+7) for Model Drift
+        // ── แสดง Actual Price vs T+7 Predicted ใน Lightweight Charts ──
+        // ── [Bonus] Model Drift Alert ถ้า Error > 5% ──────────────────
+        // ══════════════════════════════════════════════════════════════
+        async function renderDriftChart(symbol) {
+            const container = document.getElementById('driftChartCanvas');
+            if (!container || !APP.supabaseClient) return;
+
+            const cleanSymbol = symbol.trim().toUpperCase();
+
+            // ── Dispose existing LWC instance ─────────────────────────────
+            if (APP.driftLwcChart) {
+                try {
+                    if (APP.driftLwcChart._resizeHandler) {
+                        window.removeEventListener('resize', APP.driftLwcChart._resizeHandler);
+                    }
+                    APP.driftLwcChart.remove();
+                } catch(e) {}
+                APP.driftLwcChart = null;
+            }
+            container.innerHTML = '';
+
+            // ── Remove existing drift alert (ล้างของเก่าก่อน re-render) ──
+            const oldAlert = document.getElementById('driftAlertBanner');
+            if (oldAlert) oldAlert.remove();
+
+            // ── Responsive height ──────────────────────────────────────────
+            const isMobile = window.innerWidth < 768;
+            const DRIFT_H  = isMobile ? 240 : 320;
+            container.style.height = DRIFT_H + 'px';
+
+            // ── Loading spinner ────────────────────────────────────────────
+            container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;gap:10px;font-family:'Inter',sans-serif">
+                <div style="width:18px;height:18px;border:2px solid #f97316;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite"></div>
+                <span style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.12em">Loading Drift Data...</span>
+            </div>`;
+
+            try {
+                // ── 1. Fetch Actual Price จาก stock_historical_data ─────────
+                const from = luxon.DateTime.now().minus({ months: 6 }).toISODate();
+                const { data: histData, error: histErr } = await APP.supabaseClient
+                    .from('stock_historical_data')
+                    .select('date, close_price')
+                    .eq('symbol', cleanSymbol)
+                    .gte('date', from)
+                    .order('date', { ascending: true });
+                if (histErr) throw histErr;
+
+                // ── 2. Fetch T+7 Prediction จาก predictions_log ─────────────
+                const { data: predData, error: predErr } = await APP.supabaseClient
+                    .from('predictions_log')
+                    .select('target_date, predicted_price')
+                    .eq('symbol', cleanSymbol)
+                    .eq('horizon_days', 7)
+                    .not('predicted_price', 'is', null)
+                    .order('target_date', { ascending: true });
+                if (predErr) throw predErr;
+
+                // ── Guard: ถ้าไม่มีข้อมูลเลย แสดง empty state ──────────────
+                if ((!histData || !histData.length) && (!predData || !predData.length)) {
+                    container.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;font-family:'Inter',sans-serif">
+                        <svg width="32" height="32" fill="none" stroke="#cbd5e1" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                        <span style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em">ไม่พบข้อมูล Forward Test สำหรับ ${cleanSymbol}</span>
+                        <span style="font-size:10px;font-weight:600;color:#cbd5e1">ตรวจสอบ table <code>predictions_log</code> (horizon_days=7)</span>
+                    </div>`;
+                    return;
+                }
+
+                // ── 3. เตรียม series data ──────────────────────────────────
+                const actualSeries = (histData || [])
+                    .map(d => ({ time: d.date, value: parseFloat(d.close_price) }))
+                    .filter(d => !isNaN(d.value) && d.value > 0);
+
+                const predSeries = (predData || [])
+                    .map(d => ({ time: d.target_date, value: parseFloat(d.predicted_price) }))
+                    .filter(d => !isNaN(d.value) && d.value > 0);
+
+                // ── Clear loading spinner ──────────────────────────────────
+                container.innerHTML = '';
+
+                // ── 4. สร้าง Lightweight Chart ─────────────────────────────
+                const chart = LW.createChart(container, {
+                    height: DRIFT_H,
+                    autoSize: true,
+                    layout: {
+                        background:  { color: '#ffffff' },
+                        textColor:   '#64748b',
+                        fontFamily:  "'Inter', -apple-system, sans-serif",
+                        fontSize:    11,
+                    },
+                    grid: {
+                        vertLines: { color: '#f1f5f9' },
+                        horzLines: { color: '#f1f5f9' },
+                    },
+                    crosshair: {
+                        mode: LW.CrosshairMode.Normal,
+                        vertLine: { color: '#94a3b8', labelBackgroundColor: '#1e293b' },
+                        horzLine: { color: '#94a3b8', labelBackgroundColor: '#1e293b' },
+                    },
+                    rightPriceScale: {
+                        borderColor:  '#e2e8f0',
+                        scaleMargins: { top: 0.08, bottom: 0.08 },
+                    },
+                    timeScale: {
+                        borderColor:    '#e2e8f0',
+                        timeVisible:    false,
+                        secondsVisible: false,
+                        fixLeftEdge:    true,
+                        fixRightEdge:   true,
+                        tickMarkFormatter: (time) => {
+                            try {
+                                const dt = typeof time === 'string'
+                                    ? luxon.DateTime.fromISO(time)
+                                    : typeof time === 'number'
+                                        ? luxon.DateTime.fromSeconds(time)
+                                        : luxon.DateTime.fromObject(time);
+                                return dt.toFormat('d MMM');
+                            } catch(e) { return String(time); }
+                        },
+                    },
+                    localization: {
+                        timeFormatter: (time) => {
+                            try {
+                                const dt = typeof time === 'string'
+                                    ? luxon.DateTime.fromISO(time)
+                                    : typeof time === 'number'
+                                        ? luxon.DateTime.fromSeconds(time)
+                                        : luxon.DateTime.fromObject(time);
+                                return dt.toFormat('d MMM yyyy');
+                            } catch(e) { return String(time); }
+                        },
+                    },
+                    handleScroll: { mouseWheel: true, pressedMouseMove: true },
+                    handleScale:  { axisPressedMouseMove: true, mouseWheel: true, pinch: true },
+                });
+
+                APP.driftLwcChart = chart;
+
+                // ── 5. เส้น Actual Price (ทึบ สีน้ำเงิน #2563EB) ────────────
+                if (actualSeries.length) {
+                    const actualLine = chart.addLineSeries({
+                        color:                   '#2563EB',
+                        lineWidth:               2,
+                        lineStyle:               LW.LineStyle.Solid,
+                        title:                   'Actual',
+                        priceLineVisible:        false,
+                        lastValueVisible:        true,
+                        crosshairMarkerVisible:  true,
+                        crosshairMarkerRadius:   4,
+                        crosshairMarkerBorderColor: '#2563EB',
+                        crosshairMarkerBackgroundColor: '#2563EB',
+                    });
+                    actualLine.setData(actualSeries);
+                }
+
+                // ── 6. เส้น T+7 Predicted (ทึบ สีส้ม #F97316) ───────────────
+                // plot โดยใช้ target_date เป็น time, predicted_price เป็น value
+                if (predSeries.length) {
+                    const predLine = chart.addLineSeries({
+                        color:                   '#F97316',
+                        lineWidth:               2,
+                        lineStyle:               LW.LineStyle.Solid,
+                        title:                   'T+7 Pred',
+                        priceLineVisible:        false,
+                        lastValueVisible:        true,
+                        crosshairMarkerVisible:  true,
+                        crosshairMarkerRadius:   4,
+                        crosshairMarkerBorderColor: '#F97316',
+                        crosshairMarkerBackgroundColor: '#F97316',
+                    });
+                    predLine.setData(predSeries);
+                }
+
+                chart.timeScale().fitContent();
+
+                // ── 7. [BONUS] Model Drift Detection ──────────────────────
+                // หา actual_price ที่ target_date ตรงกับ predicted point ล่าสุด
+                if (actualSeries.length && predSeries.length) {
+                    const actualMap = Object.fromEntries(actualSeries.map(d => [d.time, d.value]));
+
+                    // หา prediction ล่าสุดที่มี actual_price ตรงกัน
+                    const matched = [...predSeries]
+                        .reverse()
+                        .find(p => actualMap[p.time] != null);
+
+                    if (matched) {
+                        const actual  = actualMap[matched.time];
+                        const pred    = matched.value;
+                        const errPct  = Math.abs((actual - pred) / actual) * 100;
+                        const matchDt = luxon.DateTime.fromISO(matched.time).toFormat('dd MMM yyyy');
+
+                        // อัปเดต subtitle ด้วยค่า error ล่าสุด
+                        const subtitleEl = document.getElementById('driftChartSubtitle');
+                        if (subtitleEl) {
+                            const errColor = errPct > 5 ? '#dc2626' : errPct > 2 ? '#d97706' : '#059669';
+                            subtitleEl.innerHTML = `${cleanSymbol} · Actual vs T+7 Predicted &nbsp;·&nbsp;
+                                <span style="color:${errColor};font-weight:900">Latest Error: ${errPct.toFixed(2)}%</span>
+                                <span style="color:#94a3b8"> (${matchDt})</span>`;
+                        }
+
+                        // แสดง Alert banner ถ้า Error > 5%
+                        if (errPct > 5) {
+                            const alertDiv = document.createElement('div');
+                            alertDiv.id = 'driftAlertBanner';
+                            alertDiv.style.cssText = [
+                                'position:absolute',
+                                'top:10px',
+                                'left:50%',
+                                'transform:translateX(-50%)',
+                                'background:#fff7ed',
+                                'border:1.5px solid #f97316',
+                                'border-radius:10px',
+                                'padding:6px 18px',
+                                'display:flex',
+                                'align-items:center',
+                                'gap:8px',
+                                'z-index:20',
+                                'pointer-events:none',
+                                'white-space:nowrap',
+                                'box-shadow:0 4px 16px rgba(249,115,22,0.20)',
+                            ].join(';');
+                            alertDiv.innerHTML = `
+                                <span style="font-size:14px">⚠️</span>
+                                <span style="font-size:10px;font-weight:900;color:#c2410c;text-transform:uppercase;letter-spacing:.12em;font-family:'Inter',sans-serif">
+                                    Model Drift Detected (&gt;5% Error)
+                                    &nbsp;·&nbsp; ${errPct.toFixed(2)}% on ${matchDt}
+                                </span>`;
+                            container.appendChild(alertDiv);
+                        }
+                    } else {
+                        // ยังไม่มี match → แสดง data count
+                        const subtitleEl = document.getElementById('driftChartSubtitle');
+                        if (subtitleEl) {
+                            subtitleEl.textContent = `${cleanSymbol} · ${actualSeries.length} Actual pts · ${predSeries.length} T+7 Predicted pts · Awaiting overlap`;
+                        }
+                    }
+                }
+
+                // ── Resize handler ─────────────────────────────────────────
+                const resizeHandler = () => {
+                    if (APP.driftLwcChart) {
+                        APP.driftLwcChart.applyOptions({ width: container.clientWidth });
+                    }
+                };
+                window.addEventListener('resize', resizeHandler);
+                chart._resizeHandler = resizeHandler;
+
+            } catch (err) {
+                console.error('❌ renderDriftChart Error:', err);
+                container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#f43f5e;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;text-align:center;padding:16px">
+                    ❌ Error loading drift chart: ${err.message}
+                </div>`;
+            }
+        }
+
+        // ══════════════════════════════════════════════════════════════
         // PREDICT PAGE — Searchable Dropdown
         // ══════════════════════════════════════════════════════════════
         async function initPredictPage() {
@@ -3249,227 +3470,6 @@
             });
 
             container.innerHTML = rows.join('');
-        }
-
-    
-        // ══════════════════════════════════════════════════════════════
-        // FORWARD TEST — renderDriftChart(symbol)
-        // Queries: stock_historical_data (actual) + predictions_log (T+7)
-        // Renders two lines via Lightweight Charts + detects Model Drift
-        // ══════════════════════════════════════════════════════════════
-        async function renderDriftChart(symbol) {
-            if (!symbol || !APP.supabaseClient) return;
-            const cleanSym = symbol.trim().toUpperCase();
-            const container = document.getElementById('driftCanvas');
-            if (!container) return;
-
-            // ── Show loading state ─────────────────────────────────────
-            container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;
-                height:100%;gap:10px;color:#94a3b8;font-size:11px;font-weight:700;
-                text-transform:uppercase;letter-spacing:.1em;font-family:'Inter',sans-serif">
-                <div style="width:16px;height:16px;border:2px solid #cbd5e1;border-top-color:#2563eb;
-                     border-radius:50%;animation:spin 0.8s linear infinite"></div>
-                Loading Drift Chart...
-            </div>`;
-
-            // ── Destroy old LWC instance if any ───────────────────────
-            if (APP.driftLwcChart) {
-                try {
-                    if (APP.driftLwcChart._resizeHandler)
-                        window.removeEventListener('resize', APP.driftLwcChart._resizeHandler);
-                    APP.driftLwcChart.remove();
-                } catch(e) {}
-                APP.driftLwcChart = null;
-            }
-
-            try {
-                // ── 1. Fetch Actual Price from stock_historical_data ──────
-                const { data: histRows, error: histErr } = await APP.supabaseClient
-                    .from('stock_historical_data')
-                    .select('date, close_price')
-                    .eq('symbol', cleanSym)
-                    .order('date', { ascending: true })
-                    .limit(500);
-                if (histErr) throw histErr;
-
-                // ── 2. Fetch T+7 Predictions from predictions_log ─────────
-                const { data: predRows, error: predErr } = await APP.supabaseClient
-                    .from('predictions_log')
-                    .select('target_date, predicted_price')
-                    .eq('symbol', cleanSym)
-                    .eq('horizon_days', 7)
-                    .not('predicted_price', 'is', null)
-                    .order('target_date', { ascending: true })
-                    .limit(500);
-                if (predErr) throw predErr;
-
-                // ── Guard: both datasets must exist ───────────────────────
-                if (!histRows?.length && !predRows?.length) {
-                    container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;
-                        height:100%;color:#94a3b8;font-size:11px;font-weight:700;
-                        text-transform:uppercase;letter-spacing:.1em;font-family:'Inter',sans-serif">
-                        ไม่พบข้อมูล Forward Test สำหรับ ${cleanSym}
-                    </div>`;
-                    return;
-                }
-
-                // ── 3. Prepare series data for Lightweight Charts ─────────
-                //    LWC requires: { time: 'YYYY-MM-DD', value: number }
-                const actualSeries = (histRows || [])
-                    .filter(d => d.date && d.close_price != null)
-                    .map(d => ({ time: d.date, value: parseFloat(d.close_price) }));
-
-                const predSeries = (predRows || [])
-                    .filter(d => d.target_date && d.predicted_price != null)
-                    .map(d => ({ time: d.target_date, value: parseFloat(d.predicted_price) }));
-
-                // ── 4. Compute Drift Metrics ──────────────────────────────
-                //    Match predicted target_date → actual close on same date
-                const actualMap = Object.fromEntries(actualSeries.map(d => [d.time, d.value]));
-                const matchedPoints = predSeries.filter(d => actualMap[d.time] != null);
-
-                let latestError = null;
-                let avgError    = null;
-                let driftDetected = false;
-
-                if (matchedPoints.length > 0) {
-                    const errors = matchedPoints.map(d => {
-                        const actual = actualMap[d.time];
-                        return Math.abs((d.value - actual) / actual) * 100;
-                    });
-                    avgError    = errors.reduce((s, e) => s + e, 0) / errors.length;
-                    latestError = errors[errors.length - 1]; // most recent matched
-                    driftDetected = latestError > 5;
-                }
-
-                // ── 5. Update footer KPI stats ────────────────────────────
-                const setDriftEl = (id, text, color) => {
-                    const el = document.getElementById(id);
-                    if (!el) return;
-                    el.textContent = text;
-                    if (color) el.style.color = color;
-                };
-
-                setDriftEl('driftLatestError',
-                    latestError != null ? latestError.toFixed(2) + '%' : '—',
-                    latestError == null ? '#cbd5e1'
-                        : latestError > 5 ? '#f59e0b'
-                        : '#10b981');
-
-                setDriftEl('driftAvgError',
-                    avgError != null ? avgError.toFixed(2) + '%' : '—',
-                    avgError == null ? '#cbd5e1'
-                        : avgError > 5 ? '#f59e0b'
-                        : '#10b981');
-
-                setDriftEl('driftMatchedPts',
-                    matchedPoints.length > 0
-                        ? matchedPoints.length + ' / ' + predSeries.length
-                        : '—',
-                    '#64748b');
-
-                setDriftEl('driftStatus',
-                    driftDetected ? 'DRIFT DETECTED' : matchedPoints.length > 0 ? 'STABLE' : 'PENDING DATA',
-                    driftDetected ? '#f59e0b' : matchedPoints.length > 0 ? '#10b981' : '#94a3b8');
-
-                // ── 6. Model Drift Alert Badge ────────────────────────────
-                const badge    = document.getElementById('driftAlertBadge');
-                const badgeTxt = document.getElementById('driftAlertText');
-                if (badge) {
-                    if (driftDetected && latestError != null) {
-                        badge.classList.add('visible');
-                        if (badgeTxt) badgeTxt.textContent =
-                            `\u26A0\uFE0F Model Drift Detected (${latestError.toFixed(1)}% Error)`;
-                    } else {
-                        badge.classList.remove('visible');
-                    }
-                }
-
-                // ── 7. Render Lightweight Charts ──────────────────────────
-                container.innerHTML = ''; // clear loader
-                const isMobile = window.innerWidth < 768;
-                container.style.height = isMobile ? '220px' : '280px';
-
-                const chart = LightweightCharts.createChart(container, {
-                    width:  container.clientWidth,
-                    height: isMobile ? 220 : 280,
-                    layout: {
-                        background:  { type: 'solid', color: 'transparent' },
-                        textColor:   '#94a3b8',
-                        fontFamily:  "'Inter', sans-serif",
-                        fontSize:    10,
-                    },
-                    grid: {
-                        vertLines: { color: '#f1f5f9' },
-                        horzLines: { color: '#f1f5f9' },
-                    },
-                    crosshair:   { mode: LightweightCharts.CrosshairMode.Normal },
-                    rightPriceScale: {
-                        borderColor: '#e2e8f0',
-                        scaleMargins: { top: 0.08, bottom: 0.08 },
-                    },
-                    timeScale: {
-                        borderColor:    '#e2e8f0',
-                        timeVisible:    true,
-                        secondsVisible: false,
-                        tickMarkFormatter: (time) => {
-                            const d = new Date(time * 1000);
-                            const months = ['Jan','Feb','Mar','Apr','May','Jun',
-                                            'Jul','Aug','Sep','Oct','Nov','Dec'];
-                            return months[d.getUTCMonth()] + ' ' + d.getUTCFullYear().toString().slice(2);
-                        },
-                    },
-                    handleScroll: true,
-                    handleScale:  true,
-                });
-                APP.driftLwcChart = chart;
-
-                // Line 1: Actual Price — Blue solid
-                if (actualSeries.length > 0) {
-                    const actualLine = chart.addLineSeries({
-                        color:       '#2563EB',
-                        lineWidth:   2,
-                        lineStyle:   LightweightCharts.LineStyle.Solid,
-                        title:       'Actual',
-                        priceLineVisible: false,
-                        lastValueVisible: true,
-                    });
-                    actualLine.setData(actualSeries);
-                }
-
-                // Line 2: T+7 Prediction — Orange solid
-                if (predSeries.length > 0) {
-                    const predLine = chart.addLineSeries({
-                        color:       '#F97316',
-                        lineWidth:   2,
-                        lineStyle:   LightweightCharts.LineStyle.Solid,
-                        title:       'T+7 Pred',
-                        priceLineVisible: false,
-                        lastValueVisible: true,
-                    });
-                    predLine.setData(predSeries);
-                }
-
-                // Fit visible range to data
-                chart.timeScale().fitContent();
-
-                // Auto-resize handler
-                const resizeHandler = () => {
-                    if (container.clientWidth > 0) {
-                        chart.applyOptions({ width: container.clientWidth });
-                    }
-                };
-                window.addEventListener('resize', resizeHandler);
-                chart._resizeHandler = resizeHandler;
-
-            } catch (err) {
-                console.error('❌ renderDriftChart Error:', err);
-                container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;
-                    height:100%;color:#f43f5e;font-size:11px;font-weight:700;
-                    text-transform:uppercase;letter-spacing:.1em;font-family:'Inter',sans-serif">
-                    Error loading drift data: ${err.message}
-                </div>`;
-            }
         }
 
     
@@ -3840,21 +3840,20 @@
 
             // 4. Auto-refresh ทุก 30 วินาที (พร้อมตรวจ auth)
             setInterval(async () => {
-                if (APP.currentPage === 'dashboard' && APP.currentStock) {
-                    // ตรวจสอบ token ยัง valid อยู่หรือไม่ (silent check)
-                    const token = localStorage.getItem(TOKEN_KEY);
-                    if (!token) { handleSessionExpired(); return; }
+                const token = localStorage.getItem(TOKEN_KEY);
+                if (!token) { handleSessionExpired(); return; }
 
+                if (APP.currentPage === 'dashboard' && APP.currentStock) {
                     console.log('🔄 Auto-Refreshing Market Data...');
                     await loadDashboardData();
                     await renderChart();
                 }
-                // ── Auto-refresh Drift Chart เมื่ออยู่หน้า Predict ────────
-                if (APP.currentPage === 'predict' && APP.predictSymbol) {
-                    const token = localStorage.getItem(TOKEN_KEY);
-                    if (!token) { handleSessionExpired(); return; }
 
-                    console.log('🔄 Auto-Refreshing Drift Chart for', APP.predictSymbol);
+                // ── Auto-refresh Drift Chart (Predict Page) ──────────────
+                // renderDriftChart จะ re-query Supabase ทั้ง stock_historical_data
+                // และ predictions_log ทุก 30 วินาที เพื่อรับข้อมูลใหม่ที่เพิ่มเข้า DB
+                if (APP.currentPage === 'predict' && APP.predictSymbol) {
+                    console.log('🔄 Auto-Refreshing Drift Chart:', APP.predictSymbol);
                     await renderDriftChart(APP.predictSymbol);
                 }
             }, 30000);
