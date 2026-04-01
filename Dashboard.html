@@ -3121,7 +3121,7 @@
 
                 const { data: allPredData, error: predErr } = await APP.supabaseClient
                     .from('predictions_log')
-                    .select('prediction_date, predicted_price, previous_close, actual_price, error_percent, is_win, evaluated_at,  created_at, updated_at')
+                    .select('prediction_date, predicted_price, previous_close, actual_price, error_percent, is_win, evaluated_at,  created_at, update_at')
                     .eq('symbol', cleanSymbol)
                     .eq('day_index', 1)
                     .order('base_date', { ascending: false })
@@ -3531,9 +3531,11 @@
         }
 
         // ══════════════════════════════════════════════════════════════
+        // ══════════════════════════════════════════════════════════════
         // renderForecastTargetsTable — Forecast Price Targets
-        // Source: predictions_log table
-        // Columns: Target Date · Horizon · Predicted Price · CI Band
+        // Source  : predictions_log (Supabase)
+        // Columns : target_date · predicted_price · previous_close
+        //           error_percent · is_win
         // ══════════════════════════════════════════════════════════════
         async function renderForecastTargetsTable(symbol) {
             const container = document.getElementById('forecastTargetsContainer');
@@ -3542,130 +3544,222 @@
 
             const cleanSym = symbol.trim().toUpperCase();
 
-            // Loading state
-            container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;padding:56px 0;gap:10px">
-                <div style="width:14px;height:14px;border:2px solid #e2e8f0;border-top-color:#94a3b8;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0"></div>
-                <span style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.14em;font-family:'Inter',sans-serif">กำลังดึงข้อมูล predictions_log…</span>
-            </div>`;
+            // ── Loading state ─────────────────────────────────────────────
+            container.innerHTML = `
+                <div style="display:flex;align-items:center;justify-content:center;padding:56px 0;gap:10px">
+                    <div style="width:14px;height:14px;border:2px solid #e2e8f0;border-top-color:#3b82f6;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0"></div>
+                    <span style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.14em;font-family:'Inter',sans-serif">
+                        กำลังดึงข้อมูล ${cleanSym}…
+                    </span>
+                </div>`;
 
             try {
-                // ── Fetch from predictions_log ────────────────────────────
+                // ── 1. Query predictions_log ──────────────────────────────
+                //    ดึงเฉพาะ 5 คอลัมน์ที่ต้องการตาม requirement
                 const { data: rows, error } = await APP.supabaseClient
                     .from('predictions_log')
-                    .select('target_date, horizon_days, predicted_price, lower_bound, upper_bound, created_at')
+                    .select('target_date, predicted_price, previous_close, error_percent, is_win')
                     .eq('symbol', cleanSym)
                     .not('predicted_price', 'is', null)
-                    .order('target_date', { ascending: false })
-                    .limit(120);
+                    .order('target_date', { ascending: false })   // ล่าสุดขึ้นก่อน
+                    .limit(150);
 
                 if (error) throw error;
 
+                // ── 2. Empty state ────────────────────────────────────────
                 if (!rows || !rows.length) {
-                    container.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 20px;gap:10px;text-align:center">
-                        <svg width="32" height="32" fill="none" stroke="#cbd5e1" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
-                        <span style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.14em;font-family:'Inter',sans-serif">ไม่พบข้อมูลพยากรณ์ใน predictions_log สำหรับ ${cleanSym}</span>
-                    </div>`;
+                    container.innerHTML = `
+                        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:12px;text-align:center">
+                            <svg width="36" height="36" fill="none" stroke="#e2e8f0" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75
+                                       C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75z
+                                       M9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25
+                                       c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625z
+                                       M16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75
+                                       c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/>
+                            </svg>
+                            <span style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.14em;font-family:'Inter',sans-serif">
+                                ไม่พบข้อมูลพยากรณ์สำหรับ ${cleanSym}
+                            </span>
+                        </div>`;
                     if (badge) badge.textContent = `${cleanSym} · 0 Records`;
                     return;
                 }
 
-                // ── Sort ascending for display ─────────────────────────────
-                const sorted = [...rows].sort((a, b) => {
-                    const dateDiff = (a.target_date || '').localeCompare(b.target_date || '');
-                    if (dateDiff !== 0) return dateDiff;
-                    return (a.horizon_days || 0) - (b.horizon_days || 0);
-                });
+                // ── 3. Sort ascending (เก่า → ใหม่) เพื่อแสดงลำดับเวลา ──────
+                const sorted = [...rows].sort((a, b) =>
+                    (a.target_date || '').localeCompare(b.target_date || ''));
 
                 const todayISO = luxon.DateTime.now().setZone('Asia/Bangkok').toISODate();
 
-                // ── Horizon label helper ──────────────────────────────────
-                function horizonLabel(days) {
-                    const d = parseInt(days);
-                    if (d === 7)  return { tag: 'T+7',  cls: 'color:#2563eb;background:#eff6ff;border-color:#bfdbfe' };
-                    if (d === 15) return { tag: 'T+15', cls: 'color:#7c3aed;background:#f5f3ff;border-color:#ddd6fe' };
-                    if (d === 30) return { tag: 'T+30', cls: 'color:#d97706;background:#fffbeb;border-color:#fde68a' };
-                    return { tag: `T+${d}`, cls: 'color:#475569;background:#f8fafc;border-color:#e2e8f0' };
-                }
+                // ── 4. Badge summary ──────────────────────────────────────
+                const totalRows    = sorted.length;
+                const evaluatedRows = sorted.filter(r => r.error_percent != null).length;
+                const winRows      = sorted.filter(r => r.is_win === true).length;
+                const upcomingRows = sorted.filter(r => (r.target_date || '') > todayISO).length;
+                const winRate      = evaluatedRows > 0
+                    ? ((winRows / evaluatedRows) * 100).toFixed(1) + '%'
+                    : '—';
 
-                // ── Badge stats ───────────────────────────────────────────
-                const futureCount = sorted.filter(r => (r.target_date || '') > todayISO).length;
-                const horizons    = [...new Set(sorted.map(r => r.horizon_days).filter(Boolean))].sort((a,b)=>a-b);
                 if (badge) {
-                    badge.textContent = `${cleanSym} · ${sorted.length} Records · ${futureCount} Upcoming · ${horizons.map(h=>'T+'+h).join(' / ')}`;
+                    badge.textContent =
+                        `${cleanSym} · ${totalRows} Records · ${upcomingRows} Upcoming · Win Rate ${winRate}`;
                 }
 
-                // ── Build table rows ──────────────────────────────────────
+                // ── 5. Build table rows ───────────────────────────────────
                 const tableRows = sorted.map(r => {
+
+                    // ── วันที่ ──────────────────────────────────────────────
                     const isFuture  = (r.target_date || '') > todayISO;
                     const targetDt  = luxon.DateTime.fromISO(r.target_date);
-                    const dateStr   = targetDt.isValid ? targetDt.toFormat('dd MMM yyyy') : r.target_date;
-                    const createdDt = r.created_at
-                        ? luxon.DateTime.fromISO(r.created_at).toFormat('dd MMM yyyy')
-                        : '—';
+                    const dateStr   = targetDt.isValid
+                        ? targetDt.toFormat('dd MMM yyyy')
+                        : (r.target_date || '—');
+
+                    // ── ราคา ───────────────────────────────────────────────
                     const pred  = r.predicted_price != null ? parseFloat(r.predicted_price) : null;
-                    const lower = r.lower_bound     != null ? parseFloat(r.lower_bound)     : null;
-                    const upper = r.upper_bound     != null ? parseFloat(r.upper_bound)     : null;
-                    const hl    = horizonLabel(r.horizon_days);
+                    const prev  = r.previous_close  != null ? parseFloat(r.previous_close)  : null;
+                    const predStr = pred != null ? `฿${pred.toFixed(2)}` : '—';
+                    const prevStr = prev != null ? `฿${prev.toFixed(2)}` : '—';
 
-                    const predStr = pred  != null ? `฿${pred.toFixed(2)}` : '—';
-                    const ciStr   = (lower != null && upper != null)
-                        ? `฿${lower.toFixed(2)} – ฿${upper.toFixed(2)}`
-                        : lower != null ? `฿${lower.toFixed(2)}` : '—';
-                    const ciWidth = (lower != null && upper != null && pred > 0)
-                        ? (((upper - lower) / pred) * 100).toFixed(1) + '%'
-                        : null;
+                    // ── Error % ────────────────────────────────────────────
+                    const ep    = r.error_percent != null ? parseFloat(r.error_percent) : null;
+                    const epAbs = ep != null ? Math.abs(ep) : null;
+                    let epStr   = '—';
+                    let epColor = '#94a3b8';
+                    if (ep != null) {
+                        epStr   = `${ep >= 0 ? '+' : ''}${ep.toFixed(2)}%`;
+                        epColor = epAbs <= 2 ? '#059669'    // สีเขียว — แม่นมาก
+                                : epAbs <= 5 ? '#d97706'    // สีส้ม — พอใช้
+                                :              '#dc2626';   // สีแดง — คลาดเคลื่อนมาก
+                    }
 
-                    const futureDot = isFuture
-                        ? `<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#3b82f6;margin-right:6px;vertical-align:middle;flex-shrink:0"></span>`
-                        : '';
-                    const dateCss    = isFuture ? 'color:#1d4ed8;font-weight:900' : 'color:#475569;font-weight:700';
+                    // ── is_win badge ──────────────────────────────────────
+                    let winBadge;
+                    if (r.is_win === true) {
+                        winBadge = `<span style="
+                            display:inline-flex;align-items:center;gap:4px;
+                            padding:3px 10px;border-radius:999px;
+                            background:#dcfce7;border:1.5px solid #86efac;
+                            font-size:10px;font-weight:900;color:#15803d;
+                            letter-spacing:.06em;font-family:'Inter',sans-serif;
+                            white-space:nowrap">✅ Win</span>`;
+                    } else if (r.is_win === false) {
+                        winBadge = `<span style="
+                            display:inline-flex;align-items:center;gap:4px;
+                            padding:3px 10px;border-radius:999px;
+                            background:#fee2e2;border:1.5px solid #fca5a5;
+                            font-size:10px;font-weight:900;color:#dc2626;
+                            letter-spacing:.06em;font-family:'Inter',sans-serif;
+                            white-space:nowrap">❌ Loss</span>`;
+                    } else {
+                        // null = ยังไม่มีข้อมูล (Upcoming)
+                        winBadge = `<span style="
+                            display:inline-flex;align-items:center;gap:4px;
+                            padding:3px 10px;border-radius:999px;
+                            background:#f1f5f9;border:1.5px solid #e2e8f0;
+                            font-size:10px;font-weight:700;color:#94a3b8;
+                            letter-spacing:.06em;font-family:'Inter',sans-serif;
+                            white-space:nowrap">⏳ Pending</span>`;
+                    }
+
+                    // ── Row styling ────────────────────────────────────────
                     const rowBgBase  = isFuture ? '#eff6ff' : 'transparent';
                     const rowBgHover = isFuture ? '#dbeafe' : '#f8fafc';
+                    const dateCss    = isFuture
+                        ? 'color:#1d4ed8;font-weight:900'
+                        : 'color:#334155;font-weight:700';
+                    const futureDot  = isFuture
+                        ? `<span style="display:inline-block;width:6px;height:6px;border-radius:50%;
+                               background:#3b82f6;margin-right:6px;flex-shrink:0;vertical-align:middle"></span>`
+                        : '';
 
-                    return `<tr style="border-bottom:1px solid #f8fafc;background:${rowBgBase};transition:background .1s"
+                    return `
+                        <tr style="border-bottom:1px solid #f1f5f9;background:${rowBgBase};transition:background .12s"
                             onmouseover="this.style.background='${rowBgHover}'"
                             onmouseout="this.style.background='${rowBgBase}'">
-                        <td style="padding:10px 18px;white-space:nowrap;font-family:'Inter',sans-serif">
-                            <div style="display:flex;align-items:center">
-                                ${futureDot}
-                                <span style="font-size:11px;${dateCss};font-family:'Inter',sans-serif">${dateStr}</span>
-                            </div>
-                            ${isFuture ? `<div style="font-size:9px;color:#3b82f6;font-weight:800;text-transform:uppercase;letter-spacing:.12em;font-family:'Inter',sans-serif;margin-top:1px;padding-left:12px">Upcoming ▶</div>` : ''}
-                        </td>
-                        <td style="padding:10px 18px;text-align:center">
-                            <span style="display:inline-block;font-size:9px;font-weight:900;padding:3px 10px;border-radius:6px;border:1.5px solid;letter-spacing:.1em;font-family:'Inter',sans-serif;${hl.cls}">${hl.tag}</span>
-                        </td>
-                        <td style="padding:10px 18px;text-align:right">
-                            <span style="font-size:12px;font-weight:900;${isFuture?'color:#1d4ed8':'color:#0f172a'};font-family:'Inter',sans-serif">${predStr}</span>
-                        </td>
-                        <td style="padding:10px 18px;text-align:right">
-                            <div style="font-size:11px;font-weight:700;color:#64748b;font-family:'Inter',sans-serif">${ciStr}</div>
-                            ${ciWidth ? `<div style="font-size:9px;font-weight:700;color:#94a3b8;font-family:'Inter',sans-serif;margin-top:1px">Width: ${ciWidth}</div>` : ''}
-                        </td>
-                        <td style="padding:10px 18px;text-align:right">
-                            <span style="font-size:10px;font-weight:600;color:#94a3b8;font-family:'Inter',sans-serif">${createdDt}</span>
-                        </td>
-                    </tr>`;
+
+                            <!-- col 1: target_date -->
+                            <td style="padding:11px 18px;white-space:nowrap;font-family:'Inter',sans-serif">
+                                <div style="display:flex;align-items:center">
+                                    ${futureDot}
+                                    <span style="font-size:12px;${dateCss};font-family:'Inter',sans-serif">
+                                        ${dateStr}
+                                    </span>
+                                </div>
+                                ${isFuture
+                                    ? `<div style="font-size:9px;color:#3b82f6;font-weight:800;text-transform:uppercase;
+                                               letter-spacing:.12em;font-family:'Inter',sans-serif;
+                                               margin-top:2px;padding-left:12px">Upcoming ▶</div>`
+                                    : ''}
+                            </td>
+
+                            <!-- col 2: predicted_price -->
+                            <td style="padding:11px 18px;text-align:right;font-family:'Inter',sans-serif">
+                                <span style="font-size:13px;font-weight:900;
+                                    ${isFuture ? 'color:#1d4ed8' : 'color:#0f172a'};
+                                    font-family:'Inter',sans-serif">
+                                    ${predStr}
+                                </span>
+                            </td>
+
+                            <!-- col 3: previous_close -->
+                            <td style="padding:11px 18px;text-align:right;font-family:'Inter',sans-serif">
+                                <span style="font-size:12px;font-weight:700;color:#64748b;font-family:'Inter',sans-serif">
+                                    ${prevStr}
+                                </span>
+                            </td>
+
+                            <!-- col 4: error_percent -->
+                            <td style="padding:11px 18px;text-align:right;font-family:'Inter',sans-serif">
+                                <span style="font-size:12px;font-weight:900;color:${epColor};font-family:'Inter',sans-serif">
+                                    ${epStr}
+                                </span>
+                            </td>
+
+                            <!-- col 5: is_win badge -->
+                            <td style="padding:11px 18px;text-align:center;font-family:'Inter',sans-serif">
+                                ${winBadge}
+                            </td>
+                        </tr>`;
                 }).join('');
 
-                container.innerHTML = `<table style="width:100%;border-collapse:collapse;min-width:580px">
-                    <thead style="position:sticky;top:0;z-index:10;background:#f8fafc;border-bottom:2px solid #e2e8f0">
-                        <tr style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.18em">
-                            <th style="padding:11px 18px;text-align:left;font-family:'Inter',sans-serif;font-weight:900">Target Date</th>
-                            <th style="padding:11px 18px;text-align:center;font-family:'Inter',sans-serif;font-weight:900">Horizon</th>
-                            <th style="padding:11px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Predicted Price</th>
-                            <th style="padding:11px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">80% Confidence Interval</th>
-                            <th style="padding:11px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Created At</th>
-                        </tr>
-                    </thead>
-                    <tbody>${tableRows}</tbody>
-                </table>`;
+                // ── 6. Inject full table into DOM ─────────────────────────
+                container.innerHTML = `
+                    <table style="width:100%;border-collapse:collapse;min-width:560px">
+                        <thead style="position:sticky;top:0;z-index:10;background:#f8fafc;border-bottom:2px solid #e2e8f0">
+                            <tr style="font-size:9px;font-weight:900;color:#94a3b8;
+                                       text-transform:uppercase;letter-spacing:.18em">
+                                <th style="padding:12px 18px;text-align:left;font-family:'Inter',sans-serif;font-weight:900">
+                                    Target Date
+                                </th>
+                                <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">
+                                    Predicted Price
+                                </th>
+                                <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">
+                                    Prev. Close
+                                </th>
+                                <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">
+                                    Error %
+                                </th>
+                                <th style="padding:12px 18px;text-align:center;font-family:'Inter',sans-serif;font-weight:900">
+                                    Result
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>${tableRows}</tbody>
+                    </table>`;
 
             } catch (err) {
                 console.error('❌ renderForecastTargetsTable:', err);
-                container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;padding:56px 20px;gap:8px;color:#f43f5e;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-family:'Inter',sans-serif">
-                    ❌ Error: ${err.message}
-                </div>`;
+                container.innerHTML = `
+                    <div style="display:flex;align-items:center;justify-content:center;
+                        padding:56px 20px;gap:8px;color:#f43f5e;
+                        font-size:11px;font-weight:700;text-transform:uppercase;
+                        letter-spacing:.1em;font-family:'Inter',sans-serif">
+                        ❌ Error: ${err.message}
+                    </div>`;
                 if (badge) badge.textContent = 'Error';
             }
         }
