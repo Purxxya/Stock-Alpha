@@ -2992,7 +2992,7 @@
             try {
                 // ดึง unique symbols จาก DB (เป็น superset ของ SET100_SYMBOLS ที่มีข้อมูลพยากรณ์)
                 const { data, error } = await APP.supabaseClient
-                    .from('stock_predictions_v3')
+                    .from('predictions_log')
                     .select('symbol')
                     .order('symbol', { ascending: true });
                 if (error) throw error;
@@ -3120,8 +3120,8 @@
                 const horizonDays   = horizonDaysMap[cleanHorizon] || 7;
 
                 const { data: allPredData, error: predErr } = await APP.supabaseClient
-                    .from('stock_predictions_v3')
-                    .select('prediction_date, predicted_price, lower_bound, upper_bound, actual_price, error_percent, day_index, model_name, previous_close, created_at, base_date')
+                    .from('predictions_log')
+                    .select('prediction_date, predicted_price, previous_close, actual_price, error_percent, is_win, evaluated_at,  created_at, update_at')
                     .eq('symbol', cleanSymbol)
                     .eq('day_index', 1)
                     .order('base_date', { ascending: false })
