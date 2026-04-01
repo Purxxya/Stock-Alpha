@@ -553,56 +553,6 @@
                         </div>
                     </div>
 
-                    <!-- ── 2 KPI Performance Cards ─────────────────────────── -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 predict-fade-in" style="animation-delay:0.08s">
-
-                        <!-- Card 1: Win Rate T+1 -->
-                        <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm p-6 flex flex-col gap-3">
-                            <div class="flex items-center justify-between">
-                                <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.2em]">Win Rate · T+1</div>
-                                <div class="w-9 h-9 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center">
-                                    <svg fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24" style="width:18px;height:18px">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                    </svg>
-                                </div>
-                            </div>
-                            <!-- Spinner shown while awaiting data -->
-                            <div id="predictWinRateSpinner" class="flex items-center gap-2.5 py-1">
-                                <div class="w-4 h-4 rounded-full border-2 border-emerald-200 border-t-emerald-500 animate-spin flex-shrink-0"></div>
-                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Awaiting Data...</span>
-                            </div>
-                            <div id="predictWinRateValue" class="predict-kpi-val text-slate-300" style="display:none">—</div>
-                            <div class="flex flex-col gap-1.5">
-                                <div class="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                                    <div id="predictWinRateBarFill" class="decay-bar h-full rounded-full" style="width:0%;background:#10b981"></div>
-                                </div>
-                                <div id="predictWinRateSubtext" class="text-[10px] font-semibold text-slate-400">Collecting T+1 evaluation data</div>
-                            </div>
-                        </div>
-
-                        <!-- Card 2: Model Accuracy MAPE -->
-                        <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm p-6 flex flex-col gap-3">
-                            <div class="flex items-center justify-between">
-                                <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.2em]">Model Accuracy · MAPE</div>
-                                <div class="w-9 h-9 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center">
-                                    <svg fill="none" stroke="#2563eb" stroke-width="2.5" viewBox="0 0 24 24" style="width:18px;height:18px">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
-                                    </svg>
-                                </div>
-                            </div>
-                            <!-- Spinner shown while calculating -->
-                            <div id="predictMapeSpinner" class="flex items-center gap-2.5 py-1">
-                                <div class="w-4 h-4 rounded-full border-2 border-blue-200 border-t-blue-500 animate-spin flex-shrink-0"></div>
-                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Calculating...</span>
-                            </div>
-                            <div id="predictMapeValue" class="predict-kpi-val text-slate-300" style="display:none">—</div>
-                            <div class="flex flex-col gap-1">
-                                <div id="predictMapeLabel" class="text-[10px] font-semibold text-slate-400">Avg MAPE (evaluated days)</div>
-                                <div id="predictMapeQuality" class="text-[9px] font-black uppercase tracking-widest text-slate-300">—</div>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- ── Price Forecast Chart (Lightweight Charts) ──────── -->
                     <div class="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden predict-fade-in" style="animation-delay:0.16s" id="forecastChartCard">
                         <div class="px-7 pt-6 pb-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
@@ -637,34 +587,25 @@
                         </div>
                     </div>
 
-                    <!-- ── R&D Insights Row ────────────────────────────────── -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-
-                        <!-- Model Decay Analysis Table -->
-                        <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm p-6 predict-fade-in" style="animation-delay:0.24s">
-                            <div class="flex items-center justify-between mb-5">
-                                <div>
-                                    <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.2em] mb-1">Research</div>
-                                    <div class="text-sm font-black text-slate-900 uppercase tracking-tight">Model Analysis</div>
-                                </div>
-                                <span class="text-[9px] font-black text-slate-400 bg-slate-100 px-3 py-1.5 rounded-xl uppercase tracking-wider border border-slate-200">Win Rate</span>
+                    <!-- ── Forecast Price Targets Table ──────────────────── -->
+                    <div class="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden predict-fade-in" style="animation-delay:0.24s">
+                        <div class="px-7 pt-5 pb-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3 bg-slate-50/30">
+                            <div>
+                                <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.2em] mb-0.5">Predictions Log</div>
+                                <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">Forecast Price Targets</h3>
                             </div>
-                            <div id="predictDecayTable" class="space-y-1">
-                                <div class="text-[11px] text-slate-300 font-bold uppercase tracking-widest text-center py-6">Select a security</div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span id="forecastTableBadge" class="text-[9px] font-black text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-slate-200">—</span>
+                                <button onclick="refreshForecastTable()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-[9px] font-black text-slate-400 uppercase tracking-wider transition-all">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h5M20 20v-5h-5M4 9a9 9 0 0114.13-3.36M20 15a9 9 0 01-14.13 3.36"/></svg>
+                                    Refresh
+                                </button>
                             </div>
                         </div>
-
-                        <!-- Forecast Data Table (Price Targets) -->
-                        <div class="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden predict-fade-in" style="animation-delay:0.28s">
-                            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3 bg-slate-50/40">
-                                <div>
-                                    <div class="text-[9px] font-black text-slate-400 uppercase tracking-[.2em] mb-0.5">Forecast</div>
-                                    <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">Price Targets</h3>
-                                </div>
-                                <span id="predictTableBadge" class="text-[9px] font-black text-slate-400 bg-slate-100 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-slate-200">—</span>
-                            </div>
-                            <div id="predictTableContainer" class="overflow-x-auto custom-scrollbar" style="max-height:320px">
-                                <div class="flex items-center justify-center py-10 text-slate-300 text-[11px] font-bold uppercase tracking-widest">Select a security</div>
+                        <div id="forecastTargetsContainer" class="overflow-x-auto custom-scrollbar" style="max-height:420px">
+                            <div class="flex flex-col items-center justify-center py-14 gap-3 text-slate-300">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+                                <span class="text-[11px] font-bold uppercase tracking-widest">Select a security to view forecasts</span>
                             </div>
                         </div>
                     </div>
@@ -3163,15 +3104,14 @@
                 if (el) el.classList.toggle('active', id === cleanHorizon);
             });
 
-            // Loading state — reset spinners on KPI cards
-            const wrSpnElInit   = document.getElementById('predictWinRateSpinner');
-            const wrValElInit   = document.getElementById('predictWinRateValue');
-            const mapeSpnElInit = document.getElementById('predictMapeSpinner');
-            const mapeValElInit = document.getElementById('predictMapeValue');
-            if (wrSpnElInit)   wrSpnElInit.style.display   = 'flex';
-            if (wrValElInit)   wrValElInit.style.display   = 'none';
-            if (mapeSpnElInit) mapeSpnElInit.style.display = 'flex';
-            if (mapeValElInit) mapeValElInit.style.display = 'none';
+            // Show loading state on forecast table
+            const ftContainer = document.getElementById('forecastTargetsContainer');
+            if (ftContainer) {
+                ftContainer.innerHTML = `<div class="flex items-center justify-center py-14 gap-3">
+                    <div style="width:14px;height:14px;border:2px solid #e2e8f0;border-top-color:#94a3b8;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0"></div>
+                    <span style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.14em;font-family:'Inter',sans-serif">Loading forecasts…</span>
+                </div>`;
+            }
 
             try {
                 const todayISO = luxon.DateTime.now().setZone('Asia/Bangkok').toISODate();
@@ -3196,10 +3136,9 @@
 
                 // ── No data guard ─────────────────────────────────────────
                 if (!allPredData || !allPredData.length) {
-                    if (wrSpnElInit)   { wrSpnElInit.style.display = 'none'; }
-                    if (wrValElInit)   { wrValElInit.style.display = ''; wrValElInit.textContent = '—'; wrValElInit.style.color = '#cbd5e1'; }
-                    if (mapeSpnElInit) { mapeSpnElInit.style.display = 'none'; }
-                    if (mapeValElInit) { mapeValElInit.style.display = ''; mapeValElInit.textContent = '—'; mapeValElInit.style.color = '#cbd5e1'; }
+                    if (ftContainer) ftContainer.innerHTML = `<div class="flex items-center justify-center py-14 text-slate-300 text-[11px] font-bold uppercase tracking-widest">ไม่พบข้อมูลพยากรณ์สำหรับ ${cleanSymbol}</div>`;
+                    renderForecastTargetsTable(cleanSymbol); // still try predictions_log
+                    renderForecastChart(cleanSymbol);
                     return;
                 }
 
@@ -3277,108 +3216,14 @@
                 setEl('predictHeroBandHigh', `High: ฿${parseFloat(lastPred.upper_bound).toFixed(2)}`);
                 setEl('predictChartSubtitle', `${cleanSymbol} · T+1 Rolling ${cleanHorizon} Window · ${allPredData.length} Predictions · ${evaluatedPred.length} Evaluated · ${futurePred.length > 0 ? '1 Upcoming' : 'No Upcoming'}`);
 
-                // ── 6b. Populate 3 KPI Performance Cards ─────────────────
-                // KPI 1: Win Rate T+1
-                const t1Data = allPredData.filter(d =>
-                    parseInt(d.day_index) === 1 &&
-                    d.actual_price != null && d.previous_close != null
-                );
-
-                // ── Early-stage guard: require at least 7 evaluated T+1 days ──────────
-                // During the first 1-2 weeks the database will have fewer than 7 samples,
-                // so we show a "Collecting Data..." state instead of a misleading percentage.
-                const T1_MIN_SAMPLES  = 7;
-                const t1HasEnoughData = t1Data.length >= T1_MIN_SAMPLES;
-                let   t1WinRate       = null;
-
-                if (t1HasEnoughData) {
-                    const wins = t1Data.filter(d => {
-                        const predDir = parseFloat(d.predicted_price) > parseFloat(d.previous_close);
-                        const actDir  = parseFloat(d.actual_price)    > parseFloat(d.previous_close);
-                        return predDir === actDir;
-                    }).length;
-                    t1WinRate = (wins / t1Data.length) * 100;
-                }
-
-                const wrValEl  = document.getElementById('predictWinRateValue');
-                const wrSubEl  = document.getElementById('predictWinRateSubtext');
-                const wrBarEl  = document.getElementById('predictWinRateBarFill');
-                const wrSpnEl  = document.getElementById('predictWinRateSpinner');
-
-                if (t1HasEnoughData && t1WinRate !== null) {
-                    // ✅ Data ready — hide spinner, show value
-                    if (wrSpnEl) wrSpnEl.style.display = 'none';
-                    if (wrValEl) {
-                        wrValEl.style.display  = '';
-                        wrValEl.textContent    = t1WinRate.toFixed(1) + '%';
-                        wrValEl.style.color    = t1WinRate >= 60 ? '#10b981' : t1WinRate >= 50 ? '#d97706' : '#f43f5e';
-                        wrValEl.style.fontSize = '';
-                    }
-                    if (wrSubEl) {
-                        const ratingLabel = t1WinRate >= 60 ? 'HIGH ACCURACY ✓' : t1WinRate >= 50 ? 'MODERATE' : 'BELOW 50%';
-                        wrSubEl.textContent = `${t1Data.length} evaluated · ${ratingLabel}`;
-                        wrSubEl.style.color = '';
-                    }
-                    if (wrBarEl) {
-                        wrBarEl.style.width      = t1WinRate + '%';
-                        wrBarEl.style.background = t1WinRate >= 60 ? '#10b981' : t1WinRate >= 50 ? '#d97706' : '#f43f5e';
-                    }
-                } else {
-                    // ⏳ Awaiting data — show spinner
-                    if (wrSpnEl) wrSpnEl.style.display = 'flex';
-                    if (wrValEl) wrValEl.style.display = 'none';
-                    if (wrSubEl) {
-                        wrSubEl.textContent = t1Data.length > 0
-                            ? `Gathering data... ${t1Data.length}/${T1_MIN_SAMPLES} days`
-                            : 'Awaiting T+1 evaluation data';
-                        wrSubEl.style.color = '#94a3b8';
-                    }
-                    if (wrBarEl) {
-                        const progressPct        = t1Data.length > 0 ? Math.min((t1Data.length / T1_MIN_SAMPLES) * 100, 99) : 0;
-                        wrBarEl.style.width      = progressPct + '%';
-                        wrBarEl.style.background = '#94a3b8';
-                    }
-                }
-
-                // KPI 2: Model Accuracy (MAPE)
-                const mapeValEl  = document.getElementById('predictMapeValue');
-                const mapeLblEl  = document.getElementById('predictMapeLabel');
-                const mapeQualEl = document.getElementById('predictMapeQuality');
-                const mapeSpnEl  = document.getElementById('predictMapeSpinner');
-                if (avgMAPE !== null) {
-                    // ✅ Data ready — hide spinner, show value
-                    if (mapeSpnEl) mapeSpnEl.style.display = 'none';
-                    if (mapeValEl) {
-                        mapeValEl.style.display = '';
-                        mapeValEl.textContent   = avgMAPE.toFixed(2) + '%';
-                        mapeValEl.style.color   = avgMAPE < 3 ? '#10b981' : avgMAPE < 8 ? '#d97706' : '#f43f5e';
-                    }
-                    if (mapeLblEl) mapeLblEl.textContent = `จาก ${evaluatedPred.length} วันที่ประเมินแล้ว`;
-                    if (mapeQualEl) {
-                        const q = avgMAPE < 3 ? 'HIGH ACCURACY' : avgMAPE < 8 ? 'MODERATE' : 'LOW ACCURACY';
-                        mapeQualEl.textContent  = q;
-                        mapeQualEl.style.color  = avgMAPE < 3 ? '#10b981' : avgMAPE < 8 ? '#d97706' : '#f43f5e';
-                    }
-                } else {
-                    // ⏳ Calculating — show spinner
-                    if (mapeSpnEl) mapeSpnEl.style.display = 'flex';
-                    if (mapeValEl) mapeValEl.style.display = 'none';
-                    if (mapeLblEl) mapeLblEl.textContent = 'Avg MAPE (evaluated days)';
-                    if (mapeQualEl) { mapeQualEl.textContent = '—'; mapeQualEl.style.color = '#cbd5e1'; }
-                }
-                // ── 6c. Render Model Decay Table ──────────────────────────
-                renderDecayTable(allPredData);
-
-                // ── 7. Render Forecast Data Table ─────────────────────────
-                renderPredictTable(allPredData);
-
-                // ── 8. Render Price Forecast Chart (Forward Test T+7) ─────
+                // ── 6b. Render Forecast chart + new targets table ────────
                 renderForecastChart(cleanSymbol);
+                renderForecastTargetsTable(cleanSymbol);
 
             } catch (err) {
                 console.error('❌ updatePredictUI Error:', err);
-                const wrSpnE = document.getElementById('predictWinRateSpinner');
-                if (wrSpnE) wrSpnE.innerHTML = `<span class="text-[10px] text-rose-400 font-bold uppercase tracking-wider">Error loading data</span>`;
+                const ftCont = document.getElementById('forecastTargetsContainer');
+                if (ftCont) ftCont.innerHTML = `<div class="flex items-center justify-center py-14 text-rose-400 text-[11px] font-bold uppercase tracking-widest">❌ Error loading data: ${err.message}</div>`;
             }
         }
         // ══════════════════════════════════════════════════════════════
@@ -3683,6 +3528,151 @@
                     ❌ Error loading chart: ${err.message}
                 </div>`;
             }
+        }
+
+        // ══════════════════════════════════════════════════════════════
+        // renderForecastTargetsTable — Forecast Price Targets
+        // Source: predictions_log table
+        // Columns: Target Date · Horizon · Predicted Price · CI Band
+        // ══════════════════════════════════════════════════════════════
+        async function renderForecastTargetsTable(symbol) {
+            const container = document.getElementById('forecastTargetsContainer');
+            const badge     = document.getElementById('forecastTableBadge');
+            if (!container || !APP.supabaseClient) return;
+
+            const cleanSym = symbol.trim().toUpperCase();
+
+            // Loading state
+            container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;padding:56px 0;gap:10px">
+                <div style="width:14px;height:14px;border:2px solid #e2e8f0;border-top-color:#94a3b8;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0"></div>
+                <span style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.14em;font-family:'Inter',sans-serif">กำลังดึงข้อมูล predictions_log…</span>
+            </div>`;
+
+            try {
+                // ── Fetch from predictions_log ────────────────────────────
+                const { data: rows, error } = await APP.supabaseClient
+                    .from('predictions_log')
+                    .select('target_date, horizon_days, predicted_price, lower_bound, upper_bound, created_at')
+                    .eq('symbol', cleanSym)
+                    .not('predicted_price', 'is', null)
+                    .order('target_date', { ascending: false })
+                    .limit(120);
+
+                if (error) throw error;
+
+                if (!rows || !rows.length) {
+                    container.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 20px;gap:10px;text-align:center">
+                        <svg width="32" height="32" fill="none" stroke="#cbd5e1" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+                        <span style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.14em;font-family:'Inter',sans-serif">ไม่พบข้อมูลพยากรณ์ใน predictions_log สำหรับ ${cleanSym}</span>
+                    </div>`;
+                    if (badge) badge.textContent = `${cleanSym} · 0 Records`;
+                    return;
+                }
+
+                // ── Sort ascending for display ─────────────────────────────
+                const sorted = [...rows].sort((a, b) => {
+                    const dateDiff = (a.target_date || '').localeCompare(b.target_date || '');
+                    if (dateDiff !== 0) return dateDiff;
+                    return (a.horizon_days || 0) - (b.horizon_days || 0);
+                });
+
+                const todayISO = luxon.DateTime.now().setZone('Asia/Bangkok').toISODate();
+
+                // ── Horizon label helper ──────────────────────────────────
+                function horizonLabel(days) {
+                    const d = parseInt(days);
+                    if (d === 7)  return { tag: 'T+7',  cls: 'color:#2563eb;background:#eff6ff;border-color:#bfdbfe' };
+                    if (d === 15) return { tag: 'T+15', cls: 'color:#7c3aed;background:#f5f3ff;border-color:#ddd6fe' };
+                    if (d === 30) return { tag: 'T+30', cls: 'color:#d97706;background:#fffbeb;border-color:#fde68a' };
+                    return { tag: `T+${d}`, cls: 'color:#475569;background:#f8fafc;border-color:#e2e8f0' };
+                }
+
+                // ── Badge stats ───────────────────────────────────────────
+                const futureCount = sorted.filter(r => (r.target_date || '') > todayISO).length;
+                const horizons    = [...new Set(sorted.map(r => r.horizon_days).filter(Boolean))].sort((a,b)=>a-b);
+                if (badge) {
+                    badge.textContent = `${cleanSym} · ${sorted.length} Records · ${futureCount} Upcoming · ${horizons.map(h=>'T+'+h).join(' / ')}`;
+                }
+
+                // ── Build table rows ──────────────────────────────────────
+                const tableRows = sorted.map(r => {
+                    const isFuture  = (r.target_date || '') > todayISO;
+                    const targetDt  = luxon.DateTime.fromISO(r.target_date);
+                    const dateStr   = targetDt.isValid ? targetDt.toFormat('dd MMM yyyy') : r.target_date;
+                    const createdDt = r.created_at
+                        ? luxon.DateTime.fromISO(r.created_at).toFormat('dd MMM yyyy')
+                        : '—';
+                    const pred  = r.predicted_price != null ? parseFloat(r.predicted_price) : null;
+                    const lower = r.lower_bound     != null ? parseFloat(r.lower_bound)     : null;
+                    const upper = r.upper_bound     != null ? parseFloat(r.upper_bound)     : null;
+                    const hl    = horizonLabel(r.horizon_days);
+
+                    const predStr = pred  != null ? `฿${pred.toFixed(2)}` : '—';
+                    const ciStr   = (lower != null && upper != null)
+                        ? `฿${lower.toFixed(2)} – ฿${upper.toFixed(2)}`
+                        : lower != null ? `฿${lower.toFixed(2)}` : '—';
+                    const ciWidth = (lower != null && upper != null && pred > 0)
+                        ? (((upper - lower) / pred) * 100).toFixed(1) + '%'
+                        : null;
+
+                    const futureDot = isFuture
+                        ? `<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#3b82f6;margin-right:6px;vertical-align:middle;flex-shrink:0"></span>`
+                        : '';
+                    const dateCss    = isFuture ? 'color:#1d4ed8;font-weight:900' : 'color:#475569;font-weight:700';
+                    const rowBgBase  = isFuture ? '#eff6ff' : 'transparent';
+                    const rowBgHover = isFuture ? '#dbeafe' : '#f8fafc';
+
+                    return `<tr style="border-bottom:1px solid #f8fafc;background:${rowBgBase};transition:background .1s"
+                            onmouseover="this.style.background='${rowBgHover}'"
+                            onmouseout="this.style.background='${rowBgBase}'">
+                        <td style="padding:10px 18px;white-space:nowrap;font-family:'Inter',sans-serif">
+                            <div style="display:flex;align-items:center">
+                                ${futureDot}
+                                <span style="font-size:11px;${dateCss};font-family:'Inter',sans-serif">${dateStr}</span>
+                            </div>
+                            ${isFuture ? `<div style="font-size:9px;color:#3b82f6;font-weight:800;text-transform:uppercase;letter-spacing:.12em;font-family:'Inter',sans-serif;margin-top:1px;padding-left:12px">Upcoming ▶</div>` : ''}
+                        </td>
+                        <td style="padding:10px 18px;text-align:center">
+                            <span style="display:inline-block;font-size:9px;font-weight:900;padding:3px 10px;border-radius:6px;border:1.5px solid;letter-spacing:.1em;font-family:'Inter',sans-serif;${hl.cls}">${hl.tag}</span>
+                        </td>
+                        <td style="padding:10px 18px;text-align:right">
+                            <span style="font-size:12px;font-weight:900;${isFuture?'color:#1d4ed8':'color:#0f172a'};font-family:'Inter',sans-serif">${predStr}</span>
+                        </td>
+                        <td style="padding:10px 18px;text-align:right">
+                            <div style="font-size:11px;font-weight:700;color:#64748b;font-family:'Inter',sans-serif">${ciStr}</div>
+                            ${ciWidth ? `<div style="font-size:9px;font-weight:700;color:#94a3b8;font-family:'Inter',sans-serif;margin-top:1px">Width: ${ciWidth}</div>` : ''}
+                        </td>
+                        <td style="padding:10px 18px;text-align:right">
+                            <span style="font-size:10px;font-weight:600;color:#94a3b8;font-family:'Inter',sans-serif">${createdDt}</span>
+                        </td>
+                    </tr>`;
+                }).join('');
+
+                container.innerHTML = `<table style="width:100%;border-collapse:collapse;min-width:580px">
+                    <thead style="position:sticky;top:0;z-index:10;background:#f8fafc;border-bottom:2px solid #e2e8f0">
+                        <tr style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.18em">
+                            <th style="padding:11px 18px;text-align:left;font-family:'Inter',sans-serif;font-weight:900">Target Date</th>
+                            <th style="padding:11px 18px;text-align:center;font-family:'Inter',sans-serif;font-weight:900">Horizon</th>
+                            <th style="padding:11px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Predicted Price</th>
+                            <th style="padding:11px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">80% Confidence Interval</th>
+                            <th style="padding:11px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>${tableRows}</tbody>
+                </table>`;
+
+            } catch (err) {
+                console.error('❌ renderForecastTargetsTable:', err);
+                container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;padding:56px 20px;gap:8px;color:#f43f5e;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-family:'Inter',sans-serif">
+                    ❌ Error: ${err.message}
+                </div>`;
+                if (badge) badge.textContent = 'Error';
+            }
+        }
+
+        /** ปุ่ม Refresh — โหลด renderForecastTargetsTable ด้วย symbol ปัจจุบัน */
+        function refreshForecastTable() {
+            if (APP.predictSymbol) renderForecastTargetsTable(APP.predictSymbol);
         }
 
         // ============================================
