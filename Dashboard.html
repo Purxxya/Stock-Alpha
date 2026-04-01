@@ -3121,7 +3121,7 @@
 
                 const { data: allPredData, error: predErr } = await APP.supabaseClient
                     .from('predictions_log')
-                    .select('prediction_date, predicted_price, previous_close, actual_price, error_percent, is_win, evaluated_at,  created_at, update_at')
+                    .select('prediction_date, predicted_price, previous_close, actual_price, error_percent, is_win, evaluated_at,  created_at, updated_at')
                     .eq('symbol', cleanSymbol)
                     .eq('day_index', 1)
                     .order('base_date', { ascending: false })
