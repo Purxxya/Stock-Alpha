@@ -3228,14 +3228,14 @@
         }
         // ══════════════════════════════════════════════════════════════
         // renderForecastChart — Price Forecast Chart (LWC)
-        // Forward Test · Horizon-aware · Actual vs Predicted
-        // Professional Trading Style — no series labels, rich crosshair
+        // Forward Test · Horizon-aware · 2-Node Segment per Prediction
+        // Actual Price (blue) + Forecast Line (orange dashed, future-aware)
         // ══════════════════════════════════════════════════════════════
         async function renderForecastChart(symbol, horizon) {
             const container = document.getElementById('forecastChartCanvas');
             if (!container || !APP.supabaseClient) return;
+
             const cleanSymbol  = symbol.trim().toUpperCase();
-            // ── ใช้ horizon ที่ส่งมา หรือ APP state หรือ fallback 7D ──────────
             const cleanHorizon = horizon || APP.predictHorizon || '7D';
             const horizonDaysMap = { '7D': 7, '15D': 15, '30D': 30 };
             const horizonDays  = horizonDaysMap[cleanHorizon] || 7;
@@ -3253,13 +3253,20 @@
             container.innerHTML = '';
 
             // ── Loading state ──────────────────────────────────────────
-            container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;gap:10px">
-                <div style="width:16px;height:16px;border:2px solid #e2e8f0;border-top-color:#94a3b8;border-radius:50%;animation:spin .8s linear infinite"></div>
-                <span style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.14em;font-family:'Inter',sans-serif">Loading chart data…</span>
-            </div>`;
+            container.innerHTML = `
+                <div style="display:flex;align-items:center;justify-content:center;height:100%;gap:10px">
+                    <div style="width:16px;height:16px;border:2px solid #e2e8f0;border-top-color:#F97316;
+                        border-radius:50%;animation:spin .8s linear infinite"></div>
+                    <span style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;
+                        letter-spacing:.14em;font-family:'Inter',sans-serif">
+                        Loading ${cleanSymbol} · ${horizonLabel}…
+                    </span>
+                </div>`;
 
             try {
-                // ── 1. Fetch Actual Price (stock_historical_data) ──────────
+                // ══════════════════════════════════════════════════════
+                // 1. Fetch Actual Price — last 6 months of closes
+                // ══════════════════════════════════════════════════════
                 const from6m = luxon.DateTime.now().minus({ months: 6 }).toISODate();
                 const { data: histRows, error: hErr } = await APP.supabaseClient
                     .from('stock_historical_data')
@@ -3269,28 +3276,78 @@
                     .order('date', { ascending: true });
                 if (hErr) throw hErr;
 
-                // ── 2. Fetch Predicted (predictions_log) — filtered by current horizon ──
+                // ══════════════════════════════════════════════════════
+                // 2. Fetch Predictions — filtered strictly by horizon
+                //    ★ เพิ่ม prediction_date + previous_close
+                //      สำหรับสร้าง anchor (Start Node) ของแต่ละ segment
+                // ══════════════════════════════════════════════════════
                 const { data: predRows, error: pErr } = await APP.supabaseClient
                     .from('predictions_log')
-                    .select('target_date, predicted_price')
+                    .select('prediction_date, previous_close, target_date, predicted_price')
                     .eq('symbol', cleanSymbol)
-                    .eq('horizon_days', horizonDays)          // ← dynamic: 7 / 15 / 30
+                    .eq('horizon_days', horizonDays)   // ← filter by active horizon
                     .not('predicted_price', 'is', null)
-                    .order('target_date', { ascending: true });
+                    .not('prediction_date', 'is', null)
+                    .order('prediction_date', { ascending: true });
                 if (pErr) throw pErr;
 
-                // ── 3. Build series ────────────────────────────────────────
+                // ══════════════════════════════════════════════════════
+                // 3. Build actual price series
+                // ══════════════════════════════════════════════════════
                 const actualSeries = (histRows || [])
                     .map(d => ({ time: d.date, value: parseFloat(d.close_price) }))
                     .filter(d => !isNaN(d.value) && d.value > 0);
 
-                const predSeries = (predRows || [])
-                    .map(d => ({ time: d.target_date, value: parseFloat(d.predicted_price) }))
-                    .filter(d => !isNaN(d.value) && d.value > 0);
+                // ══════════════════════════════════════════════════════
+                // 4. Build forecast series — 2 nodes per prediction row
+                //
+                //   Start Node : { time: prediction_date, value: previous_close }
+                //   End Node   : { time: target_date,     value: predicted_price }
+                //
+                //   รวมทุก node → sort → deduplicate (Map keeps last write)
+                //   เพื่อให้เส้นลากต่อเนื่องและพลอตในอนาคตได้ถูกต้อง
+                // ══════════════════════════════════════════════════════
+                const forecastPointMap = new Map(); // time → value (last-write-wins)
+
+                (predRows || []).forEach(row => {
+                    const prevClose  = row.previous_close  != null ? parseFloat(row.previous_close)  : null;
+                    const predPrice  = row.predicted_price != null ? parseFloat(row.predicted_price) : null;
+                    const startTime  = row.prediction_date;
+                    const endTime    = row.target_date;
+
+                    // Start Node: anchor point (prediction_date → previous_close)
+                    if (startTime && prevClose != null && !isNaN(prevClose) && prevClose > 0) {
+                        forecastPointMap.set(startTime, prevClose);
+                    }
+
+                    // End Node: target (target_date → predicted_price)
+                    if (endTime && predPrice != null && !isNaN(predPrice) && predPrice > 0) {
+                        // End node wins over any prior start node at the same date
+                        forecastPointMap.set(endTime, predPrice);
+                    }
+                });
+
+                // Sort by date string (ISO format sorts correctly lexicographically)
+                const predSeries = Array.from(forecastPointMap.entries())
+                    .sort(([a], [b]) => a.localeCompare(b))
+                    .map(([time, value]) => ({ time, value }));
+
+                // ── Lookup maps for tooltip (target_date → predicted_price) ──
+                const actualMap  = Object.fromEntries(actualSeries.map(d => [d.time, d.value]));
+                // Tooltip แสดง predicted_price ที่ target_date เท่านั้น (ไม่แสดง anchor)
+                const predMap    = Object.fromEntries(
+                    (predRows || [])
+                        .filter(r => r.target_date && r.predicted_price != null)
+                        .map(r => [r.target_date, parseFloat(r.predicted_price)])
+                );
 
                 container.innerHTML = '';
 
-                // ── 4. Init Lightweight Chart ──────────────────────────────
+                // ══════════════════════════════════════════════════════
+                // 5. Init Lightweight Chart
+                //    ★ fixRightEdge: false  → อนุญาตให้แกน X ยืดไปอนาคต
+                //    ★ rightOffset          → เว้นพื้นที่ด้านขวาสำหรับ future dates
+                // ══════════════════════════════════════════════════════
                 const isMobile = window.innerWidth < 768;
                 const H = isMobile ? 300 : 400;
                 container.style.height = H + 'px';
@@ -3311,24 +3368,27 @@
                     crosshair: {
                         mode: LW.CrosshairMode.Normal,
                         vertLine: {
-                            color: '#94a3b8', width: 1, style: LW.LineStyle.Dashed,
+                            color: '#94a3b8', width: 1,
+                            style: LW.LineStyle.Dashed,
                             labelBackgroundColor: '#1e293b',
                         },
                         horzLine: {
-                            color: '#94a3b8', width: 1, style: LW.LineStyle.Dashed,
+                            color: '#94a3b8', width: 1,
+                            style: LW.LineStyle.Dashed,
                             labelBackgroundColor: '#1e293b',
                         },
                     },
                     rightPriceScale: {
                         borderColor:  '#f1f5f9',
-                        scaleMargins: { top: 0.10, bottom: 0.10 },
+                        scaleMargins: { top: 0.12, bottom: 0.12 },
                     },
                     timeScale: {
                         borderColor:    '#f1f5f9',
                         timeVisible:    false,
                         secondsVisible: false,
                         fixLeftEdge:    true,
-                        fixRightEdge:   true,
+                        fixRightEdge:   false,          // ← อนุญาตวันอนาคต
+                        rightOffset:    Math.max(6, Math.round(horizonDays / 3)),
                         tickMarkFormatter: (time) => {
                             try {
                                 const dt = typeof time === 'string'
@@ -3358,45 +3418,61 @@
 
                 APP._forecastChart = chart;
 
-                // ── 5. Actual Price series — solid blue #2563EB ────────────
-                let actualLineSeries = null;
+                // ── 6. Actual Price series — solid blue ────────────────
                 if (actualSeries.length) {
-                    actualLineSeries = chart.addLineSeries({
+                    const actualLineSeries = chart.addLineSeries({
                         color:                  '#2563EB',
                         lineWidth:              2,
                         lineStyle:              LW.LineStyle.Solid,
                         priceLineVisible:       false,
-                        lastValueVisible:       false,   // ← no label on axis
+                        lastValueVisible:       false,
                         crosshairMarkerVisible: true,
                         crosshairMarkerRadius:  5,
-                        crosshairMarkerBorderColor:      '#2563EB',
-                        crosshairMarkerBackgroundColor:  '#ffffff',
-                        crosshairMarkerBorderWidth:      2,
+                        crosshairMarkerBorderColor:     '#2563EB',
+                        crosshairMarkerBackgroundColor: '#ffffff',
+                        crosshairMarkerBorderWidth:     2,
                     });
                     actualLineSeries.setData(actualSeries);
                 }
 
-                // ── 6. T+7 Forecast series — solid orange #F97316 ──────────
-                let predLineSeries = null;
+                // ── 7. Forecast series — orange dashed (future-aware) ──
+                //    เส้นประ + marker จุดเด่น ที่ target point
                 if (predSeries.length) {
-                    predLineSeries = chart.addLineSeries({
+                    const predLineSeries = chart.addLineSeries({
                         color:                  '#F97316',
                         lineWidth:              2,
-                        lineStyle:              LW.LineStyle.Solid,
+                        lineStyle:              LW.LineStyle.Dashed, // ← เส้นประ
                         priceLineVisible:       false,
-                        lastValueVisible:       false,   // ← no label on axis
+                        lastValueVisible:       false,
                         crosshairMarkerVisible: true,
                         crosshairMarkerRadius:  5,
-                        crosshairMarkerBorderColor:      '#F97316',
-                        crosshairMarkerBackgroundColor:  '#ffffff',
-                        crosshairMarkerBorderWidth:      2,
+                        crosshairMarkerBorderColor:     '#F97316',
+                        crosshairMarkerBackgroundColor: '#ffffff',
+                        crosshairMarkerBorderWidth:     2,
                     });
                     predLineSeries.setData(predSeries);
+
+                    // ★ Marker วงกลมสีส้มที่ target_date แต่ละจุด
+                    const targetMarkers = (predRows || [])
+                        .filter(r => r.target_date && r.predicted_price != null)
+                        .map(r => ({
+                            time:     r.target_date,
+                            position: 'inBar',
+                            color:    '#F97316',
+                            shape:    'circle',
+                            size:     1,
+                        }))
+                        .sort((a, b) => a.time.localeCompare(b.time));
+
+                    if (targetMarkers.length) {
+                        predLineSeries.setMarkers(targetMarkers);
+                    }
                 }
 
+                // ── Fit content so future dates are visible ────────────
                 chart.timeScale().fitContent();
 
-                // ── 7. Professional Crosshair Tooltip ─────────────────────
+                // ── 8. Professional Crosshair Tooltip ─────────────────
                 const tooltip = document.createElement('div');
                 tooltip.style.cssText = [
                     'position:absolute', 'z-index:100', 'pointer-events:none',
@@ -3407,23 +3483,16 @@
                     'border-radius:10px', 'padding:10px 14px',
                     'box-shadow:0 8px 32px rgba(0,0,0,0.28)',
                     "font-family:'Inter',sans-serif", 'font-size:11px',
-                    'min-width:188px', 'line-height:1.5',
-                    'display:none',
+                    'min-width:188px', 'line-height:1.5', 'display:none',
                 ].join(';');
                 container.appendChild(tooltip);
-
-                // Build lookup maps for fast crosshair value retrieval
-                const actualMap = Object.fromEntries((actualSeries).map(d => [d.time, d.value]));
-                const predMap   = Object.fromEntries((predSeries).map(d => [d.time, d.value]));
 
                 chart.subscribeCrosshairMove(param => {
                     if (!param.time || !param.point
                         || param.point.x < 0 || param.point.y < 0) {
-                        tooltip.style.display = 'none';
-                        return;
+                        tooltip.style.display = 'none'; return;
                     }
 
-                    // Resolve time string
                     const timeKey = typeof param.time === 'object'
                         ? `${param.time.year}-${String(param.time.month).padStart(2,'0')}-${String(param.time.day).padStart(2,'0')}`
                         : String(param.time);
@@ -3434,11 +3503,10 @@
                     })();
 
                     const aVal = actualMap[timeKey];
-                    const pVal = predMap[timeKey];
+                    const pVal = predMap[timeKey]; // แสดง tooltip เฉพาะ target_date
 
                     if (aVal == null && pVal == null) { tooltip.style.display = 'none'; return; }
 
-                    // Build tooltip rows
                     let html = `<div style="font-size:9px;font-weight:900;color:#64748b;letter-spacing:.14em;text-transform:uppercase;margin-bottom:7px">${dtLabel}</div>`;
 
                     if (aVal != null) {
@@ -3459,29 +3527,29 @@
                             <span style="color:#F97316;font-weight:800;font-size:11px">฿${pVal.toFixed(2)}</span>
                         </div>`;
                     }
-                    // Show error % when both values present on same date
+                    // Error % เมื่อมีทั้งราคาจริงและพยากรณ์ตรงวันเดียวกัน
                     if (aVal != null && pVal != null) {
                         const errPct = ((pVal - aVal) / aVal) * 100;
                         const errAbs = Math.abs(errPct);
                         const errClr = errAbs > 5 ? '#f97316' : errAbs > 2 ? '#fbbf24' : '#34d399';
-                        html += `<div style="margin-top:5px;padding-top:5px;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;gap:14px">
+                        html += `<div style="margin-top:5px;padding-top:5px;border-top:1px solid rgba(255,255,255,0.07);
+                            display:flex;align-items:center;justify-content:space-between;gap:14px">
                             <span style="color:#64748b;font-weight:700;font-size:9px;letter-spacing:.1em;text-transform:uppercase">Error</span>
-                            <span style="color:${errClr};font-weight:900;font-size:10px">${errPct >= 0 ? '+' : ''}${errPct.toFixed(2)}%${errAbs > 5 ? ' ⚠️' : ''}</span>
+                            <span style="color:${errClr};font-weight:900;font-size:10px">
+                                ${errPct >= 0 ? '+' : ''}${errPct.toFixed(2)}%${errAbs > 5 ? ' ⚠️' : ''}
+                            </span>
                         </div>`;
                     }
 
-                    tooltip.innerHTML  = html;
+                    tooltip.innerHTML = html;
                     tooltip.style.display = 'block';
-
-                    // Flip to right if near left edge
                     const cx = param.point.x;
                     const cw = container.clientWidth;
                     tooltip.style.left  = cx < cw / 2 ? '14px' : 'auto';
                     tooltip.style.right = cx < cw / 2 ? 'auto' : '14px';
                 });
 
-                // ── 8. Model Drift Detection → update badge & subtitle ────
-                // Update legend label ใน header ให้ตรงกับ horizon ปัจจุบัน
+                // ── 9. Update legend + subtitle + drift badge ──────────
                 const legendLabel = document.getElementById('forecastLegendForecast');
                 if (legendLabel) legendLabel.textContent = `${horizonLabel} Forecast`;
 
@@ -3489,23 +3557,29 @@
                 const driftBadgeTxt = document.getElementById('forecastDriftBadgeText');
                 const subtitle      = document.getElementById('forecastChartSubtitle');
 
-                if (actualSeries.length && predSeries.length) {
-                    const latestMatch = [...predSeries].reverse()
-                        .find(p => actualMap[p.time] != null);
+                const futurePreds  = (predRows || []).filter(r => r.target_date > luxon.DateTime.now().toISODate());
+                const pastPreds    = (predRows || []).filter(r => r.target_date <= luxon.DateTime.now().toISODate());
+
+                if (actualSeries.length && pastPreds.length) {
+                    // หา pred ล่าสุดที่มีราคาจริงตรงกัน → คำนวณ drift
+                    const latestMatch = [...pastPreds]
+                        .reverse()
+                        .find(r => actualMap[r.target_date] != null);
 
                     if (latestMatch) {
-                        const a = actualMap[latestMatch.time];
-                        const p = latestMatch.value;
-                        const errPct  = Math.abs((p - a) / a) * 100;
-                        const matchDt = luxon.DateTime.fromISO(latestMatch.time).toFormat('dd MMM yyyy');
+                        const a      = actualMap[latestMatch.target_date];
+                        const p      = parseFloat(latestMatch.predicted_price);
+                        const errPct = Math.abs((p - a) / a) * 100;
+                        const matchDt = luxon.DateTime.fromISO(latestMatch.target_date).toFormat('dd MMM yyyy');
                         const errClr  = errPct > 5 ? '#dc2626' : errPct > 2 ? '#d97706' : '#059669';
 
                         if (subtitle) {
-                            subtitle.innerHTML = `${cleanSymbol} · ${actualSeries.length} actual · ${predSeries.length} ${horizonLabel} pts &nbsp;·&nbsp; `
-                                + `<span style="color:${errClr};font-weight:900">Latest Δ ${errPct.toFixed(2)}%</span>`
-                                + `<span style="color:#94a3b8"> (${matchDt})</span>`;
+                            subtitle.innerHTML =
+                                `${cleanSymbol} · ${actualSeries.length} actual · ${predSeries.length} ${horizonLabel} pts`
+                                + ` · <span style="color:${errClr};font-weight:900">Latest Δ ${errPct.toFixed(2)}%</span>`
+                                + ` <span style="color:#94a3b8">(${matchDt})</span>`
+                                + (futurePreds.length ? ` · <span style="color:#F97316;font-weight:900">${futurePreds.length} Upcoming</span>` : '');
                         }
-
                         if (errPct > 5) {
                             if (driftBadge)    driftBadge.style.display = 'flex';
                             if (driftBadgeTxt) driftBadgeTxt.textContent = `Model Drift · ${errPct.toFixed(1)}% Error`;
@@ -3514,16 +3588,22 @@
                         }
                     } else {
                         if (subtitle) subtitle.textContent =
-                            `${cleanSymbol} · ${actualSeries.length} actual · ${predSeries.length} ${horizonLabel} pts · Awaiting overlap`;
+                            `${cleanSymbol} · ${actualSeries.length} actual · ${predSeries.length} ${horizonLabel} pts · Awaiting overlap`
+                            + (futurePreds.length ? ` · ${futurePreds.length} Upcoming` : '');
                         if (driftBadge) driftBadge.style.display = 'none';
                     }
-                } else if (!predSeries.length) {
+                } else if (futurePreds.length && !pastPreds.length) {
+                    // โมเดลที่เพิ่งรัน ยังไม่มี past — แสดงว่ากำลังรอ
+                    if (subtitle) subtitle.textContent =
+                        `${cleanSymbol} · ${horizonLabel} · ${futurePreds.length} Upcoming forecast${futurePreds.length > 1 ? 's' : ''} · Awaiting target date`;
+                    if (driftBadge) driftBadge.style.display = 'none';
+                } else {
                     if (subtitle) subtitle.textContent =
                         `${cleanSymbol} · ${actualSeries.length} actual pts · No ${horizonLabel} predictions found`;
                     if (driftBadge) driftBadge.style.display = 'none';
                 }
 
-                // ── Resize handler ─────────────────────────────────────────
+                // ── Resize handler ─────────────────────────────────────
                 const onResize = () => {
                     if (APP._forecastChart)
                         APP._forecastChart.applyOptions({ width: container.clientWidth });
@@ -3533,9 +3613,12 @@
 
             } catch (err) {
                 console.error('❌ renderForecastChart:', err);
-                container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#f43f5e;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;padding:20px;text-align:center">
-                    ❌ Error loading chart: ${err.message}
-                </div>`;
+                container.innerHTML = `
+                    <div style="display:flex;align-items:center;justify-content:center;height:100%;
+                        color:#f43f5e;font-size:11px;font-weight:700;font-family:'Inter',sans-serif;
+                        padding:20px;text-align:center">
+                        ❌ Error loading chart: ${err.message}
+                    </div>`;
             }
         }
 
@@ -3605,36 +3688,9 @@
                     (a.target_date || '').localeCompare(b.target_date || ''));
 
                 const todayISO = luxon.DateTime.now().setZone('Asia/Bangkok').toISODate();
-                const today    = new Date();
-                today.setHours(0, 0, 0, 0); // normalize to start-of-day
 
-                // ══════════════════════════════════════════════════════
-                // FILTER — Mentor UX fix:
-                //   ✅ แสดงเสมอ  : แถวที่ประเมินแล้ว (is_win ไม่ null หรือ error_percent ไม่ null)
-                //   ⏳ Pending   : แสดงเฉพาะเมื่อ target_date ห่างจากวันนี้ ≤ 3 วัน
-                //   🙈 ซ่อน     : Pending + target_date ห่างเกิน 3 วัน → กรองออก
-                // ══════════════════════════════════════════════════════
-                const SHOW_PENDING_WITHIN_DAYS = 3;
-
-                const displayRows = sorted.filter(r => {
-                    // ① ประเมินแล้ว → แสดงเสมอ
-                    const isEvaluated = r.is_win !== null && r.is_win !== undefined
-                                     || r.error_percent !== null && r.error_percent !== undefined;
-                    if (isEvaluated) return true;
-
-                    // ② Pending → คำนวณ daysUntilTarget
-                    const targetDate = new Date(r.target_date);
-                    targetDate.setHours(0, 0, 0, 0);
-                    const diffMs   = targetDate.getTime() - today.getTime();
-                    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
-
-                    // แสดงถ้าอยู่ในช่วง 3 วันข้างหน้า (หรือผ่านแล้ว)
-                    return diffDays <= SHOW_PENDING_WITHIN_DAYS;
-                });
-
-                // ── Badge summary (คำนวณจาก sorted ทั้งหมด ไม่ใช่ filtered) ──
+                // ── Badge summary ──────────────────────────────────────────
                 const totalRows     = sorted.length;
-                const hiddenRows    = totalRows - displayRows.length;
                 const upcomingRows  = sorted.filter(r => (r.target_date || '') > todayISO).length;
                 const evaluatedRows = sorted.filter(r => r.error_percent != null).length;
                 const winRows       = sorted.filter(r => r.is_win === true).length;
@@ -3642,40 +3698,11 @@
                     ? ((winRows / evaluatedRows) * 100).toFixed(1) + '%'
                     : 'Pending';
                 if (badge) {
-                    badge.textContent = hiddenRows > 0
-                        ? `${cleanSym} · T+${horizonDays} · ${displayRows.length}/${totalRows} Shown · Win Rate ${winRate}`
-                        : `${cleanSym} · T+${horizonDays} · ${totalRows} Records · ${upcomingRows} Upcoming · Win Rate ${winRate}`;
+                    badge.textContent = `${cleanSym} · T+${horizonDays} · ${totalRows} Records · ${upcomingRows} Upcoming · Win Rate ${winRate}`;
                 }
 
-                // ── Fallback row เมื่อ filter ไปแล้วไม่มีแถวเหลือ ─────────────
-                // (เช่น T+30D ที่เพิ่งรัน — ยังห่างเป้าหมายเกิน 3 วันทุกแถว)
-                let tableBodyHTML;
-                if (displayRows.length === 0) {
-                    tableBodyHTML = `
-                        <tr>
-                            <td colspan="5" style="padding:0">
-                                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
-                                    padding:36px 20px;gap:8px;text-align:center">
-                                    <div style="font-size:22px;line-height:1">⏳</div>
-                                    <div style="font-size:12px;font-weight:700;color:#475569;font-family:'Inter',sans-serif">
-                                        มีข้อมูลพยากรณ์ ${horizonDays} วัน กำลังเก็บสถิติ
-                                    </div>
-                                    <div style="font-size:11px;font-weight:500;color:#94a3b8;font-family:'Inter',sans-serif;max-width:320px;line-height:1.6">
-                                        ระบบจะแสดงผลในตารางเมื่อใกล้ถึงวันเป้าหมาย (${SHOW_PENDING_WITHIN_DAYS} วันล่วงหน้า)
-                                    </div>
-                                    <div style="margin-top:4px;display:inline-flex;align-items:center;gap:6px;
-                                        padding:4px 12px;border-radius:999px;background:#f8fafc;border:1.5px solid #e2e8f0">
-                                        <span style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;
-                                            letter-spacing:.14em;font-family:'Inter',sans-serif">
-                                            ${totalRows} Forecast${totalRows !== 1 ? 's' : ''} Hidden · Horizon T+${horizonDays}
-                                        </span>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>`;
-                } else {
-                    // ── Build table rows จาก displayRows ──────────────────────
-                    tableBodyHTML = displayRows.map(r => {
+                // ── Build rows ─────────────────────────────────────────────
+                const tableRows = sorted.map(r => {
                     const isFuture = (r.target_date || '') > todayISO;
                     const dt       = luxon.DateTime.fromISO(r.target_date);
                     const dateStr  = dt.isValid ? dt.toFormat('dd MMM yyyy') : (r.target_date || '—');
@@ -3742,8 +3769,7 @@
                                 ${winBadge}
                             </td>
                         </tr>`;
-                    }).join('');
-                } // end else (displayRows.length > 0)
+                }).join('');
 
                 // ── Render table ───────────────────────────────────────────
                 container.innerHTML = `
@@ -3757,7 +3783,7 @@
                                 <th style="padding:12px 18px;text-align:center;font-family:'Inter',sans-serif;font-weight:900">Result</th>
                             </tr>
                         </thead>
-                        <tbody>${tableBodyHTML}</tbody>
+                        <tbody>${tableRows}</tbody>
                     </table>`;
 
             } catch (err) {
