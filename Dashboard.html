@@ -558,7 +558,7 @@
                         <div class="px-7 pt-6 pb-4 border-b border-slate-100 flex items-center justify-between flex-wrap gap-3">
                             <div>
                                 <h3 class="text-sm font-black text-slate-900 uppercase tracking-tight">Price Forecast Chart</h3>
-                                <p id="forecastChartSubtitle" class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">Forward Test · Rolling T+7 · Model Drift Evaluation</p>
+                                <p id="forecastChartSubtitle" class="text-[10px] font-bold text-slate-400 uppercase mt-0.5 tracking-wider">Forward Test · Model Drift Evaluation</p>
                             </div>
                             <div class="flex items-center gap-5">
                                 <!-- Drift Alert Badge — hidden by default -->
@@ -572,7 +572,7 @@
                                         <span class="inline-block w-6 h-[2px] rounded-full bg-[#2563EB]"></span>Actual Price
                                     </span>
                                     <span class="flex items-center gap-2">
-                                        <span class="inline-block w-6 h-[2px] rounded-full bg-[#F97316]"></span>T+7 Forecast
+                                        <span class="inline-block w-6 h-[2px] rounded-full bg-[#F97316]"></span><span id="forecastLegendForecast">T+7 Forecast</span>
                                     </span>
                                 </div>
                             </div>
@@ -3137,9 +3137,9 @@
 
                 // ── No data guard ─────────────────────────────────────────
                 if (!allPredData || !allPredData.length) {
-                    if (ftContainer) ftContainer.innerHTML = `<div class="flex items-center justify-center py-14 text-slate-300 text-[11px] font-bold uppercase tracking-widest">ไม่พบข้อมูลพยากรณ์สำหรับ ${cleanSymbol}</div>`;
-                    renderForecastTargetsTable(cleanSymbol);
-                    renderForecastChart(cleanSymbol);
+                    if (ftContainer) ftContainer.innerHTML = `<div class="flex items-center justify-center py-14 text-slate-300 text-[11px] font-bold uppercase tracking-widest">ไม่พบข้อมูลพยากรณ์สำหรับ ${cleanSymbol} · ${cleanHorizon}</div>`;
+                    renderForecastTargetsTable(cleanSymbol, cleanHorizon);
+                    renderForecastChart(cleanSymbol, cleanHorizon);
                     return;
                 }
 
@@ -3217,8 +3217,8 @@
                 setEl('predictChartSubtitle', `${cleanSymbol} · ${cleanHorizon} · ${allPredData.length} Forecasts · ${evaluatedPred.length} Evaluated · ${futurePred.length > 0 ? futurePred.length + ' Upcoming' : 'No Upcoming'}`);
 
                 // ── Render chart + table ──────────────────────────────────
-                renderForecastChart(cleanSymbol);
-                renderForecastTargetsTable(cleanSymbol);
+                renderForecastChart(cleanSymbol, cleanHorizon);
+                renderForecastTargetsTable(cleanSymbol, cleanHorizon);
 
             } catch (err) {
                 console.error('❌ updatePredictUI Error:', err);
@@ -3228,13 +3228,18 @@
         }
         // ══════════════════════════════════════════════════════════════
         // renderForecastChart — Price Forecast Chart (LWC)
-        // Forward Test · Rolling T+7 · Actual vs Predicted
+        // Forward Test · Horizon-aware · Actual vs Predicted
         // Professional Trading Style — no series labels, rich crosshair
         // ══════════════════════════════════════════════════════════════
-        async function renderForecastChart(symbol) {
+        async function renderForecastChart(symbol, horizon) {
             const container = document.getElementById('forecastChartCanvas');
             if (!container || !APP.supabaseClient) return;
-            const cleanSymbol = symbol.trim().toUpperCase();
+            const cleanSymbol  = symbol.trim().toUpperCase();
+            // ── ใช้ horizon ที่ส่งมา หรือ APP state หรือ fallback 7D ──────────
+            const cleanHorizon = horizon || APP.predictHorizon || '7D';
+            const horizonDaysMap = { '7D': 7, '15D': 15, '30D': 30 };
+            const horizonDays  = horizonDaysMap[cleanHorizon] || 7;
+            const horizonLabel = `T+${horizonDays}`;
 
             // ── Dispose previous chart ─────────────────────────────────
             if (APP._forecastChart) {
@@ -3264,12 +3269,12 @@
                     .order('date', { ascending: true });
                 if (hErr) throw hErr;
 
-                // ── 2. Fetch T+7 Predicted (predictions_log) ──────────────
+                // ── 2. Fetch Predicted (predictions_log) — filtered by current horizon ──
                 const { data: predRows, error: pErr } = await APP.supabaseClient
                     .from('predictions_log')
                     .select('target_date, predicted_price')
                     .eq('symbol', cleanSymbol)
-                    .eq('horizon_days', 7)
+                    .eq('horizon_days', horizonDays)          // ← dynamic: 7 / 15 / 30
                     .not('predicted_price', 'is', null)
                     .order('target_date', { ascending: true });
                 if (pErr) throw pErr;
@@ -3449,7 +3454,7 @@
                         html += `<div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:4px">
                             <div style="display:flex;align-items:center;gap:6px">
                                 <span style="width:8px;height:8px;border-radius:50%;border:2px solid #F97316;background:#fff;flex-shrink:0;display:inline-block"></span>
-                                <span style="color:#94a3b8;font-weight:600;font-size:10px">T+7 Forecast</span>
+                                <span style="color:#94a3b8;font-weight:600;font-size:10px">${horizonLabel} Forecast</span>
                             </div>
                             <span style="color:#F97316;font-weight:800;font-size:11px">฿${pVal.toFixed(2)}</span>
                         </div>`;
@@ -3476,6 +3481,10 @@
                 });
 
                 // ── 8. Model Drift Detection → update badge & subtitle ────
+                // Update legend label ใน header ให้ตรงกับ horizon ปัจจุบัน
+                const legendLabel = document.getElementById('forecastLegendForecast');
+                if (legendLabel) legendLabel.textContent = `${horizonLabel} Forecast`;
+
                 const driftBadge    = document.getElementById('forecastDriftBadge');
                 const driftBadgeTxt = document.getElementById('forecastDriftBadgeText');
                 const subtitle      = document.getElementById('forecastChartSubtitle');
@@ -3492,7 +3501,7 @@
                         const errClr  = errPct > 5 ? '#dc2626' : errPct > 2 ? '#d97706' : '#059669';
 
                         if (subtitle) {
-                            subtitle.innerHTML = `${cleanSymbol} · ${actualSeries.length} actual · ${predSeries.length} T+7 pts &nbsp;·&nbsp; `
+                            subtitle.innerHTML = `${cleanSymbol} · ${actualSeries.length} actual · ${predSeries.length} ${horizonLabel} pts &nbsp;·&nbsp; `
                                 + `<span style="color:${errClr};font-weight:900">Latest Δ ${errPct.toFixed(2)}%</span>`
                                 + `<span style="color:#94a3b8"> (${matchDt})</span>`;
                         }
@@ -3505,12 +3514,12 @@
                         }
                     } else {
                         if (subtitle) subtitle.textContent =
-                            `${cleanSymbol} · ${actualSeries.length} actual · ${predSeries.length} T+7 pts · Awaiting overlap`;
+                            `${cleanSymbol} · ${actualSeries.length} actual · ${predSeries.length} ${horizonLabel} pts · Awaiting overlap`;
                         if (driftBadge) driftBadge.style.display = 'none';
                     }
                 } else if (!predSeries.length) {
                     if (subtitle) subtitle.textContent =
-                        `${cleanSymbol} · ${actualSeries.length} actual pts · No T+7 predictions found in predictions_log`;
+                        `${cleanSymbol} · ${actualSeries.length} actual pts · No ${horizonLabel} predictions found`;
                     if (driftBadge) driftBadge.style.display = 'none';
                 }
 
@@ -3537,28 +3546,33 @@
         // Columns : target_date · predicted_price · previous_close
         //           error_percent · is_win
         // ══════════════════════════════════════════════════════════════
-        async function renderForecastTargetsTable(symbol) {
+        async function renderForecastTargetsTable(symbol, horizon) {
             const container = document.getElementById('forecastTargetsContainer');
             const badge     = document.getElementById('forecastTableBadge');
             if (!container || !APP.supabaseClient) return;
 
-            const cleanSym = symbol.trim().toUpperCase();
+            const cleanSym     = symbol.trim().toUpperCase();
+            // ── ใช้ horizon ที่ส่งมา หรือ APP state หรือ fallback 7D ────────
+            const cleanHorizon = horizon || APP.predictHorizon || '7D';
+            const horizonDaysMap = { '7D': 7, '15D': 15, '30D': 30 };
+            const horizonDays  = horizonDaysMap[cleanHorizon] || 7;
 
             // ── Loading state ─────────────────────────────────────────────
             container.innerHTML = `
                 <div style="display:flex;align-items:center;justify-content:center;padding:56px 0;gap:10px">
                     <div style="width:14px;height:14px;border:2px solid #e2e8f0;border-top-color:#3b82f6;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0"></div>
                     <span style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.14em;font-family:'Inter',sans-serif">
-                        กำลังโหลด ${cleanSym}…
+                        กำลังโหลด ${cleanSym} · T+${horizonDays}…
                     </span>
                 </div>`;
 
             try {
-                // ── Query เฉพาะ 5 columns ที่มีในตาราง predictions_log ──────
+                // ── Query เฉพาะ horizon ที่เลือก (.eq('horizon_days', ...)) ──
                 const { data: rows, error } = await APP.supabaseClient
                     .from('predictions_log')
                     .select('target_date, predicted_price, previous_close, error_percent, is_win')
                     .eq('symbol', cleanSym)
+                    .eq('horizon_days', horizonDays)          // ← filter by active horizon
                     .not('predicted_price', 'is', null)
                     .order('target_date', { ascending: false })
                     .limit(150);
@@ -3601,7 +3615,7 @@
                     ? ((winRows / evaluatedRows) * 100).toFixed(1) + '%'
                     : 'Pending';
                 if (badge) {
-                    badge.textContent = `${cleanSym} · ${totalRows} Records · ${upcomingRows} Upcoming · Win Rate ${winRate}`;
+                    badge.textContent = `${cleanSym} · T+${horizonDays} · ${totalRows} Records · ${upcomingRows} Upcoming · Win Rate ${winRate}`;
                 }
 
                 // ── Build rows ─────────────────────────────────────────────
@@ -3701,9 +3715,12 @@
             }
         }
 
-        /** ปุ่ม Refresh */
+        /** ปุ่ม Refresh — โหลด chart + table ด้วย symbol + horizon ปัจจุบัน */
         function refreshForecastTable() {
-            if (APP.predictSymbol) renderForecastTargetsTable(APP.predictSymbol);
+            if (!APP.predictSymbol) return;
+            const h = APP.predictHorizon || '7D';
+            renderForecastChart(APP.predictSymbol, h);
+            renderForecastTargetsTable(APP.predictSymbol, h);
         }
 
         // ============================================
@@ -3742,10 +3759,12 @@
                     await renderChart();
                 }
 
-                // ── Predict page — re-fetch forecast chart every 30s
+                // ── Predict page — re-fetch forecast chart + table every 30s
                 if (APP.currentPage === 'predict' && APP.predictSymbol) {
-                    console.log('🔄 Auto-Refreshing Forecast Chart:', APP.predictSymbol);
-                    await renderForecastChart(APP.predictSymbol);
+                    console.log('🔄 Auto-Refreshing Forecast:', APP.predictSymbol, APP.predictHorizon);
+                    const h = APP.predictHorizon || '7D';
+                    await renderForecastChart(APP.predictSymbol, h);
+                    await renderForecastTargetsTable(APP.predictSymbol, h);
                 }
             }, 30000);
 
