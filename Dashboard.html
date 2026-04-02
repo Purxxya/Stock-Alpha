@@ -3605,9 +3605,36 @@
                     (a.target_date || '').localeCompare(b.target_date || ''));
 
                 const todayISO = luxon.DateTime.now().setZone('Asia/Bangkok').toISODate();
+                const today    = new Date();
+                today.setHours(0, 0, 0, 0); // normalize to start-of-day
 
-                // ── Badge summary ──────────────────────────────────────────
+                // ══════════════════════════════════════════════════════
+                // FILTER — Mentor UX fix:
+                //   ✅ แสดงเสมอ  : แถวที่ประเมินแล้ว (is_win ไม่ null หรือ error_percent ไม่ null)
+                //   ⏳ Pending   : แสดงเฉพาะเมื่อ target_date ห่างจากวันนี้ ≤ 3 วัน
+                //   🙈 ซ่อน     : Pending + target_date ห่างเกิน 3 วัน → กรองออก
+                // ══════════════════════════════════════════════════════
+                const SHOW_PENDING_WITHIN_DAYS = 3;
+
+                const displayRows = sorted.filter(r => {
+                    // ① ประเมินแล้ว → แสดงเสมอ
+                    const isEvaluated = r.is_win !== null && r.is_win !== undefined
+                                     || r.error_percent !== null && r.error_percent !== undefined;
+                    if (isEvaluated) return true;
+
+                    // ② Pending → คำนวณ daysUntilTarget
+                    const targetDate = new Date(r.target_date);
+                    targetDate.setHours(0, 0, 0, 0);
+                    const diffMs   = targetDate.getTime() - today.getTime();
+                    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+                    // แสดงถ้าอยู่ในช่วง 3 วันข้างหน้า (หรือผ่านแล้ว)
+                    return diffDays <= SHOW_PENDING_WITHIN_DAYS;
+                });
+
+                // ── Badge summary (คำนวณจาก sorted ทั้งหมด ไม่ใช่ filtered) ──
                 const totalRows     = sorted.length;
+                const hiddenRows    = totalRows - displayRows.length;
                 const upcomingRows  = sorted.filter(r => (r.target_date || '') > todayISO).length;
                 const evaluatedRows = sorted.filter(r => r.error_percent != null).length;
                 const winRows       = sorted.filter(r => r.is_win === true).length;
@@ -3615,11 +3642,40 @@
                     ? ((winRows / evaluatedRows) * 100).toFixed(1) + '%'
                     : 'Pending';
                 if (badge) {
-                    badge.textContent = `${cleanSym} · T+${horizonDays} · ${totalRows} Records · ${upcomingRows} Upcoming · Win Rate ${winRate}`;
+                    badge.textContent = hiddenRows > 0
+                        ? `${cleanSym} · T+${horizonDays} · ${displayRows.length}/${totalRows} Shown · Win Rate ${winRate}`
+                        : `${cleanSym} · T+${horizonDays} · ${totalRows} Records · ${upcomingRows} Upcoming · Win Rate ${winRate}`;
                 }
 
-                // ── Build rows ─────────────────────────────────────────────
-                const tableRows = sorted.map(r => {
+                // ── Fallback row เมื่อ filter ไปแล้วไม่มีแถวเหลือ ─────────────
+                // (เช่น T+30D ที่เพิ่งรัน — ยังห่างเป้าหมายเกิน 3 วันทุกแถว)
+                let tableBodyHTML;
+                if (displayRows.length === 0) {
+                    tableBodyHTML = `
+                        <tr>
+                            <td colspan="5" style="padding:0">
+                                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+                                    padding:36px 20px;gap:8px;text-align:center">
+                                    <div style="font-size:22px;line-height:1">⏳</div>
+                                    <div style="font-size:12px;font-weight:700;color:#475569;font-family:'Inter',sans-serif">
+                                        มีข้อมูลพยากรณ์ ${horizonDays} วัน กำลังเก็บสถิติ
+                                    </div>
+                                    <div style="font-size:11px;font-weight:500;color:#94a3b8;font-family:'Inter',sans-serif;max-width:320px;line-height:1.6">
+                                        ระบบจะแสดงผลในตารางเมื่อใกล้ถึงวันเป้าหมาย (${SHOW_PENDING_WITHIN_DAYS} วันล่วงหน้า)
+                                    </div>
+                                    <div style="margin-top:4px;display:inline-flex;align-items:center;gap:6px;
+                                        padding:4px 12px;border-radius:999px;background:#f8fafc;border:1.5px solid #e2e8f0">
+                                        <span style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;
+                                            letter-spacing:.14em;font-family:'Inter',sans-serif">
+                                            ${totalRows} Forecast${totalRows !== 1 ? 's' : ''} Hidden · Horizon T+${horizonDays}
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>`;
+                } else {
+                    // ── Build table rows จาก displayRows ──────────────────────
+                    tableBodyHTML = displayRows.map(r => {
                     const isFuture = (r.target_date || '') > todayISO;
                     const dt       = luxon.DateTime.fromISO(r.target_date);
                     const dateStr  = dt.isValid ? dt.toFormat('dd MMM yyyy') : (r.target_date || '—');
@@ -3686,7 +3742,8 @@
                                 ${winBadge}
                             </td>
                         </tr>`;
-                }).join('');
+                    }).join('');
+                } // end else (displayRows.length > 0)
 
                 // ── Render table ───────────────────────────────────────────
                 container.innerHTML = `
@@ -3700,7 +3757,7 @@
                                 <th style="padding:12px 18px;text-align:center;font-family:'Inter',sans-serif;font-weight:900">Result</th>
                             </tr>
                         </thead>
-                        <tbody>${tableRows}</tbody>
+                        <tbody>${tableBodyHTML}</tbody>
                     </table>`;
 
             } catch (err) {
