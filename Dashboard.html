@@ -3546,11 +3546,6 @@
         // Columns : target_date · predicted_price · previous_close
         //           error_percent · is_win
         // ══════════════════════════════════════════════════════════════
-    // renderForecastTargetsTable — Forecast Price Targets
-        // Source  : predictions_log
-        // Columns : target_date · predicted_price · previous_close · actual_price
-        //           error_percent · is_win
-        // ══════════════════════════════════════════════════════════════
         async function renderForecastTargetsTable(symbol, horizon) {
             const container = document.getElementById('forecastTargetsContainer');
             const badge     = document.getElementById('forecastTableBadge');
@@ -3572,12 +3567,12 @@
                 </div>`;
 
             try {
-                // ── Query เพิ่ม actual_price ────────────────────────────────
+                // ── Query เฉพาะ horizon ที่เลือก (.eq('horizon_days', ...)) ──
                 const { data: rows, error } = await APP.supabaseClient
                     .from('predictions_log')
-                    .select('target_date, predicted_price, previous_close, actual_price, error_percent, is_win')
+                    .select('target_date, predicted_price, previous_close, error_percent, is_win')
                     .eq('symbol', cleanSym)
-                    .eq('horizon_days', horizonDays)
+                    .eq('horizon_days', horizonDays)          // ← filter by active horizon
                     .not('predicted_price', 'is', null)
                     .order('target_date', { ascending: false })
                     .limit(150);
@@ -3614,19 +3609,8 @@
                 // ── Badge summary ──────────────────────────────────────────
                 const totalRows     = sorted.length;
                 const upcomingRows  = sorted.filter(r => (r.target_date || '') > todayISO).length;
-                const evaluatedRows = sorted.filter(r => r.error_percent != null || (r.actual_price != null && r.predicted_price != null)).length;
-                
-                // คำนวณ Win แบบรวมที่คำนวณสดด้วย
-                let winRows = 0;
-                sorted.forEach(r => {
-                    if (r.is_win === true) winRows++;
-                    else if (r.is_win == null && r.actual_price != null && r.predicted_price != null && r.previous_close != null) {
-                        const isPredictedUp = r.predicted_price > r.previous_close;
-                        const isActualUp = r.actual_price > r.previous_close;
-                        if (isPredictedUp === isActualUp) winRows++;
-                    }
-                });
-
+                const evaluatedRows = sorted.filter(r => r.error_percent != null).length;
+                const winRows       = sorted.filter(r => r.is_win === true).length;
                 const winRate       = evaluatedRows > 0
                     ? ((winRows / evaluatedRows) * 100).toFixed(1) + '%'
                     : 'Pending';
@@ -3642,23 +3626,10 @@
 
                     const pred = r.predicted_price != null ? parseFloat(r.predicted_price) : null;
                     const prev = r.previous_close  != null ? parseFloat(r.previous_close)  : null;
-                    const act  = r.actual_price    != null ? parseFloat(r.actual_price)    : null;
-                    let   ep   = r.error_percent   != null ? parseFloat(r.error_percent)   : null;
-                    let   isWin= r.is_win;
-
-                    // คำนวณสด ถ้ามีราคา Actual แต่ DB ยังไม่มีผลลัพธ์
-                    if (act != null && pred != null && ep == null) {
-                        ep = ((act - pred) / act) * 100;
-                    }
-                    if (act != null && pred != null && prev != null && isWin == null) {
-                        const isPredictedUp = pred > prev;
-                        const isActualUp = act > prev;
-                        isWin = (isPredictedUp === isActualUp);
-                    }
+                    const ep   = r.error_percent   != null ? parseFloat(r.error_percent)   : null;
 
                     const predStr = pred != null ? `฿${pred.toFixed(2)}` : '—';
                     const prevStr = prev != null ? `฿${prev.toFixed(2)}` : '—';
-                    const actStr  = act  != null ? `฿${act.toFixed(2)}`  : '—';
 
                     // Error % — สี ขึ้นกับความแม่น
                     let epStr = '—', epColor = '#94a3b8';
@@ -3670,11 +3641,11 @@
 
                     // is_win badge
                     let winBadge;
-                    if (isWin === true) {
+                    if (r.is_win === true) {
                         winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
                             background:#dcfce7;border:1.5px solid #86efac;font-size:10px;font-weight:900;color:#15803d;
                             letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">✅ Win</span>`;
-                    } else if (isWin === false) {
+                    } else if (r.is_win === false) {
                         winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
                             background:#fee2e2;border:1.5px solid #fca5a5;font-size:10px;font-weight:900;color:#dc2626;
                             letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">❌ Loss</span>`;
@@ -3709,9 +3680,6 @@
                                 <span style="font-size:12px;font-weight:700;color:#64748b;font-family:'Inter',sans-serif">${prevStr}</span>
                             </td>
                             <td style="padding:12px 18px;text-align:right">
-                                <span style="font-size:13px;font-weight:900;${act != null ? 'color:#0f172a' : 'color:#94a3b8'};font-family:'Inter',sans-serif">${actStr}</span>
-                            </td>
-                            <td style="padding:12px 18px;text-align:right">
                                 <span style="font-size:12px;font-weight:900;color:${epColor};font-family:'Inter',sans-serif">${epStr}</span>
                             </td>
                             <td style="padding:12px 18px;text-align:center">
@@ -3722,13 +3690,12 @@
 
                 // ── Render table ───────────────────────────────────────────
                 container.innerHTML = `
-                    <table style="width:100%;border-collapse:collapse;min-width:600px">
+                    <table style="width:100%;border-collapse:collapse;min-width:520px">
                         <thead style="position:sticky;top:0;z-index:10;background:#f8fafc;border-bottom:2px solid #e2e8f0">
                             <tr style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.18em">
                                 <th style="padding:12px 18px;text-align:left;font-family:'Inter',sans-serif;font-weight:900">Target Date</th>
                                 <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Predicted Price</th>
                                 <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Prev. Close</th>
-                                <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900;color:#0f172a">Actual Price</th>
                                 <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Error %</th>
                                 <th style="padding:12px 18px;text-align:center;font-family:'Inter',sans-serif;font-weight:900">Result</th>
                             </tr>
