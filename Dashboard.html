@@ -3570,7 +3570,7 @@
                 // ── Query เฉพาะ horizon ที่เลือก (.eq('horizon_days', ...)) ──
                 const { data: rows, error } = await APP.supabaseClient
                     .from('predictions_log')
-                    .select('target_date, predicted_price, previous_close, error_percent, is_win')
+                    .select('target_date, predicted_price, previous_close, actual_price')
                     .eq('symbol', cleanSym)
                     .eq('horizon_days', horizonDays)          // ← filter by active horizon
                     .not('predicted_price', 'is', null)
@@ -3609,8 +3609,14 @@
                 // ── Badge summary ──────────────────────────────────────────
                 const totalRows     = sorted.length;
                 const upcomingRows  = sorted.filter(r => (r.target_date || '') > todayISO).length;
-                const evaluatedRows = sorted.filter(r => r.error_percent != null).length;
-                const winRows       = sorted.filter(r => r.is_win === true).length;
+                const evaluatedRows = sorted.filter(r => r.actual_price != null && r.previous_close != null).length;
+                const winRows       = sorted.filter(r => {
+                    const actual = r.actual_price   != null ? parseFloat(r.actual_price)   : null;
+                    const pred   = r.predicted_price != null ? parseFloat(r.predicted_price) : null;
+                    const prev   = r.previous_close  != null ? parseFloat(r.previous_close)  : null;
+                    if (actual == null || pred == null || prev == null) return false;
+                    return (pred >= prev) === (actual >= prev);
+                }).length;
                 const winRate       = evaluatedRows > 0
                     ? ((winRows / evaluatedRows) * 100).toFixed(1) + '%'
                     : 'Pending';
@@ -3624,35 +3630,40 @@
                     const dt       = luxon.DateTime.fromISO(r.target_date);
                     const dateStr  = dt.isValid ? dt.toFormat('dd MMM yyyy') : (r.target_date || '—');
 
-                    const pred = r.predicted_price != null ? parseFloat(r.predicted_price) : null;
-                    const prev = r.previous_close  != null ? parseFloat(r.previous_close)  : null;
-                    const ep   = r.error_percent   != null ? parseFloat(r.error_percent)   : null;
+                    const pred   = r.predicted_price != null ? parseFloat(r.predicted_price) : null;
+                    const prev   = r.previous_close  != null ? parseFloat(r.previous_close)  : null;
+                    const actual = r.actual_price    != null ? parseFloat(r.actual_price)    : null;
 
+                    // 1. Prev. Close — ดึงตรงจาก previous_close เท่านั้น
                     const predStr = pred != null ? `฿${pred.toFixed(2)}` : '—';
                     const prevStr = prev != null ? `฿${prev.toFixed(2)}` : '—';
 
-                    // Error % — สี ขึ้นกับความแม่น
+                    // 2. Error % — คำนวณสดใน browser: |actual - pred| / |actual| * 100
                     let epStr = '—', epColor = '#94a3b8';
-                    if (ep != null) {
-                        epStr   = `${ep >= 0 ? '+' : ''}${ep.toFixed(2)}%`;
-                        const a = Math.abs(ep);
-                        epColor = a <= 2 ? '#059669' : a <= 5 ? '#d97706' : '#dc2626';
+                    if (actual != null && pred != null) {
+                        const ep  = Math.abs((actual - pred) / actual) * 100;
+                        epStr     = `${ep.toFixed(2)}%`;
+                        epColor   = ep <= 2 ? '#059669' : ep <= 5 ? '#d97706' : '#dc2626';
                     }
 
-                    // is_win badge
+                    // 3. Result (Win/Loss) — คำนวณสดจากทิศทาง predicted vs actual เทียบกับ previous_close
                     let winBadge;
-                    if (r.is_win === true) {
-                        winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
-                            background:#dcfce7;border:1.5px solid #86efac;font-size:10px;font-weight:900;color:#15803d;
-                            letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">✅ Win</span>`;
-                    } else if (r.is_win === false) {
-                        winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
-                            background:#fee2e2;border:1.5px solid #fca5a5;font-size:10px;font-weight:900;color:#dc2626;
-                            letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">❌ Loss</span>`;
+                    if (actual != null && pred != null && prev != null) {
+                        const aiUp     = pred   >= prev;   // ทิศทางที่ AI ทาย
+                        const actualUp = actual >= prev;   // ทิศทางที่เกิดขึ้นจริง
+                        if (aiUp === actualUp) {
+                            winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
+                                background:#dcfce7;border:1.5px solid #86efac;font-size:10px;font-weight:900;color:#15803d;
+                                letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">✅ Win</span>`;
+                        } else {
+                            winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
+                                background:#fee2e2;border:1.5px solid #fca5a5;font-size:10px;font-weight:900;color:#dc2626;
+                                letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">❌ Loss</span>`;
+                        }
                     } else {
                         winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
                             background:#f1f5f9;border:1.5px solid #e2e8f0;font-size:10px;font-weight:700;color:#94a3b8;
-                            letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">⏳ Pending</span>`;
+                            letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">⏳ Waiting for data</span>`;
                     }
 
                     const rowBgBase  = isFuture ? '#eff6ff' : 'transparent';
