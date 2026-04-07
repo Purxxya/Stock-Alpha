@@ -3610,12 +3610,8 @@
                 const totalRows     = sorted.length;
                 const upcomingRows  = sorted.filter(r => (r.target_date || '') > todayISO).length;
                 const evaluatedRows = sorted.filter(r => r.error_percent != null).length;
-                const winRows       = sorted.filter(r => r.is_win === true).length;
-                const winRate       = evaluatedRows > 0
-                    ? ((winRows / evaluatedRows) * 100).toFixed(1) + '%'
-                    : 'Pending';
                 if (badge) {
-                    badge.textContent = `${cleanSym} · T+${horizonDays} · ${totalRows} Records · ${upcomingRows} Upcoming · Win Rate ${winRate}`;
+                    badge.textContent = `${cleanSym} · T+${horizonDays} · ${totalRows} Records · ${upcomingRows} Upcoming · ${evaluatedRows} Evaluated`;
                 }
 
                 // ── Build rows ─────────────────────────────────────────────
@@ -3639,21 +3635,7 @@
                         epColor = a <= 2 ? '#059669' : a <= 5 ? '#d97706' : '#dc2626';
                     }
 
-                    // is_win badge
-                    let winBadge;
-                    if (r.is_win === true) {
-                        winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
-                            background:#dcfce7;border:1.5px solid #86efac;font-size:10px;font-weight:900;color:#15803d;
-                            letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">Win</span>`;
-                    } else if (r.is_win === false) {
-                        winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
-                            background:#fee2e2;border:1.5px solid #fca5a5;font-size:10px;font-weight:900;color:#dc2626;
-                            letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">Loss</span>`;
-                    } else {
-                        winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
-                            background:#f1f5f9;border:1.5px solid #e2e8f0;font-size:10px;font-weight:700;color:#94a3b8;
-                            letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">⏳ Pending</span>`;
-                    }
+                    // is_win ไม่แสดงในตารางตอนนี้
 
                     const rowBgBase  = isFuture ? '#eff6ff' : 'transparent';
                     const rowBgHover = isFuture ? '#dbeafe' : '#f8fafc';
@@ -3682,9 +3664,6 @@
                             <td style="padding:12px 18px;text-align:right">
                                 <span style="font-size:12px;font-weight:900;color:${epColor};font-family:'Inter',sans-serif">${epStr}</span>
                             </td>
-                            <td style="padding:12px 18px;text-align:center">
-                                ${winBadge}
-                            </td>
                         </tr>`;
                 }).join('');
 
@@ -3697,7 +3676,6 @@
                                 <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Predicted Price</th>
                                 <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Actual Price</th>
                                 <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Error %</th>
-                                <th style="padding:12px 18px;text-align:center;font-family:'Inter',sans-serif;font-weight:900">Result</th>
                             </tr>
                         </thead>
                         <tbody>${tableRows}</tbody>
