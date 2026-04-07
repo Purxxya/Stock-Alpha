@@ -3570,7 +3570,7 @@
                 // ── Query เฉพาะ horizon ที่เลือก (.eq('horizon_days', ...)) ──
                 const { data: rows, error } = await APP.supabaseClient
                     .from('predictions_log')
-                    .select('target_date, predicted_price, actual_price, error_percent, is_win')
+                    .select('target_date, predicted_price, actual_price, error_percent')
                     .eq('symbol', cleanSym)
                     .eq('horizon_days', horizonDays)          // ← filter by active horizon
                     .not('predicted_price', 'is', null)
@@ -3634,9 +3634,6 @@
                         const a = Math.abs(ep);
                         epColor = a <= 2 ? '#059669' : a <= 5 ? '#d97706' : '#dc2626';
                     }
-
-                    // is_win ไม่แสดงในตารางตอนนี้
-
                     const rowBgBase  = isFuture ? '#eff6ff' : 'transparent';
                     const rowBgHover = isFuture ? '#dbeafe' : '#f8fafc';
                     const dateCss    = isFuture ? 'color:#1d4ed8;font-weight:900' : 'color:#334155;font-weight:700';
