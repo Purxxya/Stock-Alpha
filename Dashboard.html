@@ -432,8 +432,9 @@
                         <table class="w-full table-fixed" style="min-width:480px"> <thead class="bg-slate-50/50 border-b border-slate-100">
                                 <tr class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
                                     <th class="w-[15%] px-4 md:px-6 py-4 text-left">Stock</th>
-                                    <th class="w-[55%] px-4 md:px-6 py-4 text-center">Company Name</th>
-                                    <th class="w-[30%] px-4 md:px-6 py-4 text-center">Change %</th> 
+                                    <th class="w-[45%] px-4 md:px-6 py-4 text-center">Company Name</th>
+                                    <th class="w-[20%] px-4 md:px-6 py-4 text-center">Change %</th> 
+                                    <th class="w-[20%] px-4 md:px-6 py-4 text-right">Last Price</th>
                                 </tr>
                             </thead>
                             <tbody id="stockTable" class="divide-y divide-slate-50"></tbody>
@@ -2208,6 +2209,10 @@
                             </span>
                         </td>
                         
+                        <td class="px-4 md:px-6 py-3 md:py-4 text-right">
+                            <span class="text-xs font-black text-slate-900">฿${stock.price.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                        </td>
+                        
                     </tr>
                 `;
             }).join('');
@@ -3565,7 +3570,7 @@
                 // ── Query เฉพาะ horizon ที่เลือก (.eq('horizon_days', ...)) ──
                 const { data: rows, error } = await APP.supabaseClient
                     .from('predictions_log')
-                    .select('target_date, predicted_price, previous_close, error_percent, is_win')
+                    .select('target_date, predicted_price, actual_price, error_percent, is_win')
                     .eq('symbol', cleanSym)
                     .eq('horizon_days', horizonDays)          // ← filter by active horizon
                     .not('predicted_price', 'is', null)
@@ -3619,12 +3624,12 @@
                     const dt       = luxon.DateTime.fromISO(r.target_date);
                     const dateStr  = dt.isValid ? dt.toFormat('dd MMM yyyy') : (r.target_date || '—');
 
-                    const pred = r.predicted_price != null ? parseFloat(r.predicted_price) : null;
-                    const prev = r.previous_close  != null ? parseFloat(r.previous_close)  : null;
-                    const ep   = r.error_percent   != null ? parseFloat(r.error_percent)   : null;
+                    const pred   = r.predicted_price != null ? parseFloat(r.predicted_price) : null;
+                    const actual = r.actual_price    != null ? parseFloat(r.actual_price)    : null;
+                    const ep     = r.error_percent   != null ? parseFloat(r.error_percent)   : null;
 
-                    const predStr = pred != null ? `฿${pred.toFixed(2)}` : '—';
-                    const prevStr = prev != null ? `฿${prev.toFixed(2)}` : '—';
+                    const predStr   = pred   != null ? `฿${pred.toFixed(2)}`   : '—';
+                    const actualStr = actual != null ? `฿${actual.toFixed(2)}` : '—';
 
                     // Error % — สี ขึ้นกับความแม่น
                     let epStr = '—', epColor = '#94a3b8';
@@ -3639,11 +3644,11 @@
                     if (r.is_win === true) {
                         winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
                             background:#dcfce7;border:1.5px solid #86efac;font-size:10px;font-weight:900;color:#15803d;
-                            letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">✅ Win</span>`;
+                            letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">Win</span>`;
                     } else if (r.is_win === false) {
                         winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
                             background:#fee2e2;border:1.5px solid #fca5a5;font-size:10px;font-weight:900;color:#dc2626;
-                            letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">❌ Loss</span>`;
+                            letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">Loss</span>`;
                     } else {
                         winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
                             background:#f1f5f9;border:1.5px solid #e2e8f0;font-size:10px;font-weight:700;color:#94a3b8;
@@ -3672,7 +3677,7 @@
                                 <span style="font-size:13px;font-weight:900;${isFuture?'color:#1d4ed8':'color:#0f172a'};font-family:'Inter',sans-serif">${predStr}</span>
                             </td>
                             <td style="padding:12px 18px;text-align:right">
-                                <span style="font-size:12px;font-weight:700;color:#64748b;font-family:'Inter',sans-serif">${prevStr}</span>
+                                <span style="font-size:12px;font-weight:700;color:#64748b;font-family:'Inter',sans-serif">${actualStr}</span>
                             </td>
                             <td style="padding:12px 18px;text-align:right">
                                 <span style="font-size:12px;font-weight:900;color:${epColor};font-family:'Inter',sans-serif">${epStr}</span>
@@ -3690,7 +3695,7 @@
                             <tr style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.18em">
                                 <th style="padding:12px 18px;text-align:left;font-family:'Inter',sans-serif;font-weight:900">Target Date</th>
                                 <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Predicted Price</th>
-                                <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Prev. Close</th>
+                                <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Actual Price</th>
                                 <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Error %</th>
                                 <th style="padding:12px 18px;text-align:center;font-family:'Inter',sans-serif;font-weight:900">Result</th>
                             </tr>
