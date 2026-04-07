@@ -432,9 +432,8 @@
                         <table class="w-full table-fixed" style="min-width:480px"> <thead class="bg-slate-50/50 border-b border-slate-100">
                                 <tr class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
                                     <th class="w-[15%] px-4 md:px-6 py-4 text-left">Stock</th>
-                                    <th class="w-[45%] px-4 md:px-6 py-4 text-center">Company Name</th>
-                                    <th class="w-[20%] px-4 md:px-6 py-4 text-center">Change %</th> 
-                                    <th class="w-[20%] px-4 md:px-6 py-4 text-right">Last Price</th>
+                                    <th class="w-[55%] px-4 md:px-6 py-4 text-center">Company Name</th>
+                                    <th class="w-[30%] px-4 md:px-6 py-4 text-center">Change %</th>
                                 </tr>
                             </thead>
                             <tbody id="stockTable" class="divide-y divide-slate-50"></tbody>
@@ -2209,10 +2208,6 @@
                             </span>
                         </td>
                         
-                        <td class="px-4 md:px-6 py-3 md:py-4 text-right">
-                            <span class="text-xs font-black text-slate-900">฿${stock.price.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
-                        </td>
-                        
                     </tr>
                 `;
             }).join('');
@@ -2942,10 +2937,6 @@
             const actualStr  = actual   != null ? `฿${actual.toFixed(2)}`   : '—';
             const prevStr    = prevClose != null ? `฿${prevClose.toFixed(2)}` : '—';
 
-            // Win/Loss badge
-            let winBadge = '';
-            if      (isWin === true)  winBadge = `<span style="font-size:9px;font-weight:900;color:#059669"> WIN ✓</span>`;
-            else if (isWin === false) winBadge = `<span style="font-size:9px;font-weight:900;color:#f43f5e"> LOSS ✗</span>`;
 
             const rowCls  = isFuture ? 'future-row' : '';
             const dateCls = isFuture ? 'text-blue-700 font-black' : 'text-slate-600';
@@ -2957,7 +2948,7 @@
                 <td class="px-4 py-2.5 text-right font-mono text-[11px] text-slate-800">${actualStr}</td>
                 <td class="px-4 py-2.5 text-right font-mono text-[11px] text-indigo-700 font-bold">฿${pred.toFixed(2)}</td>
                 <td class="px-4 py-2.5 text-right font-mono text-[11px] text-slate-400 hidden sm:table-cell">฿${lower.toFixed(2)} – ฿${upper.toFixed(2)}</td>
-                <td class="px-4 py-2.5 text-right font-mono text-[11px] ${errClass(ep)}">${epStr}${winBadge}</td>
+                <td class="px-4 py-2.5 text-right font-mono text-[11px] ${errClass(ep)}">${epStr}</td>
             </tr>`;
         }).join('');
 
@@ -2970,7 +2961,7 @@
                     <th class="px-4 py-3 text-right">Actual</th>
                     <th class="px-4 py-3 text-right">T+1 Forecast</th>
                     <th class="px-4 py-3 text-right hidden sm:table-cell">80% CI Band</th>
-                    <th class="px-4 py-3 text-right">APE / Result</th>
+                    <th class="px-4 py-3 text-right">Error %</th>
                 </tr>
             </thead>
             <tbody>${rows}</tbody>
@@ -3610,12 +3601,8 @@
                 const totalRows     = sorted.length;
                 const upcomingRows  = sorted.filter(r => (r.target_date || '') > todayISO).length;
                 const evaluatedRows = sorted.filter(r => r.error_percent != null).length;
-                const winRows       = sorted.filter(r => r.is_win === true).length;
-                const winRate       = evaluatedRows > 0
-                    ? ((winRows / evaluatedRows) * 100).toFixed(1) + '%'
-                    : 'Pending';
                 if (badge) {
-                    badge.textContent = `${cleanSym} · T+${horizonDays} · ${totalRows} Records · ${upcomingRows} Upcoming · Win Rate ${winRate}`;
+                    badge.textContent = `${cleanSym} · T+${horizonDays} · ${totalRows} Records · ${upcomingRows} Upcoming · ${evaluatedRows} Evaluated`;
                 }
 
                 // ── Build rows ─────────────────────────────────────────────
@@ -3639,21 +3626,7 @@
                         epColor = a <= 2 ? '#059669' : a <= 5 ? '#d97706' : '#dc2626';
                     }
 
-                    // is_win badge
-                    let winBadge;
-                    if (r.is_win === true) {
-                        winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
-                            background:#dcfce7;border:1.5px solid #86efac;font-size:10px;font-weight:900;color:#15803d;
-                            letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">Win</span>`;
-                    } else if (r.is_win === false) {
-                        winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
-                            background:#fee2e2;border:1.5px solid #fca5a5;font-size:10px;font-weight:900;color:#dc2626;
-                            letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">Loss</span>`;
-                    } else {
-                        winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
-                            background:#f1f5f9;border:1.5px solid #e2e8f0;font-size:10px;font-weight:700;color:#94a3b8;
-                            letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">⏳ Pending</span>`;
-                    }
+                    
 
                     const rowBgBase  = isFuture ? '#eff6ff' : 'transparent';
                     const rowBgHover = isFuture ? '#dbeafe' : '#f8fafc';
@@ -3682,9 +3655,6 @@
                             <td style="padding:12px 18px;text-align:right">
                                 <span style="font-size:12px;font-weight:900;color:${epColor};font-family:'Inter',sans-serif">${epStr}</span>
                             </td>
-                            <td style="padding:12px 18px;text-align:center">
-                                ${winBadge}
-                            </td>
                         </tr>`;
                 }).join('');
 
@@ -3697,7 +3667,6 @@
                                 <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Predicted Price</th>
                                 <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Actual Price</th>
                                 <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Error %</th>
-                                <th style="padding:12px 18px;text-align:center;font-family:'Inter',sans-serif;font-weight:900">Result</th>
                             </tr>
                         </thead>
                         <tbody>${tableRows}</tbody>
