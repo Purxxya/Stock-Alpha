@@ -852,7 +852,17 @@
         // บันทึก symbol ล่าสุดที่ User เลือก (ข้ามทุกหน้า)
         globalSelectedSymbol: null,
         // ── [FEATURE 2] Favorites / Watchlist ─────────────────────────
-        favorites: JSON.parse(localStorage.getItem('stock_favorites') || '[]'),
+        favorites: (() => {
+            try {
+                const saved = JSON.parse(localStorage.getItem('stock_favorites') || '[]');
+                // ถ้าไม่ใช่ array หรือมีมากกว่า 30 ตัว → ถือว่าข้อมูลเสีย → reset
+                if (!Array.isArray(saved) || saved.length > 30) {
+                    localStorage.removeItem('stock_favorites');
+                    return [];
+                }
+                return saved;
+            } catch { return []; }
+        })(),
         sidebarMode: 'top10',   // 'top10' | 'watchlist'
         // ── [FEATURE 3] Chart Timeframe ────────────────────────────────
         chartTimeframe: '3M',   // '1M' | '3M' | '6M' | '1Y'
@@ -1512,7 +1522,16 @@
                 return;
             }
 
-            listEl.innerHTML = displayStocks.map((stock, rank) => {
+            // ── Watchlist header with clear button ───────────────────
+            const watchlistHeader = isWatchlist ? `
+                <div class="flex items-center justify-between px-3 pb-2">
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-wider">${displayStocks.length} หุ้น</span>
+                    <button onclick="clearWatchlist()" class="text-[9px] font-black text-slate-300 hover:text-red-500 uppercase tracking-wider transition-colors">
+                        ล้างทั้งหมด ✕
+                    </button>
+                </div>` : '';
+
+            const stockListHTML = displayStocks.map((stock, rank) => {
             const isActive   = APP.currentStock && APP.currentStock.symbol === stock.symbol;
             const isPositive = stock.changePercent >= 0;
             const isFav      = APP.favorites.includes(stock.symbol);
@@ -1560,6 +1579,7 @@
                 </button>
             `;
         }).join('');
+            listEl.innerHTML = (watchlistHeader || '') + stockListHTML;
             // Fetch sparklines for uncached symbols (async — paints when ready)
             const symbols  = displayStocks.map(s => s.symbol);
             const uncached = symbols.filter(sym => !APP.sparklines[sym]);
@@ -2092,6 +2112,13 @@
             }
 
             // ── Re-render sidebar เพื่อ sync watchlist ─────────────
+            renderStockList();
+        }
+
+        /** clearWatchlist() — ล้างรายการหุ้นทั้งหมดใน Watchlist */
+        function clearWatchlist() {
+            APP.favorites = [];
+            localStorage.removeItem('stock_favorites');
             renderStockList();
         }
 
