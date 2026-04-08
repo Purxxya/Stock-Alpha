@@ -3561,7 +3561,7 @@
         // ══════════════════════════════════════════════════════════════
         // renderForecastTargetsTable — Forecast Price Targets
         // Source  : predictions_log
-        // Columns : target_date · predicted_price · previous_close
+        // Columns : target_date · predicted_price · actual_price
         //           error_percent · is_win
         // ══════════════════════════════════════════════════════════════
         async function renderForecastTargetsTable(symbol, horizon) {
@@ -3570,7 +3570,6 @@
             if (!container || !APP.supabaseClient) return;
 
             const cleanSym     = symbol.trim().toUpperCase();
-            // ── ใช้ horizon ที่ส่งมา หรือ APP state หรือ fallback 7D ────────
             const cleanHorizon = horizon || APP.predictHorizon || '7D';
             const horizonDaysMap = { '7D': 7, '15D': 15, '30D': 30 };
             const horizonDays  = horizonDaysMap[cleanHorizon] || 7;
@@ -3585,12 +3584,11 @@
                 </div>`;
 
             try {
-                // ── Query เฉพาะ horizon ที่เลือก (.eq('horizon_days', ...)) ──
                 const { data: rows, error } = await APP.supabaseClient
                     .from('predictions_log')
                     .select('target_date, predicted_price, actual_price, error_percent, is_win')
                     .eq('symbol', cleanSym)
-                    .eq('horizon_days', horizonDays)          // ← filter by active horizon
+                    .eq('horizon_days', horizonDays)
                     .not('predicted_price', 'is', null)
                     .order('target_date', { ascending: false })
                     .limit(150);
@@ -3624,13 +3622,38 @@
 
                 const todayISO = luxon.DateTime.now().setZone('Asia/Bangkok').toISODate();
 
+                // ── Win Rate calculation ──────────────────────────────────
+                const evaluatedRows = sorted.filter(r => r.is_win != null);
+                const winCount      = evaluatedRows.filter(r => r.is_win === true).length;
+                const winRate       = evaluatedRows.length > 0
+                    ? (winCount / evaluatedRows.length * 100).toFixed(1)
+                    : null;
+
+                // Win Rate สี
+                const wrNum = winRate != null ? parseFloat(winRate) : 0;
+                const wrColor  = wrNum >= 60 ? '#059669' : wrNum >= 50 ? '#d97706' : '#dc2626';
+                const wrBg     = wrNum >= 60 ? '#f0fdf4' : wrNum >= 50 ? '#fffbeb' : '#fff1f2';
+                const wrBorder = wrNum >= 60 ? '#bbf7d0' : wrNum >= 50 ? '#fed7aa' : '#fecdd3';
+
                 // ── Badge summary ──────────────────────────────────────────
-                const totalRows     = sorted.length;
-                const upcomingRows  = sorted.filter(r => (r.target_date || '') > todayISO).length;
-                const evaluatedRows = sorted.filter(r => r.error_percent != null).length;
+                const totalRows    = sorted.length;
+                const upcomingRows = sorted.filter(r => (r.target_date || '') > todayISO).length;
                 if (badge) {
-                    badge.textContent = `${cleanSym} · T+${horizonDays} · ${totalRows} Records · ${upcomingRows} Upcoming · ${evaluatedRows} Evaluated`;
+                    badge.textContent = `${cleanSym} · T+${horizonDays} · ${totalRows} Records · ${upcomingRows} Upcoming · ${evaluatedRows.length} Evaluated`;
                 }
+
+                // ── Win Rate header pill ──────────────────────────────────
+                const winRatePill = winRate != null ? `
+                    <div style="display:flex;align-items:center;gap:10px;padding:10px 18px 10px;border-bottom:1px solid #f1f5f9;background:#fafafa">
+                        <span style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.16em;font-family:'Inter',sans-serif">Win Rate</span>
+                        <div style="display:flex;align-items:center;gap:6px;background:${wrBg};border:1px solid ${wrBorder};border-radius:8px;padding:4px 10px">
+                            <span style="font-size:14px;font-weight:900;color:${wrColor};font-family:'Inter',sans-serif;line-height:1">${winRate}%</span>
+                            <span style="font-size:9px;font-weight:700;color:${wrColor};opacity:.7;font-family:'Inter',sans-serif">${winCount}/${evaluatedRows.length} Wins</span>
+                        </div>
+                        <div style="flex:1;height:6px;background:#f1f5f9;border-radius:99px;overflow:hidden">
+                            <div style="height:100%;width:${winRate}%;background:${wrColor};border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)"></div>
+                        </div>
+                    </div>` : '';
 
                 // ── Build rows ─────────────────────────────────────────────
                 const tableRows = sorted.map(r => {
@@ -3641,19 +3664,32 @@
                     const pred   = r.predicted_price != null ? parseFloat(r.predicted_price) : null;
                     const actual = r.actual_price    != null ? parseFloat(r.actual_price)    : null;
                     const ep     = r.error_percent   != null ? parseFloat(r.error_percent)   : null;
+                    const isWin  = r.is_win;
 
                     const predStr   = pred   != null ? `฿${pred.toFixed(2)}`   : '—';
                     const actualStr = actual != null ? `฿${actual.toFixed(2)}` : '—';
 
-                    // Error % — สี ขึ้นกับความแม่น
+                    // ── Error % — + สีเขียว, - สีแดง/ส้ม ──────────────────
                     let epStr = '—', epColor = '#94a3b8';
                     if (ep != null) {
-                        epStr   = `${ep >= 0 ? '+' : ''}${ep.toFixed(2)}%`;
-                        const a = Math.abs(ep);
-                        epColor = a <= 2 ? '#059669' : a <= 5 ? '#d97706' : '#dc2626';
+                        // error_percent เป็น absolute value เสมอ (abs)
+                        // is_win=true → actual >= predicted → ราคาจริงสูงกว่า → +
+                        // is_win=false → actual < predicted  → ราคาจริงต่ำกว่า → -
+                        const sign   = (isWin === true) ? '+' : (isWin === false) ? '-' : '+';
+                        const absEp  = Math.abs(ep);
+                        epStr  = `${sign}${absEp.toFixed(2)}%`;
+                        epColor = (isWin === true)  ? '#059669'
+                                : (isWin === false) ? (absEp > 5 ? '#dc2626' : '#d97706')
+                                : '#94a3b8';
                     }
 
-                    
+                    // ── Win badge ─────────────────────────────────────────
+                    let winBadge = '';
+                    if (!isFuture && isWin === true) {
+                        winBadge = `<span style="display:inline-flex;align-items:center;gap:3px;font-size:8px;font-weight:900;color:#059669;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:5px;padding:1px 5px;margin-left:6px;letter-spacing:.06em;font-family:'Inter',sans-serif;vertical-align:middle">▲ WIN</span>`;
+                    } else if (!isFuture && isWin === false) {
+                        winBadge = `<span style="display:inline-flex;align-items:center;gap:3px;font-size:8px;font-weight:900;color:#dc2626;background:#fff1f2;border:1px solid #fecdd3;border-radius:5px;padding:1px 5px;margin-left:6px;letter-spacing:.06em;font-family:'Inter',sans-serif;vertical-align:middle">▼ LOSS</span>`;
+                    }
 
                     const rowBgBase  = isFuture ? '#eff6ff' : 'transparent';
                     const rowBgHover = isFuture ? '#dbeafe' : '#f8fafc';
@@ -3667,9 +3703,10 @@
                             onmouseover="this.style.background='${rowBgHover}'"
                             onmouseout="this.style.background='${rowBgBase}'">
                             <td style="padding:12px 18px;white-space:nowrap;font-family:'Inter',sans-serif">
-                                <div style="display:flex;align-items:center">
+                                <div style="display:flex;align-items:center;flex-wrap:wrap;gap:2px">
                                     ${futureDot}
                                     <span style="font-size:12px;${dateCss};font-family:'Inter',sans-serif">${dateStr}</span>
+                                    ${winBadge}
                                 </div>
                                 ${isFuture ? `<div style="font-size:9px;color:#3b82f6;font-weight:800;text-transform:uppercase;letter-spacing:.12em;font-family:'Inter',sans-serif;margin-top:2px;padding-left:12px">Upcoming ▶</div>` : ''}
                             </td>
@@ -3687,6 +3724,7 @@
 
                 // ── Render table ───────────────────────────────────────────
                 container.innerHTML = `
+                    ${winRatePill}
                     <table style="width:100%;border-collapse:collapse;min-width:520px">
                         <thead style="position:sticky;top:0;z-index:10;background:#f8fafc;border-bottom:2px solid #e2e8f0">
                             <tr style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.18em">
