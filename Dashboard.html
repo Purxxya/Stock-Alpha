@@ -1310,6 +1310,13 @@
             const container = document.getElementById('analysisContainer');
             const group = APP.filteredNews[index]; 
             if (!group) return;
+
+            // ── บนมือถือ: scroll ลงไปที่ analysisContainer หลัง render ──
+            if (window.innerWidth < 768) {
+                setTimeout(() => {
+                    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 50);
+            }
             
             const analysis = group.stock_summary;
             const sentimentLabel = analysis?.sentiment_label || analysis?.sentiment || 'Neutral';
