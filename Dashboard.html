@@ -3305,12 +3305,25 @@
                 if (pErr) throw pErr;
 
                 // ── 3. Build series ────────────────────────────────────────
+                
+                // แก้ไขข้อมูล Actual
                 const actualSeries = (histRows || [])
-                    .map(d => ({ time: d.date, value: parseFloat(d.close_price) }))
+                    // 1. เช็คว่ามีวันที่และราคาไม่เป็น null ก่อน
+                    .filter(d => d.date && d.close_price !== null && d.close_price !== undefined)
+                    .map(d => ({ 
+                        time: d.date.split('T')[0], // 2. ตัดเวลาออก เอาแค่ YYYY-MM-DD
+                        value: parseFloat(d.close_price) 
+                    }))
                     .filter(d => !isNaN(d.value) && d.value > 0);
 
+                // แก้ไขข้อมูล Predict
                 const predSeries = (predRows || [])
-                    .map(d => ({ time: d.target_date, value: parseFloat(d.predicted_price) }))
+                    // 1. เช็คว่ามีวันที่และราคาไม่เป็น null ก่อน
+                    .filter(d => d.target_date && d.predicted_price !== null && d.predicted_price !== undefined)
+                    .map(d => ({ 
+                        time: d.target_date.split('T')[0], // 2. ตัดเวลาออก เอาแค่ YYYY-MM-DD
+                        value: parseFloat(d.predicted_price) 
+                    }))
                     .filter(d => !isNaN(d.value) && d.value > 0);
 
                 container.innerHTML = '';
