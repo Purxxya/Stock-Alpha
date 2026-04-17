@@ -3299,32 +3299,48 @@
                     .from('predictions_log')
                     .select('target_date, predicted_price')
                     .eq('symbol', cleanSymbol)
-                    .eq('horizon_days', horizonDays)          // ← dynamic: 7 / 15 / 30
+                    .eq('horizon_days', horizonDays)         
                     .not('predicted_price', 'is', null)
                     .order('target_date', { ascending: true });
                 if (pErr) throw pErr;
 
-                // ── 3. Build series ────────────────────────────────────────
+                // ── 3. Build series (Ultra-Safe & Deduplicated) ────────────────────
                 
-                // แก้ไขข้อมูล Actual
-                const actualSeries = (histRows || [])
-                    // 1. เช็คว่ามีวันที่และราคาไม่เป็น null ก่อน
-                    .filter(d => d.date && d.close_price !== null && d.close_price !== undefined)
-                    .map(d => ({ 
-                        time: d.date.split('T')[0], // 2. ตัดเวลาออก เอาแค่ YYYY-MM-DD
-                        value: parseFloat(d.close_price) 
-                    }))
-                    .filter(d => !isNaN(d.value) && d.value > 0);
+                // --- ส่วนที่ 1: จัดการข้อมูล Actual (ราคาจริง) ---
+                const uniqueActualMap = new Map(); // ✅ เปลี่ยนชื่อไม่ให้ซ้ำ
+                (histRows || []).forEach(d => {
+                    if (d.date && d.close_price != null) {
+                        const cleanDate = d.date.split('T')[0].split(' ')[0]; 
+                        const val = parseFloat(d.close_price);
+                        if (!isNaN(val) && val > 0) {
+                            uniqueActualMap.set(cleanDate, val);
+                        }
+                    }
+                });
 
-                // แก้ไขข้อมูล Predict
-                const predSeries = (predRows || [])
-                    // 1. เช็คว่ามีวันที่และราคาไม่เป็น null ก่อน
-                    .filter(d => d.target_date && d.predicted_price !== null && d.predicted_price !== undefined)
-                    .map(d => ({ 
-                        time: d.target_date.split('T')[0], // 2. ตัดเวลาออก เอาแค่ YYYY-MM-DD
-                        value: parseFloat(d.predicted_price) 
-                    }))
-                    .filter(d => !isNaN(d.value) && d.value > 0);
+                const actualSeries = Array.from(uniqueActualMap.entries())
+                    .map(([time, value]) => ({ time, value }))
+                    .sort((a, b) => a.time.localeCompare(b.time));
+
+                // --- ส่วนที่ 2: จัดการข้อมูล Predict (ราคาพยากรณ์) ---
+                const uniquePredMap = new Map(); // ✅ เปลี่ยนชื่อไม่ให้ซ้ำ
+                (predRows || []).forEach(d => {
+                    if (d.target_date && d.predicted_price != null) {
+                        const cleanDate = d.target_date.split('T')[0].split(' ')[0];
+                        const val = parseFloat(d.predicted_price);
+                        if (!isNaN(val) && val > 0) {
+                            uniquePredMap.set(cleanDate, val);
+                        }
+                    }
+                });
+
+                const predSeries = Array.from(uniquePredMap.entries())
+                    .map(([time, value]) => ({ time, value }))
+                    .sort((a, b) => a.time.localeCompare(b.time));
+                    
+                // 💡 ปริ้นท์เช็คข้อมูล
+                console.log("✅ ข้อมูลที่ส่งให้กราฟ (Actual):", actualSeries);
+                console.log("✅ ข้อมูลที่ส่งให้กราฟ (Predict):", predSeries);
 
                 container.innerHTML = '';
 
