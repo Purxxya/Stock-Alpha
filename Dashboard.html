@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Stock Analysis Platform - SET100</title> 
+    <title>AI Stock Analysis Platform - SET100</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
@@ -432,9 +432,8 @@
                         <table class="w-full table-fixed" style="min-width:480px"> <thead class="bg-slate-50/50 border-b border-slate-100">
                                 <tr class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
                                     <th class="w-[15%] px-4 md:px-6 py-4 text-left">Stock</th>
-                                    <th class="w-[45%] px-4 md:px-6 py-4 text-center">Company Name</th>
-                                    <th class="w-[20%] px-4 md:px-6 py-4 text-center">Change %</th> 
-                                    <th class="w-[20%] px-4 md:px-6 py-4 text-right">Last Price</th>
+                                    <th class="w-[55%] px-4 md:px-6 py-4 text-center">Company Name</th>
+                                    <th class="w-[30%] px-4 md:px-6 py-4 text-center">Change %</th>
                                 </tr>
                             </thead>
                             <tbody id="stockTable" class="divide-y divide-slate-50"></tbody>
@@ -853,7 +852,17 @@
         // บันทึก symbol ล่าสุดที่ User เลือก (ข้ามทุกหน้า)
         globalSelectedSymbol: null,
         // ── [FEATURE 2] Favorites / Watchlist ─────────────────────────
-        favorites: JSON.parse(localStorage.getItem('stock_favorites') || '[]'),
+        favorites: (() => {
+            try {
+                const saved = JSON.parse(localStorage.getItem('stock_favorites') || '[]');
+                // ถ้าไม่ใช่ array หรือมีมากกว่า 30 ตัว → ถือว่าข้อมูลเสีย → reset
+                if (!Array.isArray(saved) || saved.length > 30) {
+                    localStorage.removeItem('stock_favorites');
+                    return [];
+                }
+                return saved;
+            } catch { return []; }
+        })(),
         sidebarMode: 'top10',   // 'top10' | 'watchlist'
         // ── [FEATURE 3] Chart Timeframe ────────────────────────────────
         chartTimeframe: '3M',   // '1M' | '3M' | '6M' | '1Y'
@@ -1194,40 +1203,7 @@
                     groupedNews[sym].related_articles.push(news);
                 });
 
-                // ── หา Top News ของวันนี้ตาม investment_rating สูงสุด ──────────
-                const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
-                let newsArray = Object.values(groupedNews);
-
-                // แยกข่าวของวันนี้ออกมาเพื่อหาตัว Top
-                const todayNews = newsArray.filter(g => {
-                    if (!g.latest_published_at) return false;
-                    const d = new Date(g.latest_published_at).toLocaleDateString('en-CA');
-                    return d === todayStr;
-                });
-
-                // หา group ที่มี investment_rating สูงที่สุดของวันนี้
-                let topNewsSymbol = null;
-                if (todayNews.length > 0) {
-                    const best = todayNews.reduce((prev, cur) => {
-                        const pr = prev.stock_summary?.investment_rating ?? -1;
-                        const cr = cur.stock_summary?.investment_rating ?? -1;
-                        return cr > pr ? cur : prev;
-                    });
-                    // กำหนด top เฉพาะเมื่อมี rating จริง
-                    if (best.stock_summary?.investment_rating != null) {
-                        topNewsSymbol = best.symbol;
-                        best.isTopNews = true;
-                    }
-                }
-
-                // Sort: ถ้า isTopNews → ขึ้นก่อนเสมอ, ที่เหลือ sort ตาม published_at
-                newsArray.sort((a, b) => {
-                    if (a.isTopNews) return -1;
-                    if (b.isTopNews) return 1;
-                    return new Date(b.latest_published_at) - new Date(a.latest_published_at);
-                });
-
-                APP.allNews = newsArray;
+                APP.allNews = Object.values(groupedNews).sort((a, b) => new Date(b.latest_published_at) - new Date(a.latest_published_at));
                 APP.filteredNews = [...APP.allNews];
 
                 renderNews();
@@ -1301,37 +1277,18 @@
             }
 
             const newsHtml = APP.filteredNews.map((group, index) => {
-                const analysis     = group.stock_summary;
+                const analysis    = group.stock_summary;
                 const sentimentStr = analysis?.sentiment_label || analysis?.sentiment || 'Neutral';
                 const color = sentimentStr.toLowerCase() === 'positive' || sentimentStr.toLowerCase() === 'bullish' ? 'emerald'
                             : sentimentStr.toLowerCase() === 'negative' || sentimentStr.toLowerCase() === 'bearish' ? 'red'
                             : 'slate';
                 const timeDisplay  = formatTimeAgo(group.latest_published_at);
                 const articleCount = group.related_articles.length;
-                const isTop        = group.isTopNews === true;
-                const rating       = analysis?.investment_rating;
-
-                // Top News: border ทอง + badge พิเศษ
-                const cardBorder = isTop
-                    ? 'border-amber-400 shadow-lg ring-2 ring-amber-200'
-                    : 'border-slate-100 hover:border-red-500 hover:shadow-md';
-
-                const topBadgeHtml = isTop ? `
-                    <div style="display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#f59e0b,#d97706);
-                        color:#fff;padding:6px 14px;border-radius:10px;margin-bottom:12px;font-size:10px;
-                        font-weight:900;letter-spacing:.12em;text-transform:uppercase;">
-                        <svg style="width:13px;height:13px;flex-shrink:0" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                        </svg>
-                        Top News Today
-                        ${rating != null ? \`<span style="margin-left:6px;background:rgba(255,255,255,.25);padding:2px 8px;border-radius:6px;font-size:9px">Rating \${parseFloat(rating).toFixed(1)}</span>\` : ''}
-                    </div>` : '';
 
                 return `
-                    <div class="bg-white rounded-2xl p-5 border ${cardBorder} transition-all cursor-pointer mb-4 flex flex-col" onclick="analyzeNews(${index})">
-                        ${topBadgeHtml}
+                    <div class="bg-white rounded-2xl p-5 border border-slate-100 hover:border-red-500 hover:shadow-md transition-all cursor-pointer mb-4 flex flex-col" onclick="analyzeNews(${index})">
                         <div class="flex items-center justify-between mb-3">
-                            <span class="px-3 py-1.5 ${isTop ? 'bg-amber-500' : 'bg-slate-900'} text-white text-[10px] font-black rounded-lg uppercase tracking-wider">${group.symbol}</span>
+                            <span class="px-3 py-1.5 bg-slate-900 text-white text-[10px] font-black rounded-lg uppercase tracking-wider">${group.symbol}</span>
                             ${analysis ? `<span class="px-3 py-1.5 bg-${color}-50 text-${color}-600 text-[10px] font-bold rounded-lg uppercase tracking-wider">${sentimentStr}</span>` : ''}
                         </div>
                         <h4 class="text-sm font-bold text-slate-800 leading-relaxed line-clamp-2 mb-3">${group.latest_title}</h4>
@@ -1353,6 +1310,13 @@
             const container = document.getElementById('analysisContainer');
             const group = APP.filteredNews[index]; 
             if (!group) return;
+
+            // ── บนมือถือ: scroll ลงไปที่ analysisContainer หลัง render ──
+            if (window.innerWidth < 768) {
+                setTimeout(() => {
+                    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 50);
+            }
             
             const analysis = group.stock_summary;
             const sentimentLabel = analysis?.sentiment_label || analysis?.sentiment || 'Neutral';
@@ -1565,7 +1529,16 @@
                 return;
             }
 
-            listEl.innerHTML = displayStocks.map((stock, rank) => {
+            // ── Watchlist header with clear button ───────────────────
+            const watchlistHeader = isWatchlist ? `
+                <div class="flex items-center justify-between px-3 pb-2">
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-wider">${displayStocks.length} หุ้น</span>
+                    <button onclick="clearWatchlist()" class="text-[9px] font-black text-slate-300 hover:text-red-500 uppercase tracking-wider transition-colors">
+                        ล้างทั้งหมด ✕
+                    </button>
+                </div>` : '';
+
+            const stockListHTML = displayStocks.map((stock, rank) => {
             const isActive   = APP.currentStock && APP.currentStock.symbol === stock.symbol;
             const isPositive = stock.changePercent >= 0;
             const isFav      = APP.favorites.includes(stock.symbol);
@@ -1613,6 +1586,7 @@
                 </button>
             `;
         }).join('');
+            listEl.innerHTML = (watchlistHeader || '') + stockListHTML;
             // Fetch sparklines for uncached symbols (async — paints when ready)
             const symbols  = displayStocks.map(s => s.symbol);
             const uncached = symbols.filter(sym => !APP.sparklines[sym]);
@@ -2148,6 +2122,13 @@
             renderStockList();
         }
 
+        /** clearWatchlist() — ล้างรายการหุ้นทั้งหมดใน Watchlist */
+        function clearWatchlist() {
+            APP.favorites = [];
+            localStorage.removeItem('stock_favorites');
+            renderStockList();
+        }
+
         /**
          * setSidebarMode(mode) — สลับ 'top10' / 'watchlist'
          * อัปเดต toggle UI แล้ว re-render stock list
@@ -2259,10 +2240,6 @@
                             <span class="text-xs font-black ${changeColor} tracking-tight">
                                 ${isPositive ? '+' : ''}${stock.changePercent.toFixed(2)}%
                             </span>
-                        </td>
-                        
-                        <td class="px-4 md:px-6 py-3 md:py-4 text-right">
-                            <span class="text-xs font-black text-slate-900">฿${stock.price.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
                         </td>
                         
                     </tr>
@@ -2994,10 +2971,6 @@
             const actualStr  = actual   != null ? `฿${actual.toFixed(2)}`   : '—';
             const prevStr    = prevClose != null ? `฿${prevClose.toFixed(2)}` : '—';
 
-            // Win/Loss badge
-            let winBadge = '';
-            if      (isWin === true)  winBadge = `<span style="font-size:9px;font-weight:900;color:#059669"> WIN ✓</span>`;
-            else if (isWin === false) winBadge = `<span style="font-size:9px;font-weight:900;color:#f43f5e"> LOSS ✗</span>`;
 
             const rowCls  = isFuture ? 'future-row' : '';
             const dateCls = isFuture ? 'text-blue-700 font-black' : 'text-slate-600';
@@ -3009,7 +2982,7 @@
                 <td class="px-4 py-2.5 text-right font-mono text-[11px] text-slate-800">${actualStr}</td>
                 <td class="px-4 py-2.5 text-right font-mono text-[11px] text-indigo-700 font-bold">฿${pred.toFixed(2)}</td>
                 <td class="px-4 py-2.5 text-right font-mono text-[11px] text-slate-400 hidden sm:table-cell">฿${lower.toFixed(2)} – ฿${upper.toFixed(2)}</td>
-                <td class="px-4 py-2.5 text-right font-mono text-[11px] ${errClass(ep)}">${epStr}${winBadge}</td>
+                <td class="px-4 py-2.5 text-right font-mono text-[11px] ${errClass(ep)}">${epStr}</td>
             </tr>`;
         }).join('');
 
@@ -3022,7 +2995,7 @@
                     <th class="px-4 py-3 text-right">Actual</th>
                     <th class="px-4 py-3 text-right">T+1 Forecast</th>
                     <th class="px-4 py-3 text-right hidden sm:table-cell">80% CI Band</th>
-                    <th class="px-4 py-3 text-right">APE / Result</th>
+                    <th class="px-4 py-3 text-right">Error %</th>
                 </tr>
             </thead>
             <tbody>${rows}</tbody>
@@ -3326,19 +3299,48 @@
                     .from('predictions_log')
                     .select('target_date, predicted_price')
                     .eq('symbol', cleanSymbol)
-                    .eq('horizon_days', horizonDays)          // ← dynamic: 7 / 15 / 30
+                    .eq('horizon_days', horizonDays)         
                     .not('predicted_price', 'is', null)
                     .order('target_date', { ascending: true });
                 if (pErr) throw pErr;
 
-                // ── 3. Build series ────────────────────────────────────────
-                const actualSeries = (histRows || [])
-                    .map(d => ({ time: d.date, value: parseFloat(d.close_price) }))
-                    .filter(d => !isNaN(d.value) && d.value > 0);
+                // ── 3. Build series (Ultra-Safe & Deduplicated) ────────────────────
+                
+                // --- ส่วนที่ 1: จัดการข้อมูล Actual (ราคาจริง) ---
+                const uniqueActualMap = new Map(); // ✅ เปลี่ยนชื่อไม่ให้ซ้ำ
+                (histRows || []).forEach(d => {
+                    if (d.date && d.close_price != null) {
+                        const cleanDate = d.date.split('T')[0].split(' ')[0]; 
+                        const val = parseFloat(d.close_price);
+                        if (!isNaN(val) && val > 0) {
+                            uniqueActualMap.set(cleanDate, val);
+                        }
+                    }
+                });
 
-                const predSeries = (predRows || [])
-                    .map(d => ({ time: d.target_date, value: parseFloat(d.predicted_price) }))
-                    .filter(d => !isNaN(d.value) && d.value > 0);
+                const actualSeries = Array.from(uniqueActualMap.entries())
+                    .map(([time, value]) => ({ time, value }))
+                    .sort((a, b) => a.time.localeCompare(b.time));
+
+                // --- ส่วนที่ 2: จัดการข้อมูล Predict (ราคาพยากรณ์) ---
+                const uniquePredMap = new Map(); // ✅ เปลี่ยนชื่อไม่ให้ซ้ำ
+                (predRows || []).forEach(d => {
+                    if (d.target_date && d.predicted_price != null) {
+                        const cleanDate = d.target_date.split('T')[0].split(' ')[0];
+                        const val = parseFloat(d.predicted_price);
+                        if (!isNaN(val) && val > 0) {
+                            uniquePredMap.set(cleanDate, val);
+                        }
+                    }
+                });
+
+                const predSeries = Array.from(uniquePredMap.entries())
+                    .map(([time, value]) => ({ time, value }))
+                    .sort((a, b) => a.time.localeCompare(b.time));
+                    
+                // 💡 ปริ้นท์เช็คข้อมูล
+                console.log("✅ ข้อมูลที่ส่งให้กราฟ (Actual):", actualSeries);
+                console.log("✅ ข้อมูลที่ส่งให้กราฟ (Predict):", predSeries);
 
                 container.innerHTML = '';
 
@@ -3595,7 +3597,7 @@
         // ══════════════════════════════════════════════════════════════
         // renderForecastTargetsTable — Forecast Price Targets
         // Source  : predictions_log
-        // Columns : target_date · predicted_price · previous_close
+        // Columns : target_date · predicted_price · actual_price
         //           error_percent · is_win
         // ══════════════════════════════════════════════════════════════
         async function renderForecastTargetsTable(symbol, horizon) {
@@ -3604,7 +3606,6 @@
             if (!container || !APP.supabaseClient) return;
 
             const cleanSym     = symbol.trim().toUpperCase();
-            // ── ใช้ horizon ที่ส่งมา หรือ APP state หรือ fallback 7D ────────
             const cleanHorizon = horizon || APP.predictHorizon || '7D';
             const horizonDaysMap = { '7D': 7, '15D': 15, '30D': 30 };
             const horizonDays  = horizonDaysMap[cleanHorizon] || 7;
@@ -3619,12 +3620,11 @@
                 </div>`;
 
             try {
-                // ── Query เฉพาะ horizon ที่เลือก (.eq('horizon_days', ...)) ──
                 const { data: rows, error } = await APP.supabaseClient
                     .from('predictions_log')
                     .select('target_date, predicted_price, actual_price, error_percent, is_win')
                     .eq('symbol', cleanSym)
-                    .eq('horizon_days', horizonDays)          // ← filter by active horizon
+                    .eq('horizon_days', horizonDays)
                     .not('predicted_price', 'is', null)
                     .order('target_date', { ascending: false })
                     .limit(150);
@@ -3658,17 +3658,38 @@
 
                 const todayISO = luxon.DateTime.now().setZone('Asia/Bangkok').toISODate();
 
+                // ── Win Rate calculation ──────────────────────────────────
+                const evaluatedRows = sorted.filter(r => r.is_win != null);
+                const winCount      = evaluatedRows.filter(r => r.is_win === true).length;
+                const winRate       = evaluatedRows.length > 0
+                    ? (winCount / evaluatedRows.length * 100).toFixed(1)
+                    : null;
+
+                // Win Rate สี
+                const wrNum = winRate != null ? parseFloat(winRate) : 0;
+                const wrColor  = wrNum >= 60 ? '#059669' : wrNum >= 50 ? '#d97706' : '#dc2626';
+                const wrBg     = wrNum >= 60 ? '#f0fdf4' : wrNum >= 50 ? '#fffbeb' : '#fff1f2';
+                const wrBorder = wrNum >= 60 ? '#bbf7d0' : wrNum >= 50 ? '#fed7aa' : '#fecdd3';
+
                 // ── Badge summary ──────────────────────────────────────────
-                const totalRows     = sorted.length;
-                const upcomingRows  = sorted.filter(r => (r.target_date || '') > todayISO).length;
-                const evaluatedRows = sorted.filter(r => r.error_percent != null).length;
-                const winRows       = sorted.filter(r => r.is_win === true).length;
-                const winRate       = evaluatedRows > 0
-                    ? ((winRows / evaluatedRows) * 100).toFixed(1) + '%'
-                    : 'Pending';
+                const totalRows    = sorted.length;
+                const upcomingRows = sorted.filter(r => (r.target_date || '') > todayISO).length;
                 if (badge) {
-                    badge.textContent = `${cleanSym} · T+${horizonDays} · ${totalRows} Records · ${upcomingRows} Upcoming · Win Rate ${winRate}`;
+                    badge.textContent = `${cleanSym} · T+${horizonDays} · ${totalRows} Records · ${upcomingRows} Upcoming · ${evaluatedRows.length} Evaluated`;
                 }
+
+                // ── Win Rate header pill ──────────────────────────────────
+                const winRatePill = winRate != null ? `
+                    <div style="display:flex;align-items:center;gap:10px;padding:10px 18px 10px;border-bottom:1px solid #f1f5f9;background:#fafafa">
+                        <span style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.16em;font-family:'Inter',sans-serif">Win Rate</span>
+                        <div style="display:flex;align-items:center;gap:6px;background:${wrBg};border:1px solid ${wrBorder};border-radius:8px;padding:4px 10px">
+                            <span style="font-size:14px;font-weight:900;color:${wrColor};font-family:'Inter',sans-serif;line-height:1">${winRate}%</span>
+                            <span style="font-size:9px;font-weight:700;color:${wrColor};opacity:.7;font-family:'Inter',sans-serif">${winCount}/${evaluatedRows.length} Wins</span>
+                        </div>
+                        <div style="flex:1;height:6px;background:#f1f5f9;border-radius:99px;overflow:hidden">
+                            <div style="height:100%;width:${winRate}%;background:${wrColor};border-radius:99px;transition:width .6s cubic-bezier(.4,0,.2,1)"></div>
+                        </div>
+                    </div>` : '';
 
                 // ── Build rows ─────────────────────────────────────────────
                 const tableRows = sorted.map(r => {
@@ -3679,32 +3700,31 @@
                     const pred   = r.predicted_price != null ? parseFloat(r.predicted_price) : null;
                     const actual = r.actual_price    != null ? parseFloat(r.actual_price)    : null;
                     const ep     = r.error_percent   != null ? parseFloat(r.error_percent)   : null;
+                    const isWin  = r.is_win;
 
                     const predStr   = pred   != null ? `฿${pred.toFixed(2)}`   : '—';
                     const actualStr = actual != null ? `฿${actual.toFixed(2)}` : '—';
 
-                    // Error % — สี ขึ้นกับความแม่น
+                    // ── Error % — + สีเขียว, - สีแดง/ส้ม ──────────────────
                     let epStr = '—', epColor = '#94a3b8';
                     if (ep != null) {
-                        epStr   = `${ep >= 0 ? '+' : ''}${ep.toFixed(2)}%`;
-                        const a = Math.abs(ep);
-                        epColor = a <= 2 ? '#059669' : a <= 5 ? '#d97706' : '#dc2626';
+                        // error_percent เป็น absolute value เสมอ (abs)
+                        // is_win=true → actual >= predicted → ราคาจริงสูงกว่า → +
+                        // is_win=false → actual < predicted  → ราคาจริงต่ำกว่า → -
+                        const sign   = (isWin === true) ? '+' : (isWin === false) ? '-' : '+';
+                        const absEp  = Math.abs(ep);
+                        epStr  = `${sign}${absEp.toFixed(2)}%`;
+                        epColor = (isWin === true)  ? '#059669'
+                                : (isWin === false) ? (absEp > 5 ? '#dc2626' : '#d97706')
+                                : '#94a3b8';
                     }
 
-                    // is_win badge
-                    let winBadge;
-                    if (r.is_win === true) {
-                        winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
-                            background:#dcfce7;border:1.5px solid #86efac;font-size:10px;font-weight:900;color:#15803d;
-                            letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">Win</span>`;
-                    } else if (r.is_win === false) {
-                        winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
-                            background:#fee2e2;border:1.5px solid #fca5a5;font-size:10px;font-weight:900;color:#dc2626;
-                            letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">Loss</span>`;
-                    } else {
-                        winBadge = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;
-                            background:#f1f5f9;border:1.5px solid #e2e8f0;font-size:10px;font-weight:700;color:#94a3b8;
-                            letter-spacing:.06em;font-family:'Inter',sans-serif;white-space:nowrap">⏳ Pending</span>`;
+                    // ── Win badge ─────────────────────────────────────────
+                    let winBadge = '';
+                    if (!isFuture && isWin === true) {
+                        winBadge = `<span style="display:inline-flex;align-items:center;gap:3px;font-size:8px;font-weight:900;color:#059669;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:5px;padding:1px 5px;margin-left:6px;letter-spacing:.06em;font-family:'Inter',sans-serif;vertical-align:middle">▲ WIN</span>`;
+                    } else if (!isFuture && isWin === false) {
+                        winBadge = `<span style="display:inline-flex;align-items:center;gap:3px;font-size:8px;font-weight:900;color:#dc2626;background:#fff1f2;border:1px solid #fecdd3;border-radius:5px;padding:1px 5px;margin-left:6px;letter-spacing:.06em;font-family:'Inter',sans-serif;vertical-align:middle">▼ LOSS</span>`;
                     }
 
                     const rowBgBase  = isFuture ? '#eff6ff' : 'transparent';
@@ -3719,9 +3739,10 @@
                             onmouseover="this.style.background='${rowBgHover}'"
                             onmouseout="this.style.background='${rowBgBase}'">
                             <td style="padding:12px 18px;white-space:nowrap;font-family:'Inter',sans-serif">
-                                <div style="display:flex;align-items:center">
+                                <div style="display:flex;align-items:center;flex-wrap:wrap;gap:2px">
                                     ${futureDot}
                                     <span style="font-size:12px;${dateCss};font-family:'Inter',sans-serif">${dateStr}</span>
+                                    ${winBadge}
                                 </div>
                                 ${isFuture ? `<div style="font-size:9px;color:#3b82f6;font-weight:800;text-transform:uppercase;letter-spacing:.12em;font-family:'Inter',sans-serif;margin-top:2px;padding-left:12px">Upcoming ▶</div>` : ''}
                             </td>
@@ -3734,14 +3755,12 @@
                             <td style="padding:12px 18px;text-align:right">
                                 <span style="font-size:12px;font-weight:900;color:${epColor};font-family:'Inter',sans-serif">${epStr}</span>
                             </td>
-                            <td style="padding:12px 18px;text-align:center">
-                                ${winBadge}
-                            </td>
                         </tr>`;
                 }).join('');
 
                 // ── Render table ───────────────────────────────────────────
                 container.innerHTML = `
+                    ${winRatePill}
                     <table style="width:100%;border-collapse:collapse;min-width:520px">
                         <thead style="position:sticky;top:0;z-index:10;background:#f8fafc;border-bottom:2px solid #e2e8f0">
                             <tr style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:.18em">
@@ -3749,7 +3768,6 @@
                                 <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Predicted Price</th>
                                 <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Actual Price</th>
                                 <th style="padding:12px 18px;text-align:right;font-family:'Inter',sans-serif;font-weight:900">Error %</th>
-                                <th style="padding:12px 18px;text-align:center;font-family:'Inter',sans-serif;font-weight:900">Result</th>
                             </tr>
                         </thead>
                         <tbody>${tableRows}</tbody>
