@@ -1194,28 +1194,29 @@
                     groupedNews[sym].related_articles.push(news);
                 });
 
-                // ── Top 5 News ของวันนี้ตาม investment_rating สูงสุด ──────────
-                const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
+                // ── Top 5 News ใน 24 ชั่วโมงย้อนหลัง ตาม investment_rating ──
+                const cutoff24h = new Date(Date.now() - 24 * 60 * 60 * 1000); // 24 ชม.ที่แล้ว
                 let newsArray = Object.values(groupedNews);
 
-                // กรองข่าวของวันนี้
-                const todayNews = newsArray.filter(g => {
+                // กรองข่าว 24 ชม.ย้อนหลัง
+                const recent24hNews = newsArray.filter(g => {
                     if (!g.latest_published_at) return false;
-                    return new Date(g.latest_published_at).toLocaleDateString('en-CA') === todayStr;
+                    return new Date(g.latest_published_at) >= cutoff24h;
                 });
 
-                // เรียง todayNews ตาม investment_rating มากไปน้อย แล้วเลือก Top 5
-                const todaySorted = [...todayNews].sort((a, b) => {
+                // เรียง recent24hNews ตาม investment_rating มากไปน้อย → Top 5
+                const recentSorted = [...recent24hNews].sort((a, b) => {
                     const ra = a.stock_summary?.investment_rating ?? -1;
                     const rb = b.stock_summary?.investment_rating ?? -1;
                     return rb - ra;
                 });
-                // Mark top 5 ที่มี rating จริง
+
+                // Mark Top 5 ที่มี rating จริง
                 let topCount = 0;
-                todaySorted.forEach(g => {
+                recentSorted.forEach(g => {
                     if (topCount < 5 && g.stock_summary?.investment_rating != null) {
-                        g.isTopNews  = true;
-                        g.topRank    = topCount + 1;  // 1..5
+                        g.isTopNews = true;
+                        g.topRank   = topCount + 1; // 1–5
                         topCount++;
                     }
                 });
@@ -1313,47 +1314,53 @@
                 const topRank      = group.topRank || 0;
                 const rating       = analysis?.investment_rating;
 
-                // ── Styling ตาม rank ──────────────────────────────────
-                // Rank 1 = ทอง, 2 = เงิน, 3 = ทองแดง, 4-5 = ฟ้าอ่อน
-                const rankColors = {
-                    1: { border: 'border-amber-400 ring-2 ring-amber-200 shadow-lg',   badge: 'linear-gradient(135deg,#f59e0b,#d97706)', sym: 'bg-amber-500' },
-                    2: { border: 'border-slate-400 ring-2 ring-slate-200 shadow-md',   badge: 'linear-gradient(135deg,#94a3b8,#64748b)', sym: 'bg-slate-500' },
-                    3: { border: 'border-orange-400 ring-2 ring-orange-200 shadow-md', badge: 'linear-gradient(135deg,#fb923c,#ea580c)', sym: 'bg-orange-500' },
-                    4: { border: 'border-sky-300 ring-1 ring-sky-100 shadow-sm',       badge: 'linear-gradient(135deg,#38bdf8,#0284c7)', sym: 'bg-sky-500' },
-                    5: { border: 'border-sky-300 ring-1 ring-sky-100 shadow-sm',       badge: 'linear-gradient(135deg,#38bdf8,#0284c7)', sym: 'bg-sky-500' },
+                // ── สีเขียว gradient ลงมา ตาม rank ─────────────────────────
+                // Rank 1 = เขียวเข้มสุด → Rank 5 = เขียวอ่อน
+                const rankStyles = {
+                    1: { border: '#16a34a', ring: 'rgba(22,163,74,0.25)',  badge: 'linear-gradient(135deg,#16a34a,#15803d)', sym: '#15803d',  bg: '#f0fdf4' },
+                    2: { border: '#22c55e', ring: 'rgba(34,197,94,0.22)',  badge: 'linear-gradient(135deg,#22c55e,#16a34a)', sym: '#16a34a',  bg: '#f0fdf4' },
+                    3: { border: '#4ade80', ring: 'rgba(74,222,128,0.20)', badge: 'linear-gradient(135deg,#4ade80,#22c55e)', sym: '#15803d',  bg: '#f0fdf4' },
+                    4: { border: '#86efac', ring: 'rgba(134,239,172,0.18)',badge: 'linear-gradient(135deg,#86efac,#4ade80)', sym: '#15803d',  bg: '#f7fef9' },
+                    5: { border: '#bbf7d0', ring: 'rgba(187,247,208,0.15)',badge: 'linear-gradient(135deg,#bbf7d0,#86efac)', sym: '#16a34a',  bg: '#f7fef9' },
                 };
-                const rc = isTop ? rankColors[topRank] : null;
+                const rs = isTop ? rankStyles[topRank] : null;
 
-                const cardBorder = isTop
-                    ? rc.border
-                    : 'border-slate-100 hover:border-red-500 hover:shadow-md';
+                // border + ring inline-style สำหรับ top cards
+                const cardStyle = isTop
+                    ? `style="border:2px solid ${rs.border};box-shadow:0 0 0 3px ${rs.ring}, 0 4px 16px rgba(0,0,0,0.08);background:${rs.bg}"`
+                    : `style=""`;
+                const cardBaseClass = isTop
+                    ? 'bg-white rounded-2xl p-5 transition-all cursor-pointer mb-4 flex flex-col'
+                    : 'bg-white rounded-2xl p-5 border border-slate-100 hover:border-red-500 hover:shadow-md transition-all cursor-pointer mb-4 flex flex-col';
 
-                const rankLabel = topRank === 1 ? '⭐ Top News Today'
-                                : topRank === 2 ? '🥈 #2 Best Sentiment'
-                                : topRank === 3 ? '🥉 #3 Best Sentiment'
-                                : `#${topRank} Best Sentiment`;
+                // label ตาม rank
+                const rankLabel = topRank === 1 ? '🏆 Top Sentiment (24h)'
+                                : topRank === 2 ? '#2 Best Sentiment (24h)'
+                                : topRank === 3 ? '#3 Best Sentiment (24h)'
+                                : `#${topRank} Best Sentiment (24h)`;
 
                 const ratingBadge = (rating != null)
-                    ? `<span style="margin-left:6px;background:rgba(255,255,255,.25);padding:2px 8px;border-radius:6px;font-size:9px">Rating ${parseFloat(rating).toFixed(1)}</span>`
+                    ? `<span style="margin-left:6px;background:rgba(255,255,255,.28);padding:2px 8px;border-radius:6px;font-size:9px;font-weight:800">Rating ${parseFloat(rating).toFixed(1)}</span>`
                     : '';
 
                 const topBadgeHtml = isTop
-                    ? `<div style="display:flex;align-items:center;gap:6px;background:${rc.badge};color:#fff;padding:5px 12px;border-radius:10px;margin-bottom:10px;font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">
-                        ${topRank <= 3
-                            ? `<svg style="width:12px;height:12px;flex-shrink:0" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>`
-                            : `<svg style="width:12px;height:12px;flex-shrink:0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>`
-                        }
+                    ? `<div style="display:flex;align-items:center;gap:6px;background:${rs.badge};color:#fff;padding:5px 12px;border-radius:9px;margin-bottom:10px;font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;">
+                        <svg style="width:12px;height:12px;flex-shrink:0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
                         ${rankLabel}${ratingBadge}
                     </div>`
                     : '';
 
-                const symBg = isTop ? rc.sym : 'bg-slate-900';
+                const symStyle = isTop
+                    ? `style="background:${rs.sym};color:#fff"`
+                    : `style="background:#0f172a;color:#fff"`;
 
                 return `
-                    <div class="bg-white rounded-2xl p-5 border ${cardBorder} transition-all cursor-pointer mb-4 flex flex-col" onclick="analyzeNews(${index})">
+                    <div class="${cardBaseClass}" ${cardStyle} onclick="analyzeNews(${index})">
                         ${topBadgeHtml}
                         <div class="flex items-center justify-between mb-3">
-                            <span class="px-3 py-1.5 ${symBg} text-white text-[10px] font-black rounded-lg uppercase tracking-wider">${group.symbol}</span>
+                            <span class="px-3 py-1.5 text-[10px] font-black rounded-lg uppercase tracking-wider" ${symStyle}>${group.symbol}</span>
                             ${analysis ? `<span class="px-3 py-1.5 bg-${color}-50 text-${color}-600 text-[10px] font-bold rounded-lg uppercase tracking-wider">${sentimentStr}</span>` : ''}
                         </div>
                         <h4 class="text-sm font-bold text-slate-800 leading-relaxed line-clamp-2 mb-3">${group.latest_title}</h4>
